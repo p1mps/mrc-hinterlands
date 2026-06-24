@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h2>Add Log Entry — {{ contract.type.value|capitalize }}</h2>
+<p><strong>Month:</strong> {{ currentMonth }} &nbsp; <strong>Tracks:</strong> {{ contract.tracksCompleted }}/{{ contract.numberOfTracks }}</p>
+<a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
+
+<div class="row g-3">
+
+<div class="col-md-6">
+<div class="card">
+<div class="card-header">Step 0 — Transport</div>
+<div class="card-body">
+<form method="post">
+    <input type="hidden" name="action" value="transport">
+    <div class="mb-2">
+        <label class="form-label">Amount (SP)</label>
+        <input type="number" name="amount" class="form-control" value="-300">
+    </div>
+    <button class="btn btn-info">Record Transport</button>
+</form>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card">
+<div class="card-header">Step 1 — Maintenance</div>
+<div class="card-body">
+<p>Deduct <strong>{{ 500 * contract.scale }} SP</strong> for maintenance this month.</p>
+<form method="post">
+    <input type="hidden" name="action" value="maintenance">
+    <button class="btn btn-warning">Record Maintenance</button>
+</form>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card">
+<div class="card-header">Step 2 — Base Pay</div>
+<div class="card-body">
+<p>Receive <strong>{{ contract.calculateMonthlyBasePay() }} SP</strong> base pay.</p>
+<form method="post">
+    <input type="hidden" name="action" value="base_pay">
+    <button class="btn btn-success">Record Base Pay</button>
+</form>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card">
+<div class="card-header">Step 3 — Track Setup</div>
+<div class="card-body">
+<p>Rolls mission type, terrain, and command complication.</p>
+<form method="post">
+    <input type="hidden" name="action" value="track_setup">
+    <input type="hidden" name="month" value="{{ currentMonth }}">
+    <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" name="toftt" value="1" id="toftt">
+        <label class="form-check-label" for="toftt">Taking One for the Team</label>
+    </div>
+    <button class="btn btn-primary">Roll Track Setup</button>
+</form>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card">
+<div class="card-header">Step 4 — Post-Track Results</div>
+<div class="card-body">
+{{ form_start(postTrackForm) }}
+<input type="hidden" name="action" value="post_track">
+<input type="hidden" name="month" value="{{ currentMonth }}">
+{{ form_row(postTrackForm.combatPayTier) }}
+{{ form_row(postTrackForm.salvageClaimed) }}
+<button class="btn btn-success">Record Results</button>
+{{ form_end(postTrackForm) }}
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card">
+<div class="card-header">Step 5 — Downtime Note</div>
+<div class="card-body">
+<form method="post">
+    <input type="hidden" name="action" value="downtime">
+    <div class="mb-2">
+        <label class="form-label">Month</label>
+        <input type="number" name="month" class="form-control" value="{{ currentMonth }}">
+    </div>
+    <div class="mb-2">
+        <label class="form-label">Amount (SP)</label>
+        <input type="number" name="amount" class="form-control" value="0">
+    </div>
+    <div class="mb-2">
+        <label class="form-label">Note</label>
+        <textarea name="note" class="form-control" rows="3"></textarea>
+    </div>
+    <button class="btn btn-secondary">Add Note</button>
+</form>
+</div>
+</div>
+</div>
+
+</div>
+{% endblock %}

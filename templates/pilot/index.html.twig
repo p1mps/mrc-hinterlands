@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Pilots</h2>
+    <a href="{{ path('app_pilots_new') }}" class="btn btn-primary">Add Pilot</a>
+</div>
+<table class="table table-striped">
+<thead><tr><th>Name</th><th>Named</th><th>Gunnery</th><th>Piloting</th><th>XP</th><th>Unit</th><th></th></tr></thead>
+<tbody>
+{% for pilot in pilots %}
+<tr class="{{ thresholdAlerts[pilot.id] is defined ? 'table-warning' : '' }}">
+    <td>{{ pilot.name }}</td>
+    <td>{{ pilot.isNamed ? 'Yes' : 'No' }}</td>
+    <td>{{ pilot.gunnery }}</td>
+    <td>{{ pilot.piloting }}</td>
+    <td>{{ pilot.xp }}{% if thresholdAlerts[pilot.id] is defined %} <span class="badge bg-warning text-dark">{{ thresholdAlerts[pilot.id] }}</span>{% endif %}</td>
+    <td>{{ pilot.unit ? pilot.unit.name : '—' }}</td>
+    <td>
+        <a href="{{ path('app_pilots_edit', {id: pilot.id}) }}" class="btn btn-sm btn-secondary">Edit</a>
+        <form method="post" action="{{ path('app_pilots_delete', {id: pilot.id}) }}" class="d-inline"
+              onsubmit="return confirm('Delete this pilot?')">
+            <button class="btn btn-sm btn-danger">Del</button>
+        </form>
+    </td>
+</tr>
+{% else %}
+<tr><td colspan="7" class="text-muted">No pilots yet.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

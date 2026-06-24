@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>{{ company.name }} — Roster</h2>
+    <a href="{{ path('app_roster_new') }}" class="btn btn-primary">Add Unit</a>
+</div>
+<p><strong>Total BV:</strong> {{ totalBv }}</p>
+<table class="table table-striped">
+<thead><tr><th>Name</th><th>Chassis</th><th>Tonnage</th><th>BV</th><th>Type</th><th>Damage</th><th>Active</th><th>Pilot</th><th></th></tr></thead>
+<tbody>
+{% for unit in units %}
+<tr>
+    <td>{{ unit.name }}</td>
+    <td>{{ unit.chassis }}</td>
+    <td>{{ unit.tonnage }}</td>
+    <td>{{ unit.bv }}</td>
+    <td>{{ unit.unitType.value }}</td>
+    <td>{{ unit.damageState.value }}</td>
+    <td>{{ unit.isActive ? 'Yes' : 'No' }}</td>
+    <td>
+        <form method="post" action="{{ path('app_roster_assign_pilot', {id: unit.id}) }}" class="d-flex gap-1">
+            <select name="pilot_id" class="form-select form-select-sm">
+                <option value="">— none —</option>
+                {% for pilot in pilots %}
+                    {% if pilot.unit is null or pilot.unit.id == unit.id %}
+                        <option value="{{ pilot.id }}"
+                            {{ unit.pilot and unit.pilot.id == pilot.id ? 'selected' : '' }}>
+                            {{ pilot.name }} ({{ pilot.gunnery }}/{{ pilot.piloting }})
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <button class="btn btn-sm btn-outline-secondary">Set</button>
+        </form>
+    </td>
+    <td>
+        <a href="{{ path('app_roster_edit', {id: unit.id}) }}" class="btn btn-sm btn-secondary">Edit</a>
+        <form method="post" action="{{ path('app_roster_delete', {id: unit.id}) }}" class="d-inline"
+              onsubmit="return confirm('Delete this unit?')">
+            <button class="btn btn-sm btn-danger">Del</button>
+        </form>
+    </td>
+</tr>
+{% else %}
+<tr><td colspan="9" class="text-muted">No units yet.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h2>Edit Log Entry</h2>
+<a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
+
+{{ form_start(form, {attr: {class: 'row g-3'}}) }}
+<div class="col-md-3">{{ form_row(form.month) }}</div>
+<div class="col-md-4">{{ form_row(form.entryType) }}</div>
+<div class="col-12">{{ form_row(form.description) }}</div>
+<div class="col-12">
+    <button class="btn btn-primary">Save</button>
+</div>
+{{ form_end(form) }}
+{% endblock %}

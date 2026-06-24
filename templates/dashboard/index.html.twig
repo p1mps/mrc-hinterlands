@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h2>{{ company.name }}</h2>
+<div class="row g-3 mb-4">
+<div class="col-md-3">
+    <div class="card text-center">
+    <div class="card-body">
+        <div class="fs-1 fw-bold">{{ company.reputation }}</div>
+        <div class="text-muted">Reputation</div>
+    </div>
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="card text-center">
+    <div class="card-body">
+        <div class="fs-1 fw-bold">{{ spBalance }}</div>
+        <div class="text-muted">Support Points</div>
+    </div>
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="card text-center">
+    <div class="card-body">
+        <div class="fs-1 fw-bold">{{ totalBv }}</div>
+        <div class="text-muted">Total BV</div>
+    </div>
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="card text-center">
+    <div class="card-body">
+        <div class="fs-1 fw-bold">{{ namedPilots|length }}/4</div>
+        <div class="text-muted">Named Pilots</div>
+    </div>
+    </div>
+</div>
+</div>
+
+{% if activeContracts is not empty %}
+<h4>Active Contracts</h4>
+{% for c in activeContracts %}
+<div class="card mb-2">
+<div class="card-body d-flex justify-content-between align-items-center">
+    <div>
+        <strong>{{ c.type.value|capitalize }}</strong> — {{ c.employer }}<br>
+        <small class="text-muted">Tracks: {{ c.tracksCompleted }}/{{ c.numberOfTracks }}</small>
+    </div>
+    <a href="{{ path('app_contracts_show', {id: c.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
+</div>
+</div>
+{% endfor %}
+{% else %}
+<div class="alert alert-secondary">No active contracts. <a href="{{ path('app_contracts_generate') }}">Generate one.</a></div>
+{% endif %}
+{% endblock %}
