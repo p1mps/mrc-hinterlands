@@ -140,10 +140,6 @@ class ContractController extends AbstractController {
 
     #[Route('/{id}/edit', name: 'app_contracts_edit', methods: ['GET', 'POST'])]
     public function edit(Contract $contract, Request $request): Response {
-        $company = $this->getUser()->getCompany();
-        if ($contract->getCompany() !== $company) {
-            throw $this->createAccessDeniedException();
-        }
         $form = $this->createForm(ContractEditFormType::class, $contract);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

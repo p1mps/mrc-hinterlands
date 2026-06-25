@@ -2,8 +2,10 @@
 namespace App\Form;
 
 use App\Entity\Contract;
+use App\Entity\MercenaryCompany;
 use App\Enum\CommandRights;
 use App\Enum\ContractType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -14,6 +16,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ContractEditFormType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
+            ->add('company', EntityType::class, [
+                'class'        => MercenaryCompany::class,
+                'choice_label' => 'name',
+                'label'        => 'Claiming Player',
+                'required'     => false,
+                'placeholder'  => '— Unassigned —',
+            ])
             ->add('type', EnumType::class, ['class' => ContractType::class, 'label' => 'Contract Type'])
             ->add('employer', TextType::class)
             ->add('employerAffiliation', TextType::class, ['label' => 'Employer Affiliation'])
