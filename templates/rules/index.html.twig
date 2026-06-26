@@ -1,0 +1,235 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MRC Hinterlands — Rules{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">MRC Hinterlands League — Rules Summary</h1>
+<p class="text-muted mb-5">This is a summary of the core rules from the MRC Hinterlands League rulebook. Full rules are a supplement to <em>Hot Spots: Hinterlands</em>. Only pages 1–8 are essential for league play; the rest are additional options.</p>
+
+<div class="row g-4">
+
+    {# Building Your Force #}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Building Your Force</h5></div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li>Select a faction from the Master Unit List (<a href="https://www.masterunitlist.info" target="_blank">masterunitlist.info</a>) and choose starting units from that faction's MUL.</li>
+                    <li>Start with <strong>3000 BV</strong> to spend and <strong>3000 Support Points (SP)</strong>.</li>
+                    <li>You must select at least one Mech. You may add a second Mech, a vehicle, or two Battle Armor units.</li>
+                    <li>No aerospace units, no AE-damage units (artillery, Arrow IV), no Unique units.</li>
+                    <li>All units must come from the same IlClan faction MUL. Experimental tech is allowed.</li>
+                    <li>Each unit starts at <strong>Gunnery 4 / Piloting 5</strong> with <strong>150 XP</strong> to allocate. Battle Armor squads get 75 XP each.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {# League Play Structure #}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">League Play Structure</h5></div>
+            <div class="card-body">
+                <p>Each month a <strong>Hot Spot contract</strong> is posted in Discord. Players pair up, choose one of the two opposing contracts, and complete it. Alternatively, roll a random contract via Dobless Information Services or the MRC Contract Generator (p. 15).</p>
+                <p>A company may only receive credit for <strong>one contract per month</strong>.</p>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Downtime</dt>
+                    <dd class="col-sm-8">After each contract, players receive one month of downtime at a Hiring Hall of their choice. Downtime at a Hiring Hall costs a flat <strong>50 SP</strong> regardless of scale.</dd>
+                    <dt class="col-sm-4">Overtime</dt>
+                    <dd class="col-sm-8">If contracts for the month are complete, players may use the <em>Taking One for the Team</em> rules (HS:H p. 38) to run additional contracts with a new mercenary company.</dd>
+                    <dt class="col-sm-4">Responsibilities</dt>
+                    <dd class="col-sm-8">Players maintain their own Force record sheets. Incomplete contracts reset all accrued damage, salvage, and payments.</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    {# Reputation & Salvage #}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Reputation &amp; Salvage</h5></div>
+            <div class="card-body">
+                <p>All companies start with <strong>Reputation 1</strong>. Winning a full contract (at least half the tracks) gains +1 reputation. You never lose reputation for <em>losing</em> a contract, only for breaching it (–3) or abandoning objectives.</p>
+                <p><strong>Spending Reputation:</strong> Spend 1 reputation to shift a RAT result by ±1, or to negate a Command Complication roll. You must keep at least 1 reputation to spend.</p>
+                <p><strong>Salvage</strong> is the right to claim destroyed or crippled enemy units left on the field after a track. The victor may claim salvage if they successfully complete the track. Salvaged mechs are in their end-of-battle condition and must be repaired. If you decline salvage, the original owner may ransom the unit back.</p>
+            </div>
+        </div>
+    </div>
+
+    {# Scale Limitations & Combat Pay #}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Scale Limitations &amp; Combat Pay</h5></div>
+            <div class="card-body">
+                <p>The force you may deploy per track is capped by the contract's scale. In this league, the limit is <strong>3000 BV and 2 units per scale</strong>. Unit limits are checked once at the start of each contract.</p>
+                <p>Infantry (battle armor, conventional) may be fielded at 2-for-1 against other unit slots, but this does not bypass the BV cap.</p>
+                <p><strong>Maintenance:</strong> 500 SP × contract scale per month, paid regardless of whether a track is played.</p>
+                <p><strong>Combat Pay</strong> is paid at the end of each track (500 SP × track scale):
+                <ul class="mb-0">
+                    <li>No objectives achieved → no pay</li>
+                    <li>At least one objective, fewer Victory Points → half pay (250 × scale)</li>
+                    <li>More Victory Points than opponent → full pay (500 × scale)</li>
+                    <li>All objectives achieved → half-again pay (750 × scale)</li>
+                </ul></p>
+            </div>
+        </div>
+    </div>
+
+    {# Special Rules #}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Special Rules</h5></div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Commander</dt>
+                    <dd class="col-sm-8">Each force designates one Commander unit per track (written down, not revealed). No initiative penalty if the Commander is destroyed.</dd>
+                    <dt class="col-sm-4">Forced Withdrawal</dt>
+                    <dd class="col-sm-8">Not in effect for player-generated forces. Crippled units may not perform pickup or scan actions. Forces without a company roster (opposing force table units) do use Forced Withdrawal.</dd>
+                    <dt class="col-sm-4">Raid</dt>
+                    <dd class="col-sm-8">Mechs carrying Jump MP components must make a PSR at +3 or lose the components. All units carrying components have Run/Flank MP reduced by 1.</dd>
+                    <dt class="col-sm-4">Scanning</dt>
+                    <dd class="col-sm-8">A unit within 2 hexes (AS 4") may declare a scan instead of firing. Roll 2d6 in the End Phase — 7+ succeeds. Modifiers: +2 (no physical attack), +2 (Active Probe within 2 hexes), +2 (started within 2 hexes), –2 (used jump/VTOL MP), –2 (fired weapons, unless carrying unjammed Active Probe). A successful scan forces the defender to reveal relevant unit information.</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    {# Optional Rules #}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Optional Rules</h5></div>
+            <div class="card-body">
+                <p>Used by mutual agreement. Veteran players should defer to less experienced players. Assumed active for MRC games:</p>
+                <ul>
+                    <li>Floating Critical Hits (BMM p. 45 / TO:AR p. 75)</li>
+                    <li>Careful Stand (BMM p. 19 / TO:AR p. 22)</li>
+                    <li>Skin-of-the-teeth Ejection (BMM p. 81 / TO:AR p. 165)</li>
+                    <li>One-Armed Prone Fire (BMM p. 30 / TO:AR p. 83)</li>
+                    <li>ECCM (TO:AR p. 98–99)</li>
+                </ul>
+                <p class="mb-0"><strong>Special Munitions</strong> and Command Consoles may also be used by agreement.</p>
+            </div>
+        </div>
+    </div>
+
+    {# Vehicles and Infantry #}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Vehicles &amp; Infantry</h5></div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Full Units</dt>
+                    <dd class="col-sm-8">On the company roster with a pilot/crew. Pay all normal repair and training costs. May be salvaged. Conventional infantry is purchased in "barracks" — one barracks provides one unit per contract.</dd>
+                    <dt class="col-sm-4">Support Units</dt>
+                    <dd class="col-sm-8">Available at any track without being on the roster. Must be from the Periphery MUL, have no AE weapons, and be non-Mech/non-aerospace. Always 4/5 skill. Cannot be salvaged. Max 500 BV × scale.</dd>
+                    <dt class="col-sm-4">BSAs</dt>
+                    <dd class="col-sm-8">Battlefield Support Assets — optional for in-person or Tabletop Simulator play. Cannot be used alongside Support Units in the same track.</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    {# Time Between Tracks #}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Time Between Tracks — SP Activity Costs</h5></div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered mb-3">
+                        <thead class="table-secondary">
+                            <tr><th>Activity</th><th>Cost (Alpha Strike)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Repair (Armor damage only)</td><td>Tonnage × 0.5 (IS) / × 0.75 (Mixed/Clan)</td></tr>
+                            <tr><td>Repair (Structure/Critical damage)</td><td>Tonnage × 2 (IS) / × 3.5 (Mixed/Clan)</td></tr>
+                            <tr><td>Repair (Crippled)</td><td>Tonnage × 3 (IS) / × 4.5 (Mixed/Clan)</td></tr>
+                            <tr><td>Repair (Destroyed)</td><td>Tonnage × 5 (IS) / × 7.5 (Mixed/Clan)</td></tr>
+                            <tr><td>Reconfigure Unit</td><td>Tonnage / 2</td></tr>
+                            <tr><td>Purchase Mech</td><td>Battle Value (Point Value × 40)</td></tr>
+                            <tr><td>Sell a Mech</td><td>Battle Value / 2 (Point Value × 20)</td></tr>
+                            <tr><td>Rearm (per ton of ammo)</td><td>10 (20 for special ammo)</td></tr>
+                            <tr><td>Hire Unnamed MechWarrior/Crew</td><td>100</td></tr>
+                            <tr><td>Hire Named MechWarrior/Crew</td><td>150</td></tr>
+                            <tr><td>Heal Pilot</td><td>30 per Wound box (2 per month for AS)</td></tr>
+                            <tr><td>Heal/Replace BA Trooper</td><td>20 per trooper lost</td></tr>
+                            <tr><td>Clan Doctrine Training</td><td>200</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ul class="mb-0">
+                    <li><strong>Repair Time:</strong> Repairing a unit makes it unavailable for the rest of the month.</li>
+                    <li><strong>Truly Destroyed:</strong> A unit is truly destroyed only if its center torso internal structure is eliminated — it is gone permanently.</li>
+                    <li><strong>Named Pilots:</strong> Max 4 on roster. Earn XP (1 SP per XP, up to 200 XP × scale per track). MVP of each track earns +20 bonus XP.</li>
+                    <li><strong>Unnamed Pilots:</strong> Always cost 100 SP to hire, always Gunnery 4 / Piloting 5, cannot earn XP.</li>
+                    <li><strong>Handicap:</strong> Each named pilot has a handicap based on skill improvements. The player with the lower average handicap earns a BSP bonus equal to the handicap difference × 10.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {# Debt & Breaking Contract #}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Debt &amp; Breaking Contract</h5></div>
+            <div class="card-body">
+                <p><strong>Debt:</strong> If you can't pay maintenance or transport, you may go into debt. While in debt, SP Activities and unit training are suspended; all SP earned goes toward clearing the debt. A force cannot be in debt for more than 6 league months.</p>
+                <p>While in debt you may: sell assets, retire your force, or skip one track (–1 reputation, available once while in debt).</p>
+                <p><strong>Breaking Contract:</strong> Breaking a contract incurs a –3 reputation penalty (–1 if force is below 2/3 of the scale BV limit). The contract ends immediately — no more base pay, support, or transport coverage. The other player gains their reputation bonus for completing.</p>
+            </div>
+        </div>
+    </div>
+
+    {# Tracks Summary #}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Available Tracks</h5></div>
+            <div class="card-body">
+                <p>Tracks are the individual battles within a contract. The primary player rolls to determine which track is played each month. All tracks end when one side has no units in play, or at the turn limit.</p>
+                <ul class="mb-0">
+                    <li><strong>Straight Fight</strong> — Destroy &gt;50% of the opponent's force. Classic engagement.</li>
+                    <li><strong>Crush the Head</strong> — Target the enemy commander. Capture for maximum VP.</li>
+                    <li><strong>Secure</strong> — Control the central objective point.</li>
+                    <li><strong>Ambush</strong> — Defender hides units; attacker must scan objective hexes.</li>
+                    <li><strong>Evacuation</strong> — Attacker extracts VIPs; Defender holds the line.</li>
+                    <li><strong>Reconnaissance</strong> — Attacker scans enemy units and withdraws.</li>
+                    <li><strong>Reinforce</strong> — Attacker must break through and exit the Defender's edge.</li>
+                    <li><strong>Duel</strong> — One-on-one fight; interference by other units is penalised.</li>
+                    <li><strong>Bounding Retreat</strong> — Defender holds then withdraws in good order; Attacker routs them.</li>
+                    <li><strong>Calamity</strong> — Both sides deploy hidden; ECM is doubled, active probes disabled.</li>
+                    <li><strong>Demolition</strong> — Attacker plants demolition charges on objective buildings.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {# Contract Structure #}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Contract Structure &amp; Terms</h5></div>
+            <div class="card-body row">
+                <div class="col-md-6">
+                    <p><strong>Base Pay:</strong> 500 SP × contract scale per month.</p>
+                    <p><strong>Command Rights:</strong> Integrated (+3), House (+2), Liaison (+1), Independent (+0) — modifies Command Complication rolls.</p>
+                    <p><strong>Salvage Rights:</strong> The percentage of a salvaged unit's value you're entitled to (Exchange, 10%–80%).</p>
+                    <p><strong>Support Terms:</strong> Straight/% reduces repair costs by that percentage. Battle/% compensates for destroyed units.</p>
+                    <p><strong>Transportation Terms:</strong> 300 SP × scale per journey; the percentage listed is covered by the contract.</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Contract Types:</strong></p>
+                    <ul>
+                        <li><strong>Raid (3 months)</strong> — Quick strike contracts.</li>
+                        <li><strong>Expedition (6 months)</strong> — Extended operations away from home.</li>
+                        <li><strong>Garrison (6 months)</strong> — Defensive holding contracts.</li>
+                        <li><strong>Retainer (6 months)</strong> — Standing force on call.</li>
+                        <li><strong>Invasion (6 months)</strong> — Offensive push into enemy territory.</li>
+                    </ul>
+                    <p class="mb-0"><strong>Negotiations:</strong> Spend reputation (max 2 × scale) to shift contract step results. You may sacrifice 2 steps in one term to gain 1 step in another (twice total).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<p class="text-muted mt-4 small">For full rules, refer to the MRC Hinterlands League rulebook and <em>Hot Spots: Hinterlands</em>.</p>
+{% endblock %}
