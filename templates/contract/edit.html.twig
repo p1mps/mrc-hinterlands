@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <h2>Edit Contract — {{ contract.type.value|capitalize }}</h2>
+    <h2>Edit Contract — {{ contract.name }}</h2>
     <a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
 
     {{ form_start(form, {attr: {class: 'row g-3'}}) }}

@@ -12,11 +12,11 @@
 <div class="tab-content">
 <div class="tab-pane fade show active" id="mine">
 <table class="table table-striped">
-<thead><tr><th>Type</th><th>Employer</th><th>Scale</th><th>Status</th><th>Tracks</th><th></th></tr></thead>
+<thead><tr><th>Name</th><th>Employer</th><th>Scale</th><th>Status</th><th>Tracks</th><th></th></tr></thead>
 <tbody>
 {% for c in myContracts %}
 <tr>
-    <td>{{ c.type.value }}</td>
+    <td>{{ c.name }}</td>
     <td>{{ c.employer }}</td>
     <td>{{ c.scale }}</td>
     <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
@@ -37,11 +37,11 @@
 </div>
 <div class="tab-pane fade" id="pool">
 <table class="table table-striped">
-<thead><tr><th>Type</th><th>Employer</th><th>Affiliation</th><th>Tracks</th><th></th></tr></thead>
+<thead><tr><th>Name</th><th>Employer</th><th>Affiliation</th><th>Tracks</th><th></th></tr></thead>
 <tbody>
 {% for c in opposingPool %}
 <tr>
-    <td>{{ c.type.value }}</td>
+    <td>{{ c.name }}</td>
     <td>{{ c.employer }}</td>
     <td>{{ c.employerAffiliation }}</td>
     <td>{{ c.numberOfTracks }}</td>

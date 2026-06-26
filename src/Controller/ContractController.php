@@ -56,6 +56,7 @@ class ContractController extends AbstractController {
         $primary->setIsOpposing(false);
         $primary->setStatus(ContractStatus::Active);
         $primary->setType(ContractType::from($p['type']));
+        $primary->setName(ContractType::from($p['type'])->value);
         $primary->setEmployer($p['employer']);
         $primary->setEmployerAffiliation($p['affiliation']);
         $primary->setScale((int) $p['scale']);
@@ -75,6 +76,7 @@ class ContractController extends AbstractController {
         $opposing->setIsOpposing(true);
         $opposing->setStatus(ContractStatus::Available);
         $opposing->setType($oppData['type']);
+        $opposing->setName($oppData['type']->value);
         $opposing->setEmployer($oppData['employer']);
         $opposing->setEmployerAffiliation($oppData['affiliation']);
         $opposing->setScale($primary->getScale());
