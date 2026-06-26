@@ -72,6 +72,9 @@ class Contract {
     private ContractStatus $status = ContractStatus::Available;
 
     #[ORM\Column(length: 255, nullable: true)]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $planet = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -149,6 +152,9 @@ class Contract {
 
     public function getStatus(): ContractStatus { return $this->status; }
     public function setStatus(ContractStatus $status): static { $this->status = $status; return $this; }
+
+    public function getName(): ?string { return $this->name; }
+    public function setName(?string $name): static { $this->name = $name; return $this; }
 
     public function getPlanet(): ?string { return $this->planet; }
     public function setPlanet(?string $planet): static { $this->planet = $planet; return $this; }

@@ -34,6 +34,7 @@ class ContractEditFormType extends AbstractType {
             ->add('salvageRights', TextType::class, ['label' => 'Salvage Rights'])
             ->add('transportTerms', TextType::class, ['label' => 'Transport Terms'])
             ->add('numberOfTracks', IntegerType::class, ['label' => 'Number of Tracks'])
+            ->add('name', TextType::class, ['label' => 'Contract Name', 'required' => false])
             ->add('planet', TextType::class, ['required' => false])
             ->add('intensity', TextType::class, ['required' => false]);
     }
