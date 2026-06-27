@@ -126,9 +126,9 @@ class ContractLogController extends AbstractController {
             $currentMonth = 1;
         } else {
             if ($action == 'maintenance') {
-                $currentMonth = $lastMaintenanceContractEntry->getMonth() + 1;
+                $currentMonth = $lastMaintenanceContractEntry->getMonth() + 100;
             } else {
-                $currentMonth = $lastMaintenanceContractEntry->getMonth();
+                $currentMonth = $lastMaintenanceContractEntry->getMonth() + 10;
             }
         }
 
