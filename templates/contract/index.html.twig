@@ -20,7 +20,7 @@
     <tbody>
     {% for c in contracts %}
     <tr>
-        <td>{{ c.name }}</td>
+        <td>{{ (c.type.value ?? c.name) | capitalize }}</td>
         <td>{{ c.employer }}</td>
         <td>{{ c.scale }}</td>
         <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
