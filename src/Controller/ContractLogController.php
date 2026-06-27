@@ -157,7 +157,18 @@ class ContractLogController extends AbstractController {
 
         $log = new ContractLogEntry();
         $log->setContract($contract);
-        $log->setMonth($contract->getTracksCompleted() + 1);
+        $repo = $this->em->getRepository(ContractLogEntry::class);
+        $maintenanceContractEntries = $repo->findBy([
+            'contract_id' => $contract->getId(),
+            'type' => 'maintenance'
+        ]);
+
+        if ($maintenanceContractEntries) {
+            $log->setMonth($log->getMonth() + 1);
+        } else {
+            $log->setMonth($contract->getTracksCompleted() + 1);
+        }
+
         $log->setEntryType(ContractLogEntryType::Maintenance);
         $log->setDescription("Maintenance deducted: $amount SP");
         $this->em->persist($log);
