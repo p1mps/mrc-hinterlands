@@ -89,7 +89,7 @@ class ContractLogController extends AbstractController {
                 $this->handleTransport($contract, $company, (int) $request->request->get('jumps', 0));
                 $this->addFlash('success', 'Transport recorded.');
             } elseif ($action === 'maintenance') {
-                $this->handleMaintenance($contract, $company);
+                $this->handleMaintenance($contract, $company, (int) $request->request->get('month'));
                 $this->addFlash('success', 'Maintenance recorded.');
             } elseif ($action === 'base_pay') {
                 $this->handleBasePay($contract, $company, (int) $request->request->get('month'));
@@ -160,7 +160,7 @@ class ContractLogController extends AbstractController {
         $this->em->flush();
     }
 
-    private function handleMaintenance(Contract $contract, $company): void {
+    private function handleMaintenance(Contract $contract, $company, int $month): void {
         $amount = -500 * $contract->getScale();
         $sp = new SupportPointEntry();
         $sp->setCompany($company);
@@ -170,6 +170,7 @@ class ContractLogController extends AbstractController {
 
         $log = new ContractLogEntry();
         $log->setContract($contract);
+        $log->setMonth($month);
         $log->setEntryType(ContractLogEntryType::Maintenance);
         $log->setDescription("Maintenance deducted: $amount SP");
         $this->em->persist($log);
