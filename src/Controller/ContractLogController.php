@@ -92,7 +92,7 @@ class ContractLogController extends AbstractController {
                 $this->handleMaintenance($contract, $company);
                 $this->addFlash('success', 'Maintenance recorded.');
             } elseif ($action === 'base_pay') {
-                $this->handleBasePay($contract, $company);
+                $this->handleBasePay($contract, $company, (int) $request->request->get('month'));
                 $this->addFlash('success', 'Base pay recorded.');
             } elseif ($action === 'track_setup') {
                 $toftt = (bool) $request->request->get('toftt', false);
@@ -115,7 +115,20 @@ class ContractLogController extends AbstractController {
             return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
         }
 
-        $currentMonth = $contract->getTracksCompleted() + 1;
+        $repo = $this->em->getRepository(ContractLogEntry::class);
+        $lastMaintenanceContractEntry = $repo->findOneBy([
+            'contract' => $contract,
+            'entryType' => 'maintenance'
+        ],
+            ['createdAt' => 'DESC']
+        );
+
+        if ($lastMaintenanceContractEntry) {
+            $currentMonth = $lastMaintenanceContractEntry->getMonth() + 1;
+        } else {
+            $currentMonth = $contract->getTracksCompleted() + 1;
+        }
+
         return $this->render('contract_log/add.html.twig', [
             'contract'      => $contract,
             'currentMonth'  => $currentMonth,
@@ -157,27 +170,13 @@ class ContractLogController extends AbstractController {
 
         $log = new ContractLogEntry();
         $log->setContract($contract);
-        $repo = $this->em->getRepository(ContractLogEntry::class);
-        $lastMaintenanceContractEntry = $repo->findOneBy([
-            'contract' => $contract,
-            'entryType' => 'maintenance'
-        ],
-            ['createdAt' => 'DESC']
-        );
-
-        if ($lastMaintenanceContractEntry) {
-            $log->setMonth($lastMaintenanceContractEntry->getMonth() + 1);
-        } else {
-            $log->setMonth($contract->getTracksCompleted() + 1);
-        }
-
         $log->setEntryType(ContractLogEntryType::Maintenance);
         $log->setDescription("Maintenance deducted: $amount SP");
         $this->em->persist($log);
         $this->em->flush();
     }
 
-    private function handleBasePay(Contract $contract, $company): void {
+    private function handleBasePay(Contract $contract, $company, int $month): void {
         $amount = $contract->calculateMonthlyBasePay();
         $sp = new SupportPointEntry();
         $sp->setCompany($company);
@@ -187,7 +186,8 @@ class ContractLogController extends AbstractController {
 
         $log = new ContractLogEntry();
         $log->setContract($contract);
-        $log->setMonth($contract->getTracksCompleted() + 1);
+
+        $log->setMonth($month);
         $log->setEntryType(ContractLogEntryType::BasePay);
         $log->setDescription("Base pay received: +$amount SP");
         $this->em->persist($log);
