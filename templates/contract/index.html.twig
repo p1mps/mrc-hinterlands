@@ -5,60 +5,40 @@
     <a href="{{ path('app_contracts_generate') }}" class="btn btn-primary">Generate Contract</a>
 </div>
 
-<ul class="nav nav-tabs mb-3">
-    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#mine">My Contracts</a></li>
-    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#pool">Open Opposing Pool</a></li>
-</ul>
-<div class="tab-content">
-<div class="tab-pane fade show active" id="mine">
 <table class="table table-striped">
-<thead><tr><th>Name</th><th>Employer</th><th>Scale</th><th>Status</th><th>Tracks</th><th></th></tr></thead>
-<tbody>
-{% for c in myContracts %}
-<tr>
-    <td>{{ c.name }}</td>
-    <td>{{ c.employer }}</td>
-    <td>{{ c.scale }}</td>
-    <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
-    <td>{{ c.tracksCompleted }}/{{ c.numberOfTracks }}</td>
-    <td>
-        <a href="{{ path('app_contracts_show', {id: c.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
-        <form method="post" action="{{ path('app_contracts_delete', {id: c.id}) }}" class="d-inline"
-              onsubmit="return confirm('Delete this contract?')">
-            <button class="btn btn-sm btn-danger">Del</button>
-        </form>
-    </td>
-</tr>
-{% else %}
-<tr><td colspan="6" class="text-muted">No contracts yet.</td></tr>
-{% endfor %}
-</tbody>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Employer</th>
+            <th>Scale</th>
+            <th>Status</th>
+            <th>Tracks</th>
+            <th>Claimed By</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for c in contracts %}
+    <tr>
+        <td>{{ c.name }}</td>
+        <td>{{ c.employer }}</td>
+        <td>{{ c.scale }}</td>
+        <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
+        <td>{{ c.tracksCompleted }}/{{ c.numberOfTracks }}</td>
+        <td>{{ c.company ? c.company.name : '—' }}</td>
+        <td>
+            <a href="{{ path('app_contracts_show', {id: c.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
+            {% if c.company == userCompany %}
+            <form method="post" action="{{ path('app_contracts_delete', {id: c.id}) }}" class="d-inline"
+                  onsubmit="return confirm('Delete this contract?')">
+                <button class="btn btn-sm btn-danger">Del</button>
+            </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="text-muted">No contracts yet.</td></tr>
+    {% endfor %}
+    </tbody>
 </table>
-</div>
-<div class="tab-pane fade" id="pool">
-<table class="table table-striped">
-<thead><tr><th>Name</th><th>Employer</th><th>Affiliation</th><th>Tracks</th><th></th></tr></thead>
-<tbody>
-{% for c in opposingPool %}
-<tr>
-    <td>{{ c.name }}</td>
-    <td>{{ c.employer }}</td>
-    <td>{{ c.employerAffiliation }}</td>
-    <td>{{ c.numberOfTracks }}</td>
-    <td>
-        {% if c.linkedContract %}
-        <a href="{{ path('app_contracts_show', {id: c.linkedContract.id}) }}" class="btn btn-sm btn-outline-secondary">View Primary</a>
-        {% endif %}
-        <form method="post" action="{{ path('app_contracts_claim', {id: c.id}) }}" class="d-inline">
-            <button class="btn btn-sm btn-success">Claim</button>
-        </form>
-    </td>
-</tr>
-{% else %}
-<tr><td colspan="5" class="text-muted">No opposing contracts available.</td></tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
-</div>
 {% endblock %}

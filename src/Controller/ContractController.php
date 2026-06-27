@@ -22,19 +22,13 @@ class ContractController extends AbstractController {
 
     #[Route('', name: 'app_contracts')]
     public function index(): Response {
-        $company = $this->getUser()->getCompany();
-        $myContracts = $this->em->getRepository(Contract::class)->findBy(
-            ['company' => $company],
+        $contracts = $this->em->getRepository(Contract::class)->findBy(
+            [],
             ['createdAt' => 'DESC']
         );
-        $opposingPool = $this->em->getRepository(Contract::class)->findBy([
-            'company'    => null,
-            'isOpposing' => true,
-            'status'     => ContractStatus::Available,
-        ]);
         return $this->render('contract/index.html.twig', [
-            'myContracts'  => $myContracts,
-            'opposingPool' => $opposingPool,
+            'contracts'   => $contracts,
+            'userCompany' => $this->getUser()->getCompany(),
         ]);
     }
 
