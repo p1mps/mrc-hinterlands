@@ -159,7 +159,7 @@ class ContractLogController extends AbstractController {
         $log->setContract($contract);
         $repo = $this->em->getRepository(ContractLogEntry::class);
         $maintenanceContractEntries = $repo->findBy([
-            'contract_id' => $contract->getId(),
+            'contract' => $contract,
             'type' => 'maintenance'
         ]);
 
