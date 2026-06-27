@@ -1,8 +1,51 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<h2>Add Log Entry — {{ contract.type.value|capitalize }}</h2>
+<h2>Add Log Entry — {{ contract.name }}</h2>
 <p><strong>Month:</strong> {{ currentMonth }} &nbsp; <strong>Tracks:</strong> {{ contract.tracksCompleted }}/{{ contract.numberOfTracks }}</p>
 <a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
+
+{% set transportFull = 300 * contract.scale %}
+{% set transportPct = contract.parseTransportPercent() %}
+{% set transportEmployer = (transportFull * transportPct / 100)|round|int %}
+{% set transportPlayer = transportFull - transportEmployer %}
+{% set supportPct = contract.parseSupportPercent() %}
+{% set supportType = contract.getSupportType() %}
+
+<div class="card mb-4 border-primary">
+    <div class="card-header bg-primary text-white">Contract Terms</div>
+    <div class="card-body">
+        <div class="row text-center">
+            <div class="col">
+                <div class="fw-bold">Base Pay</div>
+                <div class="fs-5">{{ contract.basePayPercent is not null ? contract.basePayPercent ~ '%' : '—' }}</div>
+                <div class="text-muted small">= {{ contract.calculateMonthlyBasePay() }} SP/month</div>
+            </div>
+            <div class="col">
+                <div class="fw-bold">Transport</div>
+                <div class="fs-5">{{ transportPct > 0 ? transportPct ~ '%' : '—' }}</div>
+                <div class="text-muted small">employer covers {{ transportEmployer }} of {{ transportFull }} SP</div>
+            </div>
+            <div class="col">
+                <div class="fw-bold">Support</div>
+                <div class="fs-5">{{ contract.supportTerms }}</div>
+                <div class="text-muted small">
+                    {% if supportType == 'Straight' %}employer covers {{ supportPct }}% of repairs
+                    {% elseif supportType == 'Battle' %}{{ supportPct }}% compensation on loss
+                    {% else %}none{% endif %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="fw-bold">Salvage</div>
+                <div class="fs-5">{{ contract.salvageRights }}</div>
+            </div>
+            <div class="col">
+                <div class="fw-bold">Maintenance</div>
+                <div class="fs-5">{{ 500 * contract.scale }} SP</div>
+                <div class="text-muted small">per month</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row g-3">
 
@@ -10,12 +53,11 @@
 <div class="card">
 <div class="card-header">Step 0 — Transport</div>
 <div class="card-body">
+<p>Full cost: <strong>{{ transportFull }} SP</strong> (300 × scale {{ contract.scale }})</p>
+<p>Employer covers: <strong>{{ transportPct }}%</strong>{% if transportPct > 0 %} = +{{ transportEmployer }} SP{% endif %}</p>
+<p>Player pays: <strong>-{{ transportPlayer }} SP</strong></p>
 <form method="post">
     <input type="hidden" name="action" value="transport">
-    <div class="mb-2">
-        <label class="form-label">Amount (SP)</label>
-        <input type="number" name="amount" class="form-control" value="-300">
-    </div>
     <button class="btn btn-info">Record Transport</button>
 </form>
 </div>
@@ -26,7 +68,8 @@
 <div class="card">
 <div class="card-header">Step 1 — Maintenance</div>
 <div class="card-body">
-<p>Deduct <strong>{{ 500 * contract.scale }} SP</strong> for maintenance this month.</p>
+<p>Deduct <strong>{{ 500 * contract.scale }} SP</strong> for maintenance this month (500 × scale {{ contract.scale }}).</p>
+<p class="text-muted small">Not reduced by support terms — maintenance is always paid in full.</p>
 <form method="post">
     <input type="hidden" name="action" value="maintenance">
     <button class="btn btn-warning">Record Maintenance</button>
@@ -39,7 +82,8 @@
 <div class="card">
 <div class="card-header">Step 2 — Base Pay</div>
 <div class="card-body">
-<p>Receive <strong>{{ contract.calculateMonthlyBasePay() }} SP</strong> base pay.</p>
+<p>Base pay rate: <strong>{{ contract.basePayPercent }}%</strong> × 500 SP × scale {{ contract.scale }}</p>
+<p>Receive: <strong>+{{ contract.calculateMonthlyBasePay() }} SP</strong></p>
 <form method="post">
     <input type="hidden" name="action" value="base_pay">
     <button class="btn btn-success">Record Base Pay</button>
@@ -83,7 +127,7 @@
 
 <div class="col-md-6">
 <div class="card">
-<div class="card-header">Step 5 — Downtime Note</div>
+<div class="card-header">Step 5 — Downtime / Activity</div>
 <div class="card-body">
 <form method="post">
     <input type="hidden" name="action" value="downtime">
@@ -92,8 +136,10 @@
         <input type="number" name="month" class="form-control" value="{{ currentMonth }}">
     </div>
     <div class="mb-2">
-        <label class="form-label">Amount (SP)</label>
-        <input type="number" name="amount" class="form-control" value="0">
+        <label class="form-label">Gross cost (SP) <span class="text-muted small">— positive = expense, negative = income</span></label>
+        <input type="number" id="grossAmount" class="form-control" value="0" oninput="calcDowntime(this.value)">
+        <input type="hidden" name="amount" id="netAmount" value="0">
+        <div id="downtimeBreakdown" class="mt-2"></div>
     </div>
     <div class="mb-2">
         <label class="form-label">Note</label>
@@ -106,4 +152,40 @@
 </div>
 
 </div>
+
+<script>
+function calcDowntime(rawValue) {
+    const gross = parseInt(rawValue) || 0;
+    const supportPct = {{ supportPct }};
+    const supportType = '{{ supportType }}';
+    const el = document.getElementById('downtimeBreakdown');
+    const netField = document.getElementById('netAmount');
+
+    if (gross === 0) {
+        el.innerHTML = '';
+        netField.value = 0;
+        return;
+    }
+
+    if (supportType === 'Straight' && supportPct > 0 && gross > 0) {
+        const employerCovers = Math.round(gross * supportPct / 100);
+        const playerPays = gross - employerCovers;
+        el.innerHTML =
+            '<table class="table table-sm table-bordered mb-0 small">' +
+            '<tr><td>Gross cost</td><td class="text-end">' + gross + ' SP</td></tr>' +
+            '<tr class="table-success"><td>Employer covers (' + supportPct + '%)</td><td class="text-end">+' + employerCovers + ' SP</td></tr>' +
+            '<tr class="table-warning fw-bold"><td>You pay</td><td class="text-end">-' + playerPays + ' SP</td></tr>' +
+            '</table>';
+        netField.value = -playerPays;
+    } else {
+        const sign = gross > 0 ? '-' : '+';
+        const abs = Math.abs(gross);
+        el.innerHTML =
+            '<table class="table table-sm table-bordered mb-0 small">' +
+            '<tr class="fw-bold"><td>SP change</td><td class="text-end">' + sign + abs + ' SP</td></tr>' +
+            '</table>';
+        netField.value = gross > 0 ? -gross : gross;
+    }
+}
+</script>
 {% endblock %}

@@ -170,6 +170,29 @@ class Contract {
     public function getTrackRecords(): Collection { return $this->trackRecords; }
     public function getLogEntries(): Collection { return $this->logEntries; }
 
+    public function parseTransportPercent(): int {
+        if (!$this->transportTerms || $this->transportTerms === '—') return 0;
+        return (int) rtrim($this->transportTerms, '%');
+    }
+
+    public function calculateNetTransportCost(): int {
+        $full = 300 * $this->scale;
+        $pct  = $this->parseTransportPercent();
+        return (int) round($full * (1 - $pct / 100));
+    }
+
+    public function parseSupportPercent(): int {
+        if (!$this->supportTerms || $this->supportTerms === 'None') return 0;
+        if (preg_match('/(\d+)%/', $this->supportTerms, $m)) return (int) $m[1];
+        return 0;
+    }
+
+    public function getSupportType(): string {
+        if (str_starts_with($this->supportTerms ?? '', 'Straight')) return 'Straight';
+        if (str_starts_with($this->supportTerms ?? '', 'Battle')) return 'Battle';
+        return 'None';
+    }
+
     public function calculateMonthlyBasePay(): int {
         if ($this->basePayPercent === null) return 0;
         return (int) round(500 * $this->scale * ($this->basePayPercent / 100));

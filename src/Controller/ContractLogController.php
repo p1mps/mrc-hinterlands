@@ -74,7 +74,7 @@ class ContractLogController extends AbstractController {
             $action = $request->request->get('action');
 
             if ($action === 'transport') {
-                $this->handleTransport($contract, $company, (int) $request->request->get('amount', -300));
+                $this->handleTransport($contract, $company);
                 $this->addFlash('success', 'Transport recorded.');
             } elseif ($action === 'maintenance') {
                 $this->handleMaintenance($contract, $company);
@@ -111,18 +111,26 @@ class ContractLogController extends AbstractController {
         ]);
     }
 
-    private function handleTransport(Contract $contract, $company, int $amount): void {
+    private function handleTransport(Contract $contract, $company): void {
+        $full          = 300 * $contract->getScale();
+        $pct           = $contract->parseTransportPercent();
+        $employerShare = (int) round($full * $pct / 100);
+        $playerPays    = $full - $employerShare;
+
         $sp = new SupportPointEntry();
         $sp->setCompany($company);
-        $sp->setAmount($amount);
+        $sp->setAmount(-$playerPays);
         $sp->setDescription("Transport (scale {$contract->getScale()})");
         $this->em->persist($sp);
 
+        $pctNote = $pct > 0
+            ? " — employer covers {$pct}% (+{$employerShare} SP)"
+            : '';
         $log = new ContractLogEntry();
         $log->setContract($contract);
         $log->setMonth($contract->getTracksCompleted() + 1);
         $log->setEntryType(ContractLogEntryType::Transport);
-        $log->setDescription("Transport: " . ($amount >= 0 ? "+$amount" : "$amount") . " SP");
+        $log->setDescription("Transport: -{$full} SP total{$pctNote} → player pays -{$playerPays} SP");
         $this->em->persist($log);
         $this->em->flush();
     }
