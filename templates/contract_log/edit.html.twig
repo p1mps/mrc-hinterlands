@@ -6,6 +6,26 @@
 {{ form_start(form, {attr: {class: 'row g-3'}}) }}
 <div class="col-md-3">{{ form_row(form.month) }}</div>
 <div class="col-md-4">{{ form_row(form.entryType) }}</div>
+
+{% if entry.entryType.value == 'track_setup' and entry.track %}
+<div class="col-md-5">
+    <label class="form-label">Mission Type</label>
+    <select name="missionType" class="form-select">
+        {% for mission in missionTypes %}
+        <option value="{{ mission }}" {% if mission == entry.track.missionType %}selected{% endif %}>{{ mission }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="col-md-5">
+    <label class="form-label">Terrain</label>
+    <select name="terrain" class="form-select">
+        {% for terrain in terrains %}
+        <option value="{{ terrain }}" {% if terrain == entry.track.terrain %}selected{% endif %}>{{ terrain }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endif %}
+
 <div class="col-12">{{ form_row(form.description) }}</div>
 <div class="col-12">
     <button class="btn btn-primary">Save</button>

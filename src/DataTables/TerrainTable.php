@@ -19,4 +19,25 @@ class TerrainTable {
     public static function lookup(int $roll): array {
         return self::TABLE[$roll] ?? throw new \InvalidArgumentException("Invalid roll: $roll");
     }
+
+    public static function getAllTerrains(): array {
+        $seen = [];
+        $terrains = [];
+        foreach (self::TABLE as $row) {
+            if (!in_array($row['terrain'], $seen, true)) {
+                $seen[] = $row['terrain'];
+                $terrains[$row['terrain']] = $row['setting'];
+            }
+        }
+        return $terrains;
+    }
+
+    public static function getSettingByTerrain(string $terrain): string {
+        foreach (self::TABLE as $row) {
+            if ($row['terrain'] === $terrain) {
+                return $row['setting'];
+            }
+        }
+        return $terrain;
+    }
 }

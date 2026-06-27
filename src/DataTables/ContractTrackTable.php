@@ -15,4 +15,14 @@ class ContractTrackTable {
         return self::TABLE[$type->value][$roll]
             ?? throw new \InvalidArgumentException("Invalid type/roll: {$type->value}/$roll");
     }
+
+    public static function getAllMissionTypes(): array {
+        $all = [];
+        foreach (self::TABLE as $missions) {
+            foreach ($missions as $mission) {
+                $all[$mission] = true;
+            }
+        }
+        return array_keys($all);
+    }
 }

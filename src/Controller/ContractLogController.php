@@ -7,6 +7,8 @@ use App\Entity\SupportPointEntry;
 use App\Entity\TrackRecord;
 use App\Enum\ContractLogEntryType;
 use App\Enum\TrackStatus;
+use App\DataTables\ContractTrackTable;
+use App\DataTables\TerrainTable;
 use App\Form\ContractLogEntryEditFormType;
 use App\Form\PostTrackFormType;
 use App\Service\ContractGeneratorService;
@@ -35,14 +37,31 @@ class ContractLogController extends AbstractController {
         $form = $this->createForm(ContractLogEntryEditFormType::class, $entry);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($entry->getEntryType() === ContractLogEntryType::TrackSetup && $entry->getTrack() !== null) {
+                $track       = $entry->getTrack();
+                $missionType = $request->request->get('missionType', $track->getMissionType());
+                $terrain     = $request->request->get('terrain', $track->getTerrain());
+                $track->setMissionType($missionType);
+                $track->setTerrain($terrain);
+                $terrainSetting = TerrainTable::getSettingByTerrain($terrain);
+                $tofttLabel     = $track->isTakingOneForTeam() ? ' [TOFTT]' : '';
+                $entry->setDescription("Track {$track->getTrackNumber()}: {$missionType} on {$terrain} (MegaMek: {$terrainSetting}){$tofttLabel}");
+                $data = $entry->getData() ?? [];
+                $data['missionType']    = $missionType;
+                $data['terrain']        = $terrain;
+                $data['terrainSetting'] = $terrainSetting;
+                $entry->setData($data);
+            }
             $this->em->flush();
             $this->addFlash('success', 'Log entry updated.');
             return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
         }
         return $this->render('contract_log/edit.html.twig', [
-            'contract' => $contract,
-            'entry'    => $entry,
-            'form'     => $form,
+            'contract'     => $contract,
+            'entry'        => $entry,
+            'form'         => $form,
+            'missionTypes' => ContractTrackTable::getAllMissionTypes(),
+            'terrains'     => array_keys(TerrainTable::getAllTerrains()),
         ]);
     }
 
