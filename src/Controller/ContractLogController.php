@@ -83,15 +83,33 @@ class ContractLogController extends AbstractController {
         $postTrackForm = $this->createForm(PostTrackFormType::class);
         $action = $request->request->get('action');
 
+        $repo = $this->em->getRepository(ContractLogEntry::class);
+        $lastMaintenanceContractEntry = $repo->findOneBy([
+            'contract' => $contract,
+            'entryType' => ContractLogEntryType::Maintenance
+        ],
+            ['createdAt' => 'DESC']
+        );
+
+        if (empty($lastMaintenanceContractEntry)) {
+            $currentMonth = 1;
+        } else {
+            if ($action == 'maintenance') {
+                $currentMonth = $lastMaintenanceContractEntry->getMonth() + 1;
+            } else {
+                $currentMonth = $lastMaintenanceContractEntry->getMonth();
+            }
+        }
+
         if ($request->isMethod('POST')) {
             if ($action === 'transport') {
                 $this->handleTransport($contract, $company, (int) $request->request->get('jumps', 0));
                 $this->addFlash('success', 'Transport recorded.');
             } elseif ($action === 'maintenance') {
-                $this->handleMaintenance($contract, $company, (int) $request->request->get('month'));
+                $this->handleMaintenance($contract, $company, $currentMonth);
                 $this->addFlash('success', 'Maintenance recorded.');
             } elseif ($action === 'base_pay') {
-                $this->handleBasePay($contract, $company, (int) $request->request->get('month'));
+                $this->handleBasePay($contract, $company, $currentMonth);
                 $this->addFlash('success', 'Base pay recorded.');
             } elseif ($action === 'track_setup') {
                 $toftt = (bool) $request->request->get('toftt', false);
@@ -112,24 +130,6 @@ class ContractLogController extends AbstractController {
             }
 
             return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
-        }
-
-        $repo = $this->em->getRepository(ContractLogEntry::class);
-        $lastMaintenanceContractEntry = $repo->findOneBy([
-            'contract' => $contract,
-            'entryType' => ContractLogEntryType::Maintenance
-        ],
-            ['createdAt' => 'DESC']
-        );
-
-        if (empty($lastMaintenanceContractEntry)) {
-            $currentMonth = 1;
-        } else {
-            if ($action == 'maintenance') {
-                $currentMonth = $lastMaintenanceContractEntry->getMonth() + 100;
-            } else {
-                $currentMonth = $lastMaintenanceContractEntry->getMonth() + 10;
-            }
         }
 
         return $this->render('contract_log/add.html.twig', [
