@@ -127,6 +127,7 @@ class ContractLogController extends AbstractController {
         } else {
             if ($action == 'maintenance') {
                 $currentMonth = $lastMaintenanceContractEntry->getMonth() + 1;
+                $this->addFlash('success', (string) $lastMaintenanceContractEntry->getMonth());
             } else {
                 $currentMonth = $lastMaintenanceContractEntry->getMonth();
             }
