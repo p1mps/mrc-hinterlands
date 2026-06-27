@@ -67,7 +67,9 @@ class ContractLogController extends AbstractController {
         $entry = $this->em->getRepository(ContractLogEntry::class)->find($entryId);
         if ($entry && $entry->getContract() === $contract) {
             $this->em->remove($entry);
-            $contract->setTracksCompleted($contract->getTracksCompleted() - 1);
+            if ($contract->getTracksCompleted() > 0) {
+                $contract->setTracksCompleted($contract->getTracksCompleted() - 1);
+            }
             $this->em->flush();
             $this->addFlash('success', 'Log entry deleted.');
         }
