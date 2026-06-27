@@ -81,10 +81,9 @@ class ContractLogController extends AbstractController {
         $company = $this->getUser()->getCompany();
 
         $postTrackForm = $this->createForm(PostTrackFormType::class);
+        $action = $request->request->get('action');
 
         if ($request->isMethod('POST')) {
-            $action = $request->request->get('action');
-
             if ($action === 'transport') {
                 $this->handleTransport($contract, $company, (int) $request->request->get('jumps', 0));
                 $this->addFlash('success', 'Transport recorded.');
@@ -123,10 +122,14 @@ class ContractLogController extends AbstractController {
             ['createdAt' => 'DESC']
         );
 
-        if ($lastMaintenanceContractEntry) {
-            $currentMonth = $lastMaintenanceContractEntry->getMonth() + 1;
+        if (empty($lastMaintenanceContractEntry)) {
+            $currentMonth = 1;
         } else {
-            $currentMonth = $contract->getTracksCompleted() + 1;
+            if ($action == 'maintenance') {
+                $currentMonth = $lastMaintenanceContractEntry->getMonth() + 1;
+            } else {
+                $currentMonth = $lastMaintenanceContractEntry->getMonth();
+            }
         }
 
         return $this->render('contract_log/add.html.twig', [
