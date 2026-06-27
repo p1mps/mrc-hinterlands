@@ -160,9 +160,10 @@ class ContractLogController extends AbstractController {
         $repo = $this->em->getRepository(ContractLogEntry::class);
         $lastMaintenanceContractEntry = $repo->findOneBy([
             'contract' => $contract,
-            'entryType' => 'maintenance',
-            ['createdAt' => 'DESC'],
-        ]);
+            'entryType' => 'maintenance'
+        ],
+            ['createdAt' => 'DESC']
+        );
 
         if ($lastMaintenanceContractEntry) {
             $log->setMonth($lastMaintenanceContractEntry->getMonth() + 1);
