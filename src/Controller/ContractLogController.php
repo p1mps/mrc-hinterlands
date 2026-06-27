@@ -69,6 +69,9 @@ class ContractLogController extends AbstractController {
             if ($contract->getTracksCompleted() > 0 && $entry->getEntryType()->value == 'post_track') {
                 $contract->setTracksCompleted($contract->getTracksCompleted() - 1);
             }
+            if ($entry->getSupportPointEntry() !== null) {
+                $this->em->remove($entry->getSupportPointEntry());
+            }
             $this->em->remove($entry);
             $this->em->flush();
             $this->addFlash('success', 'Log entry deleted.');
@@ -159,6 +162,7 @@ class ContractLogController extends AbstractController {
         $log->setMonth($contract->getTracksCompleted() + 1);
         $log->setEntryType(ContractLogEntryType::Transport);
         $log->setDescription("Transport: 50 + (50 × {$jumps}) = {$full} SP total{$pctNote} → player pays -{$playerPays} SP");
+        $log->setSupportPointEntry($sp);
         $this->em->persist($log);
         $this->em->flush();
     }
@@ -176,6 +180,7 @@ class ContractLogController extends AbstractController {
         $log->setMonth($month);
         $log->setEntryType(ContractLogEntryType::Maintenance);
         $log->setDescription("Maintenance deducted: $amount SP");
+        $log->setSupportPointEntry($sp);
         $this->em->persist($log);
         $this->em->flush();
     }
@@ -194,6 +199,7 @@ class ContractLogController extends AbstractController {
         $log->setMonth($month);
         $log->setEntryType(ContractLogEntryType::BasePay);
         $log->setDescription("Base pay received: +$amount SP");
+        $log->setSupportPointEntry($sp);
         $this->em->persist($log);
         $this->em->flush();
     }
@@ -240,6 +246,7 @@ class ContractLogController extends AbstractController {
             $combatPay = (int) floor($combatPay / 2);
         }
 
+        $sp = null;
         if ($combatPay > 0) {
             $sp = new SupportPointEntry();
             $sp->setCompany($company);
@@ -269,11 +276,15 @@ class ContractLogController extends AbstractController {
         $log->setMonth($month);
         $log->setEntryType(ContractLogEntryType::PostTrack);
         $log->setDescription("Combat pay: " . ($combatPay > 0 ? "+$combatPay SP" : "none") . " ({$tier->value}){$tofttNote}. $salvageNote");
+        if ($sp) {
+            $log->setSupportPointEntry($sp);
+        }
         $this->em->persist($log);
         $this->em->flush();
     }
 
     private function handleDowntime(Contract $contract, $company, int $month, string $note, int $amount = 0): void {
+        $sp = null;
         if ($amount !== 0) {
             $sp = new SupportPointEntry();
             $sp->setCompany($company);
@@ -288,6 +299,9 @@ class ContractLogController extends AbstractController {
         $log->setMonth($month);
         $log->setEntryType(ContractLogEntryType::Downtime);
         $log->setDescription(($note ?: '(no note)') . $amountNote);
+        if ($sp) {
+            $log->setSupportPointEntry($sp);
+        }
         $this->em->persist($log);
         $this->em->flush();
     }

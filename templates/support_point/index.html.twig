@@ -20,7 +20,14 @@
 {% set running = running + entry.amount %}
 <tr class="{{ entry.amount > 0 ? 'table-success' : 'table-danger' }}">
     <td>{{ entry.createdAt|date('Y-m-d H:i') }}</td>
-    <td>{{ entry.description }}</td>
+    <td>
+        {{ entry.description }}
+        {% if entry.contractLogEntry is not null %}
+            <br><a href="{{ path('app_contracts_show', {id: entry.contractLogEntry.contract.id}) }}" class="badge bg-secondary text-decoration-none">
+                Contract: {{ entry.contractLogEntry.contract.name }} (Month {{ entry.contractLogEntry.month }})
+            </a>
+        {% endif %}
+    </td>
     <td>{{ entry.amount > 0 ? '+' : '' }}{{ entry.amount }}</td>
     <td>{{ running }}</td>
     <td>

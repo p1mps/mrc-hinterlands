@@ -21,6 +21,9 @@ class SupportPointEntry {
     #[ORM\Column(length: 255)]
     private string $description;
 
+    #[ORM\OneToOne(mappedBy: 'supportPointEntry', targetEntity: ContractLogEntry::class)]
+    private ?ContractLogEntry $contractLogEntry = null;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -32,6 +35,9 @@ class SupportPointEntry {
 
     public function getCompany(): MercenaryCompany { return $this->company; }
     public function setCompany(MercenaryCompany $company): static { $this->company = $company; return $this; }
+
+    public function getContractLogEntry(): ?ContractLogEntry { return $this->contractLogEntry; }
+    public function setContractLogEntry(?ContractLogEntry $contractLogEntry): static { $this->contractLogEntry = $contractLogEntry; return $this; }
 
     public function getAmount(): int { return $this->amount; }
     public function setAmount(int $amount): static { $this->amount = $amount; return $this; }

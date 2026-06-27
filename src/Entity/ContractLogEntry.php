@@ -35,6 +35,10 @@ class ContractLogEntry {
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $data = null;
 
+    #[ORM\OneToOne(targetEntity: SupportPointEntry::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?SupportPointEntry $supportPointEntry = null;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -49,6 +53,9 @@ class ContractLogEntry {
 
     public function getTrack(): ?TrackRecord { return $this->track; }
     public function setTrack(?TrackRecord $track): static { $this->track = $track; return $this; }
+
+    public function getSupportPointEntry(): ?SupportPointEntry { return $this->supportPointEntry; }
+    public function setSupportPointEntry(?SupportPointEntry $supportPointEntry): static { $this->supportPointEntry = $supportPointEntry; return $this; }
 
     public function getMonth(): int { return $this->month; }
     public function setMonth(int $month): static { $this->month = $month; return $this; }

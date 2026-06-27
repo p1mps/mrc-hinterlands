@@ -41,6 +41,11 @@
     <div class="card-body py-2">
         <span class="badge bg-secondary me-2">{{ entry.entryType.value }}</span>
         {{ entry.description }}
+        {% if entry.supportPointEntry is not null %}
+            <a href="{{ path('app_support_points') }}" class="badge bg-info text-dark text-decoration-none ms-2">
+                SP: {{ entry.supportPointEntry.amount > 0 ? '+' : '' }}{{ entry.supportPointEntry.amount }}
+            </a>
+        {% endif %}
         {% if entry.rollResult is not null %}<span class="text-muted ms-2">(rolled {{ entry.rollResult }})</span>{% endif %}
         <div class="float-end d-flex gap-1">
             <a href="{{ path('app_contracts_log_edit', {id: contract.id, entryId: entry.id}) }}"
