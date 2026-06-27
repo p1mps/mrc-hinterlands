@@ -69,7 +69,7 @@ class ContractLogController extends AbstractController {
             if ($contract->getTracksCompleted() > 0 && $entry->getEntryType() == 'post_track') {
                 $contract->setTracksCompleted($contract->getTracksCompleted() - 1);
             }
-            $this->addFlash('success', $entry->getEntryType());
+            $this->addFlash('success', $entry->getEntryType()->value);
             $this->em->remove($entry);
             $this->em->flush();
 //            $this->addFlash('success', 'Log entry deleted.');
