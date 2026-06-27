@@ -6,7 +6,7 @@
 
 {% set transportFull = 300 * contract.scale %}
 {% set transportPct = contract.parseTransportPercent() %}
-{% set transportEmployer = (transportFull * transportPct / 100)|round|int %}
+{% set transportEmployer = (transportFull * transportPct / 100)|round %}
 {% set transportPlayer = transportFull - transportEmployer %}
 {% set supportPct = contract.parseSupportPercent() %}
 {% set supportType = contract.getSupportType() %}
