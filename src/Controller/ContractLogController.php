@@ -66,10 +66,10 @@ class ContractLogController extends AbstractController {
     public function delete(Contract $contract, int $entryId): Response {
         $entry = $this->em->getRepository(ContractLogEntry::class)->find($entryId);
         if ($entry && $entry->getContract() === $contract) {
-            $this->em->remove($entry);
-            if ($entry->getEntryType() == 'post_track') {
+            if ($contract->getTracksCompleted() > 0 && $entry->getEntryType() == 'post_track') {
                 $contract->setTracksCompleted($contract->getTracksCompleted() - 1);
             }
+            $this->em->remove($entry);
             $this->em->flush();
             $this->addFlash('success', 'Log entry deleted.');
         }
