@@ -52,6 +52,7 @@
 <div class="card-body">
 <p class="text-muted small">Cost = 50 SP flat + 50 SP × jumps. Employer covers {{ transportPct }}%.</p>
 <form method="post">
+    <input type="hidden" name="month" value="{{ currentMonth }}">
     <input type="hidden" name="action" value="transport">
     <div class="mb-2">
         <label class="form-label">Number of jumps</label>
@@ -71,6 +72,7 @@
 <p>Deduct <strong>{{ 500 * contract.scale }} SP</strong> for maintenance this month (500 × scale {{ contract.scale }}).</p>
 <p class="text-muted small">Not reduced by support terms — maintenance is always paid in full.</p>
 <form method="post">
+    <input type="hidden" name="month" value="{{ currentMonth }}">
     <input type="hidden" name="action" value="maintenance">
     <button class="btn btn-warning">Record Maintenance</button>
 </form>
@@ -85,6 +87,7 @@
 <p>Base pay rate: <strong>{{ contract.basePayPercent }}%</strong> × 500 SP × scale {{ contract.scale }}</p>
 <p>Receive: <strong>+{{ contract.calculateMonthlyBasePay() }} SP</strong></p>
 <form method="post">
+    <input type="hidden" name="month" value="{{ currentMonth }}">
     <input type="hidden" name="action" value="base_pay">
     <button class="btn btn-success">Record Base Pay</button>
 </form>
