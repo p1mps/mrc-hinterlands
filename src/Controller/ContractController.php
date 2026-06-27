@@ -157,10 +157,6 @@ class ContractController extends AbstractController {
 
     #[Route('/{id}', name: 'app_contracts_show')]
     public function show(Contract $contract): Response {
-        $company = $this->getUser()->getCompany();
-        if ($contract->getCompany() !== $company) {
-            throw $this->createAccessDeniedException();
-        }
         return $this->render('contract/show.html.twig', ['contract' => $contract]);
     }
 }
