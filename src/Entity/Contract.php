@@ -175,13 +175,7 @@ class Contract {
         return (int) rtrim($this->transportTerms, '%');
     }
 
-    public function calculateNetTransportCost(): int {
-        $full = 300 * $this->scale;
-        $pct  = $this->parseTransportPercent();
-        return (int) round($full * (1 - $pct / 100));
-    }
-
-    public function parseSupportPercent(): int {
+public function parseSupportPercent(): int {
         if (!$this->supportTerms || $this->supportTerms === 'None') return 0;
         if (preg_match('/(\d+)%/', $this->supportTerms, $m)) return (int) $m[1];
         return 0;
