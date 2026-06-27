@@ -26,10 +26,7 @@ class ContractController extends AbstractController {
             [],
             ['createdAt' => 'DESC']
         );
-        return $this->render('contract/index.html.twig', [
-            'contracts'   => $contracts,
-            'userCompany' => $this->getUser()->getCompany(),
-        ]);
+        return $this->render('contract/index.html.twig', ['contracts' => $contracts]);
     }
 
     #[Route('/generate', name: 'app_contracts_generate', methods: ['GET'])]
@@ -115,9 +112,6 @@ class ContractController extends AbstractController {
 
     #[Route('/{id}/delete', name: 'app_contracts_delete', methods: ['POST'])]
     public function delete(Contract $contract): Response {
-        if ($contract->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
-        }
         $linked = $contract->getLinkedContract();
         if ($linked !== null) {
             $linked->setLinkedContract(null);
