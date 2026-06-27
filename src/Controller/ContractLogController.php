@@ -27,9 +27,6 @@ class ContractLogController extends AbstractController {
 
     #[Route('/entry/{entryId}/edit', name: 'app_contracts_log_edit', methods: ['GET', 'POST'])]
     public function editEntry(Contract $contract, int $entryId, Request $request): Response {
-        if ($contract->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
-        }
         $entry = $this->em->getRepository(ContractLogEntry::class)->find($entryId);
         if (!$entry || $entry->getContract() !== $contract) {
             throw $this->createNotFoundException();
@@ -67,10 +64,6 @@ class ContractLogController extends AbstractController {
 
     #[Route('/entry/{entryId}/delete', name: 'app_contracts_log_delete', methods: ['POST'])]
     public function delete(Contract $contract, int $entryId): Response {
-        $company = $this->getUser()->getCompany();
-        if ($contract->getCompany() !== $company) {
-            throw $this->createAccessDeniedException();
-        }
         $entry = $this->em->getRepository(ContractLogEntry::class)->find($entryId);
         if ($entry && $entry->getContract() === $contract) {
             $this->em->remove($entry);
@@ -83,9 +76,6 @@ class ContractLogController extends AbstractController {
     #[Route('/add', name: 'app_contracts_log_add', methods: ['GET', 'POST'])]
     public function add(Contract $contract, Request $request): Response {
         $company = $this->getUser()->getCompany();
-        if ($contract->getCompany() !== $company) {
-            throw $this->createAccessDeniedException();
-        }
 
         $postTrackForm = $this->createForm(PostTrackFormType::class);
 

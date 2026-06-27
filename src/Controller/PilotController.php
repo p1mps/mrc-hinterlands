@@ -52,9 +52,6 @@ class PilotController extends AbstractController {
 
     #[Route('/{id}/edit', name: 'app_pilots_edit')]
     public function edit(Pilot $pilot, Request $request, EntityManagerInterface $em): Response {
-        if ($pilot->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
-        }
         $form = $this->createForm(PilotFormType::class, $pilot);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -67,9 +64,6 @@ class PilotController extends AbstractController {
 
     #[Route('/{id}/delete', name: 'app_pilots_delete', methods: ['POST'])]
     public function delete(Pilot $pilot, EntityManagerInterface $em): Response {
-        if ($pilot->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
-        }
         $em->remove($pilot);
         $em->flush();
         $this->addFlash('success', 'Pilot deleted.');

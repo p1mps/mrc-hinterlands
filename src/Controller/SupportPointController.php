@@ -33,9 +33,6 @@ class SupportPointController extends AbstractController {
 
     #[Route('/{id}/delete', name: 'app_support_points_delete', methods: ['POST'])]
     public function delete(SupportPointEntry $entry, EntityManagerInterface $em): Response {
-        if ($entry->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
-        }
         $em->remove($entry);
         $em->flush();
         $this->addFlash('success', 'Entry deleted.');

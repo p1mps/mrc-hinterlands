@@ -40,9 +40,6 @@ class RosterController extends AbstractController {
 
     #[Route('/{id}/edit', name: 'app_roster_edit')]
     public function edit(Unit $unit, Request $request, EntityManagerInterface $em): Response {
-        if ($unit->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
-        }
         $form = $this->createForm(UnitFormType::class, $unit);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -55,9 +52,6 @@ class RosterController extends AbstractController {
 
     #[Route('/{id}/assign-pilot', name: 'app_roster_assign_pilot', methods: ['POST'])]
     public function assignPilot(Unit $unit, Request $request, EntityManagerInterface $em): Response {
-        if ($unit->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
-        }
         $pilotId = $request->request->get('pilot_id');
         if ($pilotId) {
             $pilot = $em->getRepository(Pilot::class)->find((int) $pilotId);
@@ -73,9 +67,6 @@ class RosterController extends AbstractController {
 
     #[Route('/{id}/delete', name: 'app_roster_delete', methods: ['POST'])]
     public function delete(Unit $unit, EntityManagerInterface $em): Response {
-        if ($unit->getCompany() !== $this->getUser()->getCompany()) {
-            throw $this->createAccessDeniedException();
-        }
         $em->remove($unit);
         $em->flush();
         $this->addFlash('success', 'Unit deleted.');
