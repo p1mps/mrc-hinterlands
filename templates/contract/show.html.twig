@@ -53,9 +53,7 @@
             {% if entry.data is not null and entry.data.complication is defined %}
                 <div class="text-muted small mt-1">
                     Mission: {{ entry.data.missionType }} &bull; Terrain: {{ entry.data.terrain }}
-                    {% if entry.data.complication != 'No Complication' %}
                     <br><strong>Complication:</strong> {{ entry.data.complication }}
-                    {% endif %}
                 </div>
             {% endif %}
         </div>
