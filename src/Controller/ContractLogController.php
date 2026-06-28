@@ -99,7 +99,7 @@ class ContractLogController extends AbstractController {
 
     #[Route('/add', name: 'app_contracts_log_add', methods: ['GET', 'POST'])]
     public function add(Contract $contract, Request $request): Response {
-        $company = $this->getUser()->getCompany();
+        $company = $contract->getCompany();
 
         $postTrackForm = $this->createForm(PostTrackFormType::class);
         $action = $request->request->get('action');
