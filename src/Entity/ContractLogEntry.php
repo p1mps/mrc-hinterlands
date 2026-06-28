@@ -73,4 +73,15 @@ class ContractLogEntry {
     public function setData(?array $data): static { $this->data = $data; return $this; }
 
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+
+    public function getComplication(): ?string
+    {
+        return $this->data['complication'] ?? null;
+    }
+
+    public function setComplication(?string $summary): self
+    {
+        $this->data['complication'] = $summary;
+        return $this;
+    }
 }

@@ -15,6 +15,7 @@ class ContractLogEntryEditFormType extends AbstractType {
         $builder
             ->add('month', IntegerType::class)
             ->add('entryType', EnumType::class, ['class' => ContractLogEntryType::class, 'label' => 'Entry Type'])
+            ->add('complication', TextareaType::class, ['attr' => ['rows' => 2]])
             ->add('description', TextareaType::class, ['attr' => ['rows' => 4]]);
     }
 
