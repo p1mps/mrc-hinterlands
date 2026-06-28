@@ -6,6 +6,7 @@ use App\Entity\ContractLogEntry;
 use App\Entity\SupportPointEntry;
 use App\Entity\TrackRecord;
 use App\Enum\ContractLogEntryType;
+use App\Enum\ContractStatus;
 use App\Enum\TrackStatus;
 use App\DataTables\ContractTrackTable;
 use App\DataTables\TerrainTable;
@@ -66,8 +67,25 @@ class ContractLogController extends AbstractController {
     public function delete(Contract $contract, int $entryId): Response {
         $entry = $this->em->getRepository(ContractLogEntry::class)->find($entryId);
         if ($entry && $entry->getContract() === $contract) {
-            if ($contract->getTracksCompleted() > 0 && $entry->getEntryType()->value == 'post_track') {
-                $contract->setTracksCompleted($contract->getTracksCompleted() - 1);
+            if ($entry->getEntryType() === ContractLogEntryType::PostTrack) {
+                if ($contract->getTracksCompleted() > 0) {
+                    $contract->setTracksCompleted($contract->getTracksCompleted() - 1);
+                }
+                $contract->setStatus(ContractStatus::Active);
+
+                $completedTracks = [];
+                foreach ($contract->getTrackRecords() as $track) {
+                    if ($track->getStatus() === TrackStatus::Completed) {
+                        $completedTracks[] = $track;
+                    }
+                }
+                if (!empty($completedTracks)) {
+                    /** @var TrackRecord $lastCompletedTrack */
+                    $lastCompletedTrack = end($completedTracks);
+                    $lastCompletedTrack->setStatus(TrackStatus::Pending);
+                    $lastCompletedTrack->setCompletedAt(null);
+                    $lastCompletedTrack->setCombatPayTier(null);
+                }
             }
             if ($entry->getSupportPointEntry() !== null) {
                 $this->em->remove($entry->getSupportPointEntry());
