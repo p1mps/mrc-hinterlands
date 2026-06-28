@@ -2,35 +2,35 @@
 {% block body %}
 <h2>{{ company.name }}</h2>
 <div class="row g-3 mb-4">
-<div class="col-md-3">
+<div class="col-6 col-md-3">
     <div class="card text-center">
-    <div class="card-body">
+    <div class="card-body py-3">
         <div class="fs-1 fw-bold">{{ company.reputation }}</div>
-        <div class="text-muted">Reputation</div>
+        <div class="text-muted small">Reputation</div>
     </div>
     </div>
 </div>
-<div class="col-md-3">
+<div class="col-6 col-md-3">
     <div class="card text-center">
-    <div class="card-body">
+    <div class="card-body py-3">
         <div class="fs-1 fw-bold">{{ spBalance }}</div>
-        <div class="text-muted">Support Points</div>
+        <div class="text-muted small">Support Points</div>
     </div>
     </div>
 </div>
-<div class="col-md-3">
+<div class="col-6 col-md-3">
     <div class="card text-center">
-    <div class="card-body">
+    <div class="card-body py-3">
         <div class="fs-1 fw-bold">{{ totalBv }}</div>
-        <div class="text-muted">Total BV</div>
+        <div class="text-muted small">Total BV</div>
     </div>
     </div>
 </div>
-<div class="col-md-3">
+<div class="col-6 col-md-3">
     <div class="card text-center">
-    <div class="card-body">
+    <div class="card-body py-3">
         <div class="fs-1 fw-bold">{{ namedPilots|length }}/4</div>
-        <div class="text-muted">Named Pilots</div>
+        <div class="text-muted small">Named Pilots</div>
     </div>
     </div>
 </div>

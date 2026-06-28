@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
     <h2>{{ company.name }} — Roster</h2>
-    <a href="{{ path('app_roster_new') }}" class="btn btn-primary">Add Unit</a>
+    <a href="{{ path('app_roster_new') }}" class="btn btn-primary align-self-start align-self-sm-auto">Add Unit</a>
 </div>
 <p><strong>Total BV:</strong> {{ totalBv }}</p>
-<table class="table table-striped">
+<div class="table-responsive">
+<table class="table table-striped align-middle">
 <thead><tr><th>Name</th><th>Chassis</th><th>Tonnage</th><th>BV</th><th>Type</th><th>Damage</th><th>Active</th><th>Pilot</th><th></th></tr></thead>
 <tbody>
 {% for unit in units %}
@@ -17,7 +18,7 @@
     <td>{{ unit.unitType.value }}</td>
     <td>{{ unit.damageState.value }}</td>
     <td>{{ unit.isActive ? 'Yes' : 'No' }}</td>
-    <td>
+    <td style="min-width: 180px;">
         <form method="post" action="{{ path('app_roster_assign_pilot', {id: unit.id}) }}" class="d-flex gap-1">
             <select name="pilot_id" class="form-select form-select-sm">
                 <option value="">— none —</option>
@@ -33,7 +34,7 @@
             <button class="btn btn-sm btn-outline-secondary">Set</button>
         </form>
     </td>
-    <td>
+    <td class="text-nowrap">
         <a href="{{ path('app_roster_edit', {id: unit.id}) }}" class="btn btn-sm btn-secondary">Edit</a>
         <form method="post" action="{{ path('app_roster_delete', {id: unit.id}) }}" class="d-inline"
               onsubmit="return confirm('Delete this unit?')">
@@ -46,4 +47,5 @@
 {% endfor %}
 </tbody>
 </table>
+</div>
 {% endblock %}

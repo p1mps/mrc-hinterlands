@@ -11,18 +11,18 @@
 <div class="card mb-4 border-primary">
     <div class="card-header bg-primary text-white">Contract Terms</div>
     <div class="card-body">
-        <div class="row text-center">
-            <div class="col">
+        <div class="row text-center g-3">
+            <div class="col-6 col-sm-4 col-md">
                 <div class="fw-bold">Base Pay</div>
                 <div class="fs-5">{{ contract.basePayPercent is not null ? contract.basePayPercent ~ '%' : '—' }}</div>
                 <div class="text-muted small">= {{ contract.calculateMonthlyBasePay() }} SP/month</div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md">
                 <div class="fw-bold">Transport</div>
                 <div class="fs-5">{{ transportPct > 0 ? transportPct ~ '%' : '—' }}</div>
                 <div class="text-muted small">50 SP + 50 SP × jumps, employer covers {{ transportPct }}%</div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md">
                 <div class="fw-bold">Support</div>
                 <div class="fs-5">{{ contract.supportTerms }}</div>
                 <div class="text-muted small">
@@ -31,11 +31,11 @@
                     {% else %}none{% endif %}
                 </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md">
                 <div class="fw-bold">Salvage</div>
                 <div class="fs-5">{{ contract.salvageRights }}</div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md">
                 <div class="fw-bold">Maintenance</div>
                 <div class="fs-5">{{ 500 * contract.scale }} SP</div>
                 <div class="text-muted small">per month</div>

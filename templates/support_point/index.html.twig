@@ -3,7 +3,7 @@
 <h2>Support Points</h2>
 <div class="alert alert-info fs-4">Balance: <strong>{{ balance }} SP</strong></div>
 <div class="row">
-<div class="col-md-4">
+<div class="col-12 col-md-4 mb-4 mb-md-0">
 <h5>Add Entry</h5>
 {{ form_start(form) }}
 {{ form_row(form.amount) }}
@@ -11,15 +11,16 @@
 <button class="btn btn-primary">Add</button>
 {{ form_end(form) }}
 </div>
-<div class="col-md-8">
-<table class="table table-sm">
+<div class="col-12 col-md-8">
+<div class="table-responsive">
+<table class="table table-sm align-middle">
 <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Running Total</th><th></th></tr></thead>
 <tbody>
 {% set running = 0 %}
 {% for entry in entries %}
 {% set running = running + entry.amount %}
 <tr class="{{ entry.amount > 0 ? 'table-success' : 'table-danger' }}">
-    <td>{{ entry.createdAt|date('Y-m-d H:i') }}</td>
+    <td class="text-nowrap">{{ entry.createdAt|date('Y-m-d H:i') }}</td>
     <td>
         {{ entry.description }}
         {% if entry.contractLogEntry is not null %}
@@ -42,6 +43,7 @@
 {% endfor %}
 </tbody>
 </table>
+</div>
 </div>
 </div>
 {% endblock %}

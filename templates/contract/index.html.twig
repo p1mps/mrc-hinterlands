@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
     <h2>Contracts</h2>
-    <a href="{{ path('app_contracts_generate') }}" class="btn btn-primary">Generate Contract</a>
+    <a href="{{ path('app_contracts_generate') }}" class="btn btn-primary align-self-start align-self-sm-auto">Generate Contract</a>
 </div>
 
-<table class="table table-striped">
+<div class="table-responsive">
+<table class="table table-striped align-middle">
     <thead>
         <tr>
             <th>Name</th>
@@ -26,7 +27,7 @@
         <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
         <td>{{ c.tracksCompleted }}/{{ c.numberOfTracks }}</td>
         <td>{{ c.company ? c.company.name : '—' }}</td>
-        <td>
+        <td class="text-nowrap">
             <a href="{{ path('app_contracts_show', {id: c.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
             <form method="post" action="{{ path('app_contracts_delete', {id: c.id}) }}" class="d-inline"
                   onsubmit="return confirm('Delete this contract?')">
@@ -39,4 +40,5 @@
     {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}
