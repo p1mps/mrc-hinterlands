@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Contract;
+use App\Entity\MercenaryCompany;
 use App\Enum\ContractStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,9 +16,22 @@ class DashboardController extends AbstractController {
         $activeContracts = $entityManager->getRepository(Contract::class)->findBy(
             ['status' => ContractStatus::Active]
         );
+        $companies = $entityManager->getRepository(MercenaryCompany::class)->findAll();
+
+        $companiesAndSupportPoints = [];
+
+        foreach ($companies as $c) {
+            $companiesAndSupportPoints[] = [
+                'company' => $c,
+                'supportPoints' => $c->getSupportPointsBalance()
+            ];
+        }
+
         return $this->render('dashboard/index.html.twig', [
             'company'         => $company,
+            'companies'         => $companies,
             'activeContracts' => $activeContracts,
+            'companiesAndSupportPoints' => $companiesAndSupportPoints,
             'totalBv'         => $company->getTotalBv(),
             'spBalance'       => $company->getSupportPointsBalance(),
             'namedPilots'     => $company->getPilots()->filter(fn($p) => $p->isNamed()),
