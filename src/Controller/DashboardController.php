@@ -27,6 +27,8 @@ class DashboardController extends AbstractController {
             ];
         }
 
+        usort($companiesAndSupportPoints, fn($a, $b) => $b['supportPoints'] <=> $a['supportPoints']);
+
         return $this->render('dashboard/index.html.twig', [
             'company'         => $company,
             'companies'         => $companies,
