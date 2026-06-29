@@ -4,6 +4,7 @@ namespace App\Form;
 use App\Entity\Contract;
 use App\Entity\MercenaryCompany;
 use App\Enum\CommandRights;
+use App\Enum\ContractStatus;
 use App\Enum\ContractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -23,6 +24,7 @@ class ContractEditFormType extends AbstractType {
                 'required'     => false,
                 'placeholder'  => '— Unassigned —',
             ])
+            ->add('status', EnumType::class, ['class' => ContractStatus::class, 'label' => 'Contract Status'])
             ->add('type', EnumType::class, ['class' => ContractType::class, 'label' => 'Contract Type'])
             ->add('employer', TextType::class)
             ->add('employerAffiliation', TextType::class, ['label' => 'Employer Affiliation'])
