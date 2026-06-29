@@ -25,6 +25,14 @@ class SalvagedMech
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $configuration = null;
 
+    // NEW FIELD: BV Cost
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $bvCost = null;
+
+    // NEW FIELD: Acquired status
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $acquired = false;
+
     #[ORM\ManyToOne(inversedBy: 'salvagedMechs')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ContractLogEntry $sourceLogEntry = null;
@@ -83,6 +91,30 @@ class SalvagedMech
     public function setConfiguration(?string $configuration): static
     {
         $this->configuration = $configuration;
+        return $this;
+    }
+
+    // NEW GETTER/SETTER FOR BV COST
+    public function getBvCost(): ?int
+    {
+        return $this->bvCost;
+    }
+
+    public function setBvCost(?int $bvCost): static
+    {
+        $this->bvCost = $bvCost;
+        return $this;
+    }
+
+    // NEW GETTER/SETTER FOR ACQUIRED STATUS
+    public function isAcquired(): bool
+    {
+        return $this->acquired;
+    }
+
+    public function setAcquired(bool $acquired): static
+    {
+        $this->acquired = $acquired;
         return $this;
     }
 
