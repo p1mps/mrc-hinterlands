@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Salvaged Mech{% endblock %}
+
+{% block body %}
+    <h1>Create new Salvaged Mech</h1>
+
+    {{ include('salvaged_mech/_form.html.twig') }}
+
+    <a href="{{ path('app_salvaged_mech_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Salvaged Mech{% endblock %}
+
+{% block body %}
+    <h1>Edit Salvaged Mech</h1>
+
+    {{ include('salvaged_mech/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_salvaged_mech_index') }}">back to list</a>
+
+    {{ include('salvaged_mech/_delete_form.html.twig') }}
+{% endblock %}
