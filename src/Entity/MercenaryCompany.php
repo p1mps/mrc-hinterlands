@@ -73,6 +73,47 @@ class MercenaryCompany {
         return $total;
     }
 
+    /**
+     * Deducts support points by creating a negative entry.
+     * 
+     * @param int $amount The amount to deduct (must be positive)
+     * @param string $reason Description of why points were deducted
+     * @throws \Exception if insufficient funds
+     */
+    public function deductSupportPoints(int $amount, string $reason = 'General Deduction'): void {
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Deduction amount must be positive.');
+        }
+
+        $currentBalance = $this->getSupportPointsBalance();
+        
+        if ($currentBalance < $amount) {
+            throw new \Exception("Insufficient support points. Current balance: {$currentBalance}, Requested deduction: {$amount}");
+        }
+
+        $entry = new SupportPointEntry();
+        // Assuming SupportPointEntry has setAmount, setCompany, and setDescription methods
+        // If description is not available, we might need to adjust this based on the actual entity structure
+        if (method_exists($entry, 'setAmount')) {
+            $entry->setAmount(-$amount);
+        } else {
+            throw new \RuntimeException('SupportPointEntry does not have setAmount method.');
+        }
+        
+        if (method_exists($entry, 'setCompany')) {
+            $entry->setCompany($this);
+        } else {
+            throw new \RuntimeException('SupportPointEntry does not have setCompany method.');
+        }
+
+        // Optional: Set a description if the entity supports it
+        if (method_exists($entry, 'setDescription')) {
+            $entry->setDescription($reason);
+        }
+
+        $this->supportPointEntries->add($entry);
+    }
+
     public function getNamedPilotsCount(): int {
         return $this->pilots->filter(fn(Pilot $p) => $p->isNamed())->count();
     }
