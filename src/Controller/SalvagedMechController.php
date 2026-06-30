@@ -17,7 +17,7 @@ class SalvagedMechController extends AbstractController
     #[Route('/', name: 'app_salvaged_mech_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        // Filter out already acquired mechs if they are soft-deleted or marked, 
+        // Filter out already acquired mechs if they are soft-deleted or marked,
         // but since we hard-delete in the service, findAll() is sufficient for available ones.
         $salvagedMechs = $entityManager->getRepository(SalvagedMech::class)->findAll();
 
@@ -85,8 +85,8 @@ class SalvagedMechController extends AbstractController
 
     #[Route('/{id}/acquire', name: 'app_salvaged_mech_acquire', methods: ['POST'])]
     public function acquire(
-        int $id, 
-        EntityManagerInterface $entityManager, 
+        int $id,
+        EntityManagerInterface $entityManager,
         MechAcquisitionService $acquisitionService
     ): Response {
         $salvagedMech = $entityManager->getRepository(SalvagedMech::class)->find($id);
@@ -95,19 +95,13 @@ class SalvagedMechController extends AbstractController
             throw $this->createNotFoundException('Salvaged Mech not found.');
         }
 
-        // Determine the company. 
+        // Determine the company.
         // The service requires a MercenaryCompany object.
         // We need to get the company from the SalvagedMech's source log entry or similar.
         // Looking at SalvagedMech entity: it has $sourceLogEntry (ContractLogEntry).
         // ContractLogEntry likely links to a Contract, which links to a Company.
-        
-        $company = null;
-        if ($salvagedMech->getSourceLogEntry()) {
-            $contract = $salvagedMech->getSourceLogEntry()->getContract();
-            if ($contract) {
-                $company = $contract->getCompany();
-            }
-        }
+
+        $company = $this->getUser()->getCompany();
 
         if (!$company) {
             // Fallback: If no source log entry, we might need to default to the user's company or throw error.

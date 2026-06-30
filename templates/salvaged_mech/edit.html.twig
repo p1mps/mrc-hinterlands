@@ -3,19 +3,17 @@
 {% block title %}Edit Salvaged Mech{% endblock %}
 
 {% block body %}
-    <h2>Edit Salvaged Mech — {{ salvaged_mech.name }}</h2>
-    
+    <h2>Edit Salvaged Mech — {{ salvaged_mech.model }}</h2>
+
     <div class="d-flex gap-2 mb-3">
         <a href="{{ path('app_salvaged_mech_show', {id: salvaged_mech.id}) }}" class="btn btn-outline-secondary">Back to Details</a>
     </div>
 
     {{ form_start(form, {attr: {class: 'row g-3'}}) }}
-        <div class="col-md-6">{{ form_row(form.name) }}</div>
         <div class="col-md-6">{{ form_row(form.model) }}</div>
         <div class="col-md-4">{{ form_row(form.tonnage) }}</div>
         <div class="col-md-4">{{ form_row(form.bvCost) }}</div>
-        <div class="col-md-12">{{ form_row(form.configuration) }}</div>
-        
+
         <div class="col-12">
             <button class="btn btn-primary">Save Changes</button>
         </div>

@@ -44,12 +44,8 @@ class ContractLogEntry {
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\OneToMany(mappedBy: 'sourceLogEntry', targetEntity: SalvagedMech::class, orphanRemoval: true)]
-    private Collection $salvagedMechs;
-
     public function __construct() {
         $this->createdAt = new \DateTimeImmutable();
-        $this->salvagedMechs = new ArrayCollection();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -88,33 +84,6 @@ class ContractLogEntry {
     public function setComplication(?string $summary): self
     {
         $this->data['complication'] = $summary;
-        return $this;
-    }
-
-    public function getSalvagedMechs(): Collection
-    {
-        return $this->salvagedMechs;
-    }
-
-    public function addSalvagedMech(SalvagedMech $salvagedMech): static
-    {
-        if (!$this->salvagedMechs->contains($salvagedMech)) {
-            $this->salvagedMechs->add($salvagedMech);
-            $salvagedMech->setSourceLogEntry($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSalvagedMech(SalvagedMech $salvagedMech): static
-    {
-        if ($this->salvagedMechs->removeElement($salvagedMech)) {
-            // set the owning side to null (unless already changed)
-            if ($salvagedMech->getSourceLogEntry() === $this) {
-                $salvagedMech->setSourceLogEntry(null);
-            }
-        }
-
         return $this;
     }
 }

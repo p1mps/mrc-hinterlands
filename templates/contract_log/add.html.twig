@@ -1,211 +1,211 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<h2>Add Log Entry — {{ contract.name }}</h2>
-<p><strong>Month:</strong> {{ currentMonth }} &nbsp; <strong>Tracks:</strong> {{ contract.tracksCompleted }}/{{ contract.numberOfTracks }}</p>
-<a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
+    <h2>Add Log Entry — {{ contract.name }}</h2>
+    <p><strong>Month:</strong> {{ currentMonth }} &nbsp; <strong>Tracks:</strong> {{ contract.tracksCompleted }}/{{ contract.numberOfTracks }}</p>
+    <a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
 
-{% set transportPct = contract.parseTransportPercent() %}
-{% set supportPct = contract.parseSupportPercent() %}
-{% set supportType = contract.getSupportType() %}
+    {% set transportPct = contract.parseTransportPercent() %}
+    {% set supportPct = contract.parseSupportPercent() %}
+    {% set supportType = contract.getSupportType() %}
 
-<div class="card mb-4 border-primary">
-    <div class="card-header bg-primary text-white">Contract Terms</div>
-    <div class="card-body">
-        <div class="row text-center g-3">
-            <div class="col-6 col-sm-4 col-md">
-                <div class="fw-bold">Base Pay</div>
-                <div class="fs-5">{{ contract.basePayPercent is not null ? contract.basePayPercent ~ '%' : '—' }}</div>
-                <div class="text-muted small">= {{ contract.calculateMonthlyBasePay() }} SP/month</div>
-            </div>
-            <div class="col-6 col-sm-4 col-md">
-                <div class="fw-bold">Transport</div>
-                <div class="fs-5">{{ transportPct > 0 ? transportPct ~ '%' : '—' }}</div>
-                <div class="text-muted small">50 SP + 50 SP × jumps, employer covers {{ transportPct }}%</div>
-            </div>
-            <div class="col-6 col-sm-4 col-md">
-                <div class="fw-bold">Support</div>
-                <div class="fs-5">{{ contract.supportTerms }}</div>
-                <div class="text-muted small">
-                    {% if supportType == 'Straight' %}employer covers {{ supportPct }}% of repairs
-                    {% elseif supportType == 'Battle' %}{{ supportPct }}% compensation on loss
-                    {% else %}none{% endif %}
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white">Contract Terms</div>
+        <div class="card-body">
+            <div class="row text-center g-3">
+                <div class="col-6 col-sm-4 col-md">
+                    <div class="fw-bold">Base Pay</div>
+                    <div class="fs-5">{{ contract.basePayPercent is not null ? contract.basePayPercent ~ '%' : '—' }}</div>
+                    <div class="text-muted small">= {{ contract.calculateMonthlyBasePay() }} SP/month</div>
                 </div>
-            </div>
-            <div class="col-6 col-sm-4 col-md">
-                <div class="fw-bold">Salvage</div>
-                <div class="fs-5">{{ contract.salvageRights }}</div>
-            </div>
-            <div class="col-6 col-sm-4 col-md">
-                <div class="fw-bold">Maintenance</div>
-                <div class="fs-5">{{ 500 * contract.scale }} SP</div>
-                <div class="text-muted small">per month</div>
+                <div class="col-6 col-sm-4 col-md">
+                    <div class="fw-bold">Transport</div>
+                    <div class="fs-5">{{ transportPct > 0 ? transportPct ~ '%' : '—' }}</div>
+                    <div class="text-muted small">50 SP + 50 SP × jumps, employer covers {{ transportPct }}%</div>
+                </div>
+                <div class="col-6 col-sm-4 col-md">
+                    <div class="fw-bold">Support</div>
+                    <div class="fs-5">{{ contract.supportTerms }}</div>
+                    <div class="text-muted small">
+                        {% if supportType == 'Straight' %}employer covers {{ supportPct }}% of repairs
+                        {% elseif supportType == 'Battle' %}{{ supportPct }}% compensation on loss
+                        {% else %}none{% endif %}
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4 col-md">
+                    <div class="fw-bold">Salvage</div>
+                    <div class="fs-5">{{ contract.salvageRights }}</div>
+                </div>
+                <div class="col-6 col-sm-4 col-md">
+                    <div class="fw-bold">Maintenance</div>
+                    <div class="fs-5">{{ 500 * contract.scale }} SP</div>
+                    <div class="text-muted small">per month</div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row g-3">
+    <div class="row g-3">
 
-<div class="col-md-6">
-<div class="card">
-<div class="card-header">Step 0 — Transport</div>
-<div class="card-body">
-<p class="text-muted small">Cost = 50 SP flat + 50 SP × jumps. Employer covers {{ transportPct }}%.</p>
-<form method="post">
-    <input type="hidden" name="month" value="{{ currentMonth }}">
-    <input type="hidden" name="action" value="transport">
-    <div class="mb-2">
-        <label class="form-label">Number of jumps</label>
-        <input type="number" name="jumps" id="jumpsInput" class="form-control" value="0" min="0" oninput="calcTransport(this.value)">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Step 0 — Transport</div>
+                <div class="card-body">
+                    <p class="text-muted small">Cost = 50 SP flat + 50 SP × jumps. Employer covers {{ transportPct }}%.</p>
+                    <form method="post">
+                        <input type="hidden" name="month" value="{{ currentMonth }}">
+                        <input type="hidden" name="action" value="transport">
+                        <div class="mb-2">
+                            <label class="form-label">Number of jumps</label>
+                            <input type="number" name="jumps" id="jumpsInput" class="form-control" value="0" min="0" oninput="calcTransport(this.value)">
+                        </div>
+                        <div id="transportBreakdown" class="mb-2"></div>
+                        <button class="btn btn-info">Record Transport</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Step 1 — Maintenance</div>
+                <div class="card-body">
+                    <p>Deduct <strong>{{ 500 * contract.scale }} SP</strong> for maintenance this month (500 × scale {{ contract.scale }}).</p>
+                    <p class="text-muted small">Not reduced by support terms — maintenance is always paid in full.</p>
+                    <form method="post">
+                        <input type="hidden" name="month" value="{{ currentMonth }}">
+                        <input type="hidden" name="action" value="maintenance">
+                        <button class="btn btn-warning">Record Maintenance</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Step 2 — Base Pay</div>
+                <div class="card-body">
+                    <p>Base pay rate: <strong>{{ contract.basePayPercent }}%</strong> × 500 SP × scale {{ contract.scale }}</p>
+                    <p>Receive: <strong>+{{ contract.calculateMonthlyBasePay() }} SP</strong></p>
+                    <form method="post">
+                        <input type="hidden" name="month" value="{{ currentMonth }}">
+                        <input type="hidden" name="action" value="base_pay">
+                        <button class="btn btn-success">Record Base Pay</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Step 3 — Track Setup</div>
+                <div class="card-body">
+                    <p>Rolls mission type, terrain, and command complication.</p>
+                    <form method="post">
+                        <input type="hidden" name="action" value="track_setup">
+                        <input type="hidden" name="month" value="{{ currentMonth }}">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="toftt" value="1" id="toftt">
+                            <label class="form-check-label" for="toftt">Taking One for the Team</label>
+                        </div>
+                        <button class="btn btn-primary">Roll Track Setup</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Step 4 — Post-Track Results</div>
+                <div class="card-body">
+                    {{ form_start(postTrackForm) }}
+                    <input type="hidden" name="action" value="post_track">
+                    <input type="hidden" name="month" value="{{ currentMonth }}">
+                    {{ form_row(postTrackForm.combatPayTier) }}
+                    {{ form_row(postTrackForm.salvageClaimed) }}
+                    <button class="btn btn-success">Record Results</button>
+                    {{ form_end(postTrackForm) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Step 5 — Downtime / Activity</div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" name="action" value="downtime">
+                        <div class="mb-2">
+                            <label class="form-label">Month</label>
+                            <input type="number" name="month" class="form-control" value="{{ currentMonth }}">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Gross cost (SP) <span class="text-muted small">— positive = expense, negative = income</span></label>
+                            <input type="number" id="grossAmount" class="form-control" value="0" oninput="calcDowntime(this.value)">
+                            <input type="hidden" name="amount" id="netAmount" value="0">
+                            <div id="downtimeBreakdown" class="mt-2"></div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Note</label>
+                            <textarea name="note" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button class="btn btn-secondary">Add Note</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
-    <div id="transportBreakdown" class="mb-2"></div>
-    <button class="btn btn-info">Record Transport</button>
-</form>
-</div>
-</div>
-</div>
 
-<div class="col-md-6">
-<div class="card">
-<div class="card-header">Step 1 — Maintenance</div>
-<div class="card-body">
-<p>Deduct <strong>{{ 500 * contract.scale }} SP</strong> for maintenance this month (500 × scale {{ contract.scale }}).</p>
-<p class="text-muted small">Not reduced by support terms — maintenance is always paid in full.</p>
-<form method="post">
-    <input type="hidden" name="month" value="{{ currentMonth }}">
-    <input type="hidden" name="action" value="maintenance">
-    <button class="btn btn-warning">Record Maintenance</button>
-</form>
-</div>
-</div>
-</div>
+    <script>
+        function calcTransport(rawValue) {
+            const jumps = parseInt(rawValue) || 0;
+            const pct = {{ transportPct }};
+            const full = 50 + 50 * jumps;
+            const employerCovers = Math.round(full * pct / 100);
+            const playerPays = full - employerCovers;
+            const el = document.getElementById('transportBreakdown');
+            el.innerHTML =
+                '<table class="table table-sm table-bordered mb-0 small">' +
+                '<tr><td>Flat fee</td><td class="text-end">50 SP</td></tr>' +
+                '<tr><td>Jump cost (' + jumps + ' × 50)</td><td class="text-end">' + (jumps * 50) + ' SP</td></tr>' +
+                '<tr><td><strong>Total</strong></td><td class="text-end"><strong>' + full + ' SP</strong></td></tr>' +
+                (pct > 0 ? '<tr class="table-success"><td>Employer covers (' + pct + '%)</td><td class="text-end">+' + employerCovers + ' SP</td></tr>' : '') +
+                '<tr class="table-warning fw-bold"><td>You pay</td><td class="text-end">-' + playerPays + ' SP</td></tr>' +
+                '</table>';
+        }
 
-<div class="col-md-6">
-<div class="card">
-<div class="card-header">Step 2 — Base Pay</div>
-<div class="card-body">
-<p>Base pay rate: <strong>{{ contract.basePayPercent }}%</strong> × 500 SP × scale {{ contract.scale }}</p>
-<p>Receive: <strong>+{{ contract.calculateMonthlyBasePay() }} SP</strong></p>
-<form method="post">
-    <input type="hidden" name="month" value="{{ currentMonth }}">
-    <input type="hidden" name="action" value="base_pay">
-    <button class="btn btn-success">Record Base Pay</button>
-</form>
-</div>
-</div>
-</div>
+        function calcDowntime(rawValue) {
+            const gross = parseInt(rawValue) || 0;
+            const supportPct = {{ supportPct }};
+            const supportType = '{{ supportType }}';
+            const el = document.getElementById('downtimeBreakdown');
+            const netField = document.getElementById('netAmount');
 
-<div class="col-md-6">
-<div class="card">
-<div class="card-header">Step 3 — Track Setup</div>
-<div class="card-body">
-<p>Rolls mission type, terrain, and command complication.</p>
-<form method="post">
-    <input type="hidden" name="action" value="track_setup">
-    <input type="hidden" name="month" value="{{ currentMonth }}">
-    <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" name="toftt" value="1" id="toftt">
-        <label class="form-check-label" for="toftt">Taking One for the Team</label>
-    </div>
-    <button class="btn btn-primary">Roll Track Setup</button>
-</form>
-</div>
-</div>
-</div>
+            if (gross === 0) {
+                el.innerHTML = '';
+                netField.value = 0;
+                return;
+            }
 
-<div class="col-md-6">
-<div class="card">
-<div class="card-header">Step 4 — Post-Track Results</div>
-<div class="card-body">
-{{ form_start(postTrackForm) }}
-<input type="hidden" name="action" value="post_track">
-<input type="hidden" name="month" value="{{ currentMonth }}">
-{{ form_row(postTrackForm.combatPayTier) }}
-{{ form_row(postTrackForm.salvageClaimed) }}
-<button class="btn btn-success">Record Results</button>
-{{ form_end(postTrackForm) }}
-</div>
-</div>
-</div>
-
-<div class="col-md-6">
-<div class="card">
-<div class="card-header">Step 5 — Downtime / Activity</div>
-<div class="card-body">
-<form method="post">
-    <input type="hidden" name="action" value="downtime">
-    <div class="mb-2">
-        <label class="form-label">Month</label>
-        <input type="number" name="month" class="form-control" value="{{ currentMonth }}">
-    </div>
-    <div class="mb-2">
-        <label class="form-label">Gross cost (SP) <span class="text-muted small">— positive = expense, negative = income</span></label>
-        <input type="number" id="grossAmount" class="form-control" value="0" oninput="calcDowntime(this.value)">
-        <input type="hidden" name="amount" id="netAmount" value="0">
-        <div id="downtimeBreakdown" class="mt-2"></div>
-    </div>
-    <div class="mb-2">
-        <label class="form-label">Note</label>
-        <textarea name="note" class="form-control" rows="3"></textarea>
-    </div>
-    <button class="btn btn-secondary">Add Note</button>
-</form>
-</div>
-</div>
-</div>
-
-</div>
-
-<script>
-function calcTransport(rawValue) {
-    const jumps = parseInt(rawValue) || 0;
-    const pct = {{ transportPct }};
-    const full = 50 + 50 * jumps;
-    const employerCovers = Math.round(full * pct / 100);
-    const playerPays = full - employerCovers;
-    const el = document.getElementById('transportBreakdown');
-    el.innerHTML =
-        '<table class="table table-sm table-bordered mb-0 small">' +
-        '<tr><td>Flat fee</td><td class="text-end">50 SP</td></tr>' +
-        '<tr><td>Jump cost (' + jumps + ' × 50)</td><td class="text-end">' + (jumps * 50) + ' SP</td></tr>' +
-        '<tr><td><strong>Total</strong></td><td class="text-end"><strong>' + full + ' SP</strong></td></tr>' +
-        (pct > 0 ? '<tr class="table-success"><td>Employer covers (' + pct + '%)</td><td class="text-end">+' + employerCovers + ' SP</td></tr>' : '') +
-        '<tr class="table-warning fw-bold"><td>You pay</td><td class="text-end">-' + playerPays + ' SP</td></tr>' +
-        '</table>';
-}
-
-function calcDowntime(rawValue) {
-    const gross = parseInt(rawValue) || 0;
-    const supportPct = {{ supportPct }};
-    const supportType = '{{ supportType }}';
-    const el = document.getElementById('downtimeBreakdown');
-    const netField = document.getElementById('netAmount');
-
-    if (gross === 0) {
-        el.innerHTML = '';
-        netField.value = 0;
-        return;
-    }
-
-    if (supportType === 'Straight' && supportPct > 0 && gross > 0) {
-        const employerCovers = Math.round(gross * supportPct / 100);
-        const playerPays = gross - employerCovers;
-        el.innerHTML =
-            '<table class="table table-sm table-bordered mb-0 small">' +
-            '<tr><td>Gross cost</td><td class="text-end">' + gross + ' SP</td></tr>' +
-            '<tr class="table-success"><td>Employer covers (' + supportPct + '%)</td><td class="text-end">+' + employerCovers + ' SP</td></tr>' +
-            '<tr class="table-warning fw-bold"><td>You pay</td><td class="text-end">-' + playerPays + ' SP</td></tr>' +
-            '</table>';
-        netField.value = -playerPays;
-    } else {
-        const sign = gross > 0 ? '-' : '+';
-        const abs = Math.abs(gross);
-        el.innerHTML =
-            '<table class="table table-sm table-bordered mb-0 small">' +
-            '<tr class="fw-bold"><td>SP change</td><td class="text-end">' + sign + abs + ' SP</td></tr>' +
-            '</table>';
-        netField.value = gross > 0 ? -gross : gross;
-    }
-}
-</script>
+            if (supportType === 'Straight' && supportPct > 0 && gross > 0) {
+                const employerCovers = Math.round(gross * supportPct / 100);
+                const playerPays = gross - employerCovers;
+                el.innerHTML =
+                    '<table class="table table-sm table-bordered mb-0 small">' +
+                    '<tr><td>Gross cost</td><td class="text-end">' + gross + ' SP</td></tr>' +
+                    '<tr class="table-success"><td>Employer covers (' + supportPct + '%)</td><td class="text-end">+' + employerCovers + ' SP</td></tr>' +
+                    '<tr class="table-warning fw-bold"><td>You pay</td><td class="text-end">-' + playerPays + ' SP</td></tr>' +
+                    '</table>';
+                netField.value = -playerPays;
+            } else {
+                const sign = gross > 0 ? '-' : '+';
+                const abs = Math.abs(gross);
+                el.innerHTML =
+                    '<table class="table table-sm table-bordered mb-0 small">' +
+                    '<tr class="fw-bold"><td>SP change</td><td class="text-end">' + sign + abs + ' SP</td></tr>' +
+                    '</table>';
+                netField.value = gross > 0 ? -gross : gross;
+            }
+        }
+    </script>
 {% endblock %}

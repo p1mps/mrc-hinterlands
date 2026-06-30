@@ -16,28 +16,16 @@ class SalvagedMechType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
-                'label' => 'Mech Name/Designation'
-            ])
             ->add('model', TextType::class, [
-                'label' => 'Model (e.g., LRM-5)',
-                'required' => false
+                'label' => 'Model',
+                'required' => true
             ])
             ->add('tonnage', IntegerType::class, [
                 'label' => 'Tonnage',
-                'required' => false
+                'required' => true
             ])
-            ->add('configuration', TextType::class, [
-                'label' => 'Configuration Notes',
-                'required' => false,
-                'attr' => ['rows' => 5]
-            ])
-            ->add('sourceLogEntry', EntityType::class, [
-                'class' => ContractLogEntry::class,
-                'choice_label' => function(ContractLogEntry $entry) {
-                    return sprintf('%s - %s', $entry->getContract()->getId(), $entry->getDescription());
-                },
-                'label' => 'Source Log Entry',
+            ->add('bvCost', IntegerType::class, [
+                'label' => 'BV',
                 'required' => true
             ])
         ;

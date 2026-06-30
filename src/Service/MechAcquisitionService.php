@@ -34,17 +34,17 @@ class MechAcquisitionService
 
         // 2. Deduct Support Points from Company
         // This will throw an exception if insufficient funds
-        $company->deductSupportPoints($bvCost, "Acquisition of {$salvagedMech->getName()}");
+        $company->deductSupportPoints($bvCost, "Acquisition of {$salvagedMech->getModel()}");
 
         // 3. Create New Roster Unit
         $newUnit = new Unit();
-        
+
         // Map fields from SalvagedMech to Unit
-        $newUnit->setName($salvagedMech->getName());
+        $newUnit->setName(null);
         $newUnit->setChassis($salvagedMech->getModel() ?? 'Unknown Chassis');
         $newUnit->setTonnage($salvagedMech->getTonnage() ?? 0);
         $newUnit->setBv($bvCost); // Using BV cost as the BV value for the unit
-        
+
         // Set Unit Type to Mech (assuming UnitType enum has a Mech case)
         try {
             $newUnit->setUnitType(UnitType::Mech);
