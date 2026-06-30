@@ -5,7 +5,9 @@
 {% block body %}
     <h2>Edit Salvaged Mech — {{ salvaged_mech.name }}</h2>
     
-    <a href="{{ path('app_salvaged_mech_show', {id: salvaged_mech.id}) }}" class="btn btn-outline-secondary mb-3">Back to Details</a>
+    <div class="d-flex gap-2 mb-3">
+        <a href="{{ path('app_salvaged_mech_show', {id: salvaged_mech.id}) }}" class="btn btn-outline-secondary">Back to Details</a>
+    </div>
 
     {{ form_start(form, {attr: {class: 'row g-3'}}) }}
         <div class="col-md-6">{{ form_row(form.name) }}</div>
