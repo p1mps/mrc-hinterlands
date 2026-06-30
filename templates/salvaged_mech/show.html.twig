@@ -1,26 +1,23 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Salvaged Mech{% endblock %}
-
 {% block body %}
-    <h2>{{ salvaged_mech.model }}</h2>
+<h2>{{ salvaged_mech.model }}</h2>
+<div class="row mb-4">
+<div class="col-12 col-md-8 col-lg-6">
+<div class="table-responsive">
+<table class="table table-bordered table-sm">
+<tr><th>Model</th><td>{{ salvaged_mech.model ?? '—' }}</td></tr>
+<tr><th>Tonnage</th><td>{{ salvaged_mech.tonnage ?? '—' }}</td></tr>
+<tr><th>BV Cost</th><td>{{ salvaged_mech.bvCost ?? '—' }}</td></tr>
+</table>
+</div>
+</div>
+</div>
 
-    <div class="row mb-4">
-        <div class="col-12 col-md-8 col-lg-6">
-            <div class="table-responsive">
-                <table class="table table-bordered table-sm">
-                    <tr><th>Name</th><td>{{ salvaged_mech.model }}</td></tr>
-                    <tr><th>Tonnage</th><td>{{ salvaged_mech.tonnage}}</td></tr>
-                    <tr><th>BV Cost</th><td>{{ salvaged_mech.bvCost}}</td></tr>
-                </table>
-            </div>
-        </div>
-    </div>
-
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
+    <a href="{{ path('app_salvaged_mech_index') }}" class="btn btn-outline-secondary">Back to list</a>
     <div class="d-flex gap-2">
-        <a href="{{ path('app_salvaged_mech_index') }}" class="btn btn-outline-secondary">Back to list</a>
-        <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-primary">Edit</a>
-
+        <a href="{{ path('app_salvaged_mech_edit', {id: salvaged_mech.id}) }}" class="btn btn-primary">Edit</a>
+        
         {% if not salvaged_mech.isAcquired %}
             <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech? This will deduct BV cost from your support points.');" class="d-inline">
                 <input type="hidden" name="_token" value="{{ csrf_token('acquire' ~ salvaged_mech.id) }}">
@@ -28,6 +25,7 @@
             </form>
         {% endif %}
     </div>
+</div>
 
-    {{ include('salvaged_mech/_delete_form.html.twig') }}
+{{ include('salvaged_mech/_delete_form.html.twig') }}
 {% endblock %}
