@@ -36,8 +36,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     public function getUserIdentifier(): string { return $this->username; }
 
-    public function getRoles(): array { return ['ROLE_USER']; }
-
     public function getPassword(): string { return $this->password; }
     public function setPassword(string $password): static { $this->password = $password; return $this; }
 
