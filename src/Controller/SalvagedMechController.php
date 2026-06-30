@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\SalvagedMech;
 use App\Form\SalvagedMechType;
+use App\Service\MechAcquisitionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,8 @@ class SalvagedMechController extends AbstractController
     #[Route('/', name: 'app_salvaged_mech_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
+        // Filter out already acquired mechs if they are soft-deleted or marked, 
+        // but since we hard-delete in the service, findAll() is sufficient for available ones.
         $salvagedMechs = $entityManager->getRepository(SalvagedMech::class)->findAll();
 
         return $this->render('salvaged_mech/index.html.twig', [
@@ -78,5 +81,48 @@ class SalvagedMechController extends AbstractController
         }
 
         return $this->redirectToRoute('app_salvaged_mech_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/acquire', name: 'app_salvaged_mech_acquire', methods: ['POST'])]
+    public function acquire(
+        int $id, 
+        EntityManagerInterface $entityManager, 
+        MechAcquisitionService $acquisitionService
+    ): Response {
+        $salvagedMech = $entityManager->getRepository(SalvagedMech::class)->find($id);
+
+        if (!$salvagedMech) {
+            throw $this->createNotFoundException('Salvaged Mech not found.');
+        }
+
+        // Determine the company. 
+        // The service requires a MercenaryCompany object.
+        // We need to get the company from the SalvagedMech's source log entry or similar.
+        // Looking at SalvagedMech entity: it has $sourceLogEntry (ContractLogEntry).
+        // ContractLogEntry likely links to a Contract, which links to a Company.
+        
+        $company = null;
+        if ($salvagedMech->getSourceLogEntry()) {
+            $contract = $salvagedMech->getSourceLogEntry()->getContract();
+            if ($contract) {
+                $company = $contract->getCompany();
+            }
+        }
+
+        if (!$company) {
+            // Fallback: If no source log entry, we might need to default to the user's company or throw error.
+            // For now, let's assume it must be linked to a contract log entry for acquisition context.
+            $this->addFlash('error', 'Cannot acquire mech: No associated company found.');
+            return $this->redirectToRoute('app_salvaged_mech_index');
+        }
+
+        try {
+            $acquisitionService->acquireMech($salvagedMech, $company);
+            $this->addFlash('success', 'Mech acquired successfully!');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Failed to acquire mech: ' . $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_salvaged_mech_index');
     }
 }
