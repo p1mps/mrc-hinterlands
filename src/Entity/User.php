@@ -45,4 +45,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     public function getCompany(): ?MercenaryCompany { return $this->company; }
     public function setCompany(?MercenaryCompany $company): static { $this->company = $company; return $this; }
+
+    public function getRoles(): array
+    {
+        // Give everyone the default user role
+        $roles = ['ROLE_USER'];
+
+        // Grant the impersonation role to specific emails
+        if (in_array($this->email, ['imparato.andrea@gmail.com'])) {
+            $roles[] = 'ROLE_ALLOWED_TO_SWITCH';
+        }
+
+        return array_unique($roles);
+    }
 }

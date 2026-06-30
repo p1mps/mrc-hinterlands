@@ -3,16 +3,15 @@
 {% block title %}Salvaged Mech{% endblock %}
 
 {% block body %}
-    <h2>{{ salvaged_mech.name }}</h2>
+    <h2>{{ salvaged_mech.model }}</h2>
 
     <div class="row mb-4">
         <div class="col-12 col-md-8 col-lg-6">
             <div class="table-responsive">
                 <table class="table table-bordered table-sm">
-                    <tr><th>Name</th><td>{{ salvaged_mech.name }}</td></tr>
-                    <tr><th>Tonnage</th><td>{{ salvaged_mech.tonnage ?? '—' }}</td></tr>
-                    <tr><th>BV Cost</th><td>{{ salvaged_mech.bvCost ?? '—' }}</td></tr>
-                    <tr><th>Salvaged</th><td>{{ salvaged_mech.salvagedAt ? 'Yes' : 'No') }}</td></tr>
+                    <tr><th>Name</th><td>{{ salvaged_mech.model }}</td></tr>
+                    <tr><th>Tonnage</th><td>{{ salvaged_mech.tonnage}}</td></tr>
+                    <tr><th>BV Cost</th><td>{{ salvaged_mech.bvCost}}</td></tr>
                 </table>
             </div>
         </div>
