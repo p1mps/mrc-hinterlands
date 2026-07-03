@@ -2,7 +2,8 @@
 {% block body %}
 <div class="row justify-content-center">
 <div class="col-md-4">
-<h2>Login</h2>
+<h2>Hey there! 👋</h2>
+<p>Welcome back to BattleTech Mercenary Company Manager!</p>
 {% if error %}<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>{% endif %}
 <form method="post" action="{{ path('app_login') }}">
     <div class="mb-3"><label class="form-label">Username</label>
@@ -12,7 +13,7 @@
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
     <button class="btn btn-primary w-100">Login</button>
 </form>
-<p class="mt-2"><a href="{{ path('app_register') }}">Register</a></p>
+<p class="mt-2"><a href="{{ path('app_register') }}">New here? Create an account!</a></p>
 </div>
 </div>
 {% endblock %}
