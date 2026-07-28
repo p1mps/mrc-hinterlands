@@ -1,71 +1,71 @@
 <?php
+
 namespace App\Controller;
 
-use App\DataTables\XpThresholdsTable;
 use App\Entity\Pilot;
 use App\Form\PilotFormType;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\PilotService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/pilots')]
-class PilotController extends AbstractController {
+class PilotController extends AbstractController
+{
     #[Route('', name: 'app_pilots')]
-    public function index(): Response {
+    public function index(PilotService $pilotService): Response
+    {
         $company = $this->getUser()->getCompany();
-        $pilots  = $company->getPilots();
-        $thresholdAlerts = [];
-        foreach ($pilots as $pilot) {
-            if ($pilot->isNamed()) {
-                $alert = XpThresholdsTable::checkImprovement($pilot->getGunnery(), $pilot->getPiloting(), $pilot->getXp());
-                if ($alert) $thresholdAlerts[$pilot->getId()] = $alert;
-            }
-        }
+        $pilots = $pilotService->getPilots($company);
+
         return $this->render('pilot/index.html.twig', [
             'company'         => $company,
             'pilots'          => $pilots,
-            'thresholdAlerts' => $thresholdAlerts,
+            'thresholdAlerts' => $pilotService->getXpThresholdAlerts($pilots),
         ]);
     }
 
     #[Route('/new', name: 'app_pilots_new')]
-    public function new(Request $request, EntityManagerInterface $em): Response {
+    public function new(Request $request, PilotService $pilotService): Response
+    {
         $company = $this->getUser()->getCompany();
-        $pilot   = new Pilot();
-        $form    = $this->createForm(PilotFormType::class, $pilot);
+        $pilot = new Pilot();
+        $form = $this->createForm(PilotFormType::class, $pilot);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($pilot->isNamed() && $company->getNamedPilotsCount() >= 4) {
-                $this->addFlash('danger', 'Maximum 4 named pilots allowed.');
+            $error = $pilotService->createPilot($company, $pilot);
+            if ($error) {
+                $this->addFlash('danger', $error);
                 return $this->redirectToRoute('app_pilots');
             }
-            $pilot->setCompany($company);
-            $em->persist($pilot);
-            $em->flush();
             $this->addFlash('success', 'Pilot added.');
             return $this->redirectToRoute('app_pilots');
         }
+
         return $this->render('pilot/form.html.twig', ['form' => $form, 'title' => 'Add Pilot']);
     }
 
     #[Route('/{id}/edit', name: 'app_pilots_edit')]
-    public function edit(Pilot $pilot, Request $request, EntityManagerInterface $em): Response {
+    public function edit(Pilot $pilot, Request $request, PilotService $pilotService): Response
+    {
         $form = $this->createForm(PilotFormType::class, $pilot);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
+            $pilotService->updatePilot($pilot);
             $this->addFlash('success', 'Pilot updated.');
             return $this->redirectToRoute('app_pilots');
         }
+
         return $this->render('pilot/form.html.twig', ['form' => $form, 'title' => 'Edit Pilot']);
     }
 
     #[Route('/{id}/delete', name: 'app_pilots_delete', methods: ['POST'])]
-    public function delete(Pilot $pilot, EntityManagerInterface $em): Response {
-        $em->remove($pilot);
-        $em->flush();
+    public function delete(Pilot $pilot, PilotService $pilotService): Response
+    {
+        $pilotService->deletePilot($pilot);
         $this->addFlash('success', 'Pilot deleted.');
         return $this->redirectToRoute('app_pilots');
     }

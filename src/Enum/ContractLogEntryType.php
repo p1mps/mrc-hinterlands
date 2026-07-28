@@ -9,4 +9,6 @@ enum ContractLogEntryType: string
     case PostTrack = 'Post Track';
     case Downtime = 'Downtime';
     case Salvage = 'Salvage';
+    case Transport = 'transport';
+    case Maintenance = 'maintenance';
 }

@@ -10,12 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class MechAcquisitionService
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private readonly EntityManagerInterface $em) {}
 
     /**
      * Acquires a salvaged mech by deducting support points, creating a new Unit in the roster,
@@ -61,8 +56,8 @@ class MechAcquisitionService
         $salvagedMech->setAcquired(true);
 
         // 5. Persist Changes
-        $this->entityManager->persist($newUnit);
-        $this->entityManager->remove($salvagedMech);
-        $this->entityManager->flush();
+        $this->em->persist($newUnit);
+        $this->em->remove($salvagedMech);
+        $this->em->flush();
     }
 }

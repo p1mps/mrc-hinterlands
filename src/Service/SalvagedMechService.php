@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Service;
+
+use App\Entity\MercenaryCompany;
+use App\Entity\SalvagedMech;
+use Doctrine\ORM\EntityManagerInterface;
+
+class SalvagedMechService
+{
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly MechAcquisitionService $acquisition,
+    ) {}
+
+    /** @return SalvagedMech[] */
+    public function getAllMechs(): array
+    {
+        return $this->em->getRepository(SalvagedMech::class)->findAll();
+    }
+
+    public function getMech(int $id): ?SalvagedMech
+    {
+        return $this->em->getRepository(SalvagedMech::class)->find($id);
+    }
+
+    public function createMech(SalvagedMech $mechan): void
+    {
+        $this->em->persist($mechan);
+        $this->em->flush();
+    }
+
+    public function updateMech(SalvagedMech $mechan): void
+    {
+        $this->em->flush();
+    }
+
+    public function deleteMech(SalvagedMech $mechan): void
+    {
+        $this->em->remove($mechan);
+        $this->em->flush();
+    }
+
+    public function acquireMech(SalvagedMech $mechan, MercenaryCompany $company): void
+    {
+        $this->acquisition->acquireMech($mechan, $company);
+    }
+}
