@@ -21,7 +21,7 @@ class ContractController extends AbstractController
     #[Route('/contract', name: 'app_contracts')]
     public function index(EntityManagerInterface $em, ContractGeneratorService $generator): Response
     {
-        $contracts = $em->getRepository(Contract::class)->findAll();
+        $contracts = $em->getRepository(Contract::class)->findAllOrderedByConnections();
         return $this->render('contract/index.html.twig', [
             'contracts' => $contracts,
         ]);
@@ -123,7 +123,7 @@ class ContractController extends AbstractController
     }
 
     #[Route('/contract/{id}/accept', name: 'app_contract_accept', methods: ['POST'])]
-    public function accept(Contract $contract, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
+    public function accept(Contract $contract, EntityManagerInterface $em, ContractService $contractService): Response
     {
         if ($contract->getStatus() !== ContractStatus::Available) {
             $this->addFlash('error', 'Contract is not available.');
@@ -132,14 +132,27 @@ class ContractController extends AbstractController
 
         $contract->setCompany($this->getUser()->getCompany());
         $contractService->acceptContract($contract);
+        $em->persist($contract);
+        $em->flush();
+        $this->addFlash('success', 'Contract accepted.');
+
+        return $this->redirectToRoute('app_contracts');
+    }
+
+    #[Route('/contract/{id}/generate-opposing', name: 'app_contracts_generate_opposing', methods: ['POST'])]
+    public function generateOpposing(Contract $contract, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
+    {
+        if ($contract->isOpposing()) {
+            $this->addFlash('error', 'Cannot generate opposing for an opposing contract.');
+            return $this->redirectToRoute('app_contracts');
+        }
+
         $opposingData = $generator->generateOpposing($contract->getType(), $contract->getScale(), $contract->getNumberOfTracks());
         $opposing = $contractService->createContract($opposingData);
         $opposing->setLinkedContract($contract);
-        $contract->setLinkedContract($opposing);
         $em->persist($opposing);
-
         $em->flush();
-        $this->addFlash('success', 'Contract accepted.');
+        $this->addFlash('success', 'Opposing contract generated.');
 
         return $this->redirectToRoute('app_contracts');
     }
@@ -148,18 +161,14 @@ class ContractController extends AbstractController
     public function delete(Contract $contract, EntityManagerInterface $em): Response
     {
         if ($contract->isOpposing()) {
-            $primary = $em->getRepository(Contract::class)->findOneBy(['linkedContract' => $contract]);
-            if ($primary) {
-                $primary->setLinkedContract(null);
-                $em->flush();
-            }
+            $contract->setLinkedContract(null);
+            $em->flush();
         } else {
-            $linked = $contract->getLinkedContract();
-            if ($linked) {
-                $em->remove($linked);
-                $contract->setLinkedContract(null);
-                $em->flush();
+            foreach ($contract->getOpposingContracts() as $opposing) {
+                $em->remove($opposing);
             }
+            $contract->setLinkedContract(null);
+            $em->flush();
         }
         $em->remove($contract);
         $em->flush();

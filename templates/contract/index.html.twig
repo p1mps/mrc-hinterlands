@@ -22,15 +22,29 @@
     <tbody>
     {% for c in contracts %}
     <tr>
-        <td>{{ (c.type.value ?? c.name) | capitalize }}</td>
+        <td>{{ c.name ?? c.type.value | capitalize }}</td>
         <td>{{ c.employer }}</td>
         <td>{{ c.scale }}</td>
         <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
         <td>{{ c.tracksCompleted }}/{{ c.numberOfTracks }}</td>
         <td>{{ c.company ? c.company.name : '—' }}</td>
-        <td>{{ c.isOpposing ? 'Yes' : 'No' }}</td>
+        <td>
+            {% if c.opposingContracts|length > 0 %}
+                {{ c.opposingContracts|map(c => c.name ?? '(no name)')|join(', ') }}
+            {% elseif c.linkedContract %}
+                {{ c.linkedContract.name ?? '—' }}
+            {% else %}
+                —
+            {% endif %}
+        </td>
         <td class="text-nowrap">
             <a href="{{ path('app_contracts_show', {id: c.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
+            {% if c.linkedContract is null and c.opposingContracts|length == 0 and c.status.value != 'completed' %}
+            <form method="post" action="{{ path('app_contracts_generate_opposing', {id: c.id}) }}" class="d-inline"
+                  onsubmit="return confirm('Generate an opposing contract for this one?')">
+                <button class="btn btn-sm btn-outline-warning">Gen Opposing</button>
+            </form>
+            {% endif %}
             {% if c.status.value == 'available' and not c.company %}
             <form method="post" action="{{ path('app_contract_accept', {id: c.id}) }}" class="d-inline">
                 <button class="btn btn-sm btn-success">Claim</button>

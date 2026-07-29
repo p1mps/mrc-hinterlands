@@ -36,7 +36,7 @@ class ContractLogController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($entry->getEntryType()->value === 'Track Setup' && $entry->getTrack()) {
+            if ($entry->getEntryType()->value === 'track_setup' && $entry->getTrack()) {
                 $missionType = $request->request->get('missionType', $entry->getTrack()->getMissionType());
                 $terrain = $request->request->get('terrain', $entry->getTrack()->getTerrain());
                 $this->logService->updateTrackSetupData($entry, $missionType, $terrain);
