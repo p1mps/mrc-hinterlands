@@ -26,7 +26,7 @@ class Contract {
     private ?MercenaryCompany $opposingCompany = null;
 
     #[ORM\OneToOne(targetEntity: self::class)]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Contract $linkedContract = null;
 
     #[ORM\Column]
@@ -40,6 +40,9 @@ class Contract {
 
     #[ORM\Column(length: 255)]
     private string $employerAffiliation;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = '';
 
     #[ORM\Column]
     private int $scale;
@@ -161,6 +164,9 @@ class Contract {
 
     public function getIntensity(): ?string { return $this->intensity; }
     public function setIntensity(?string $intensity): static { $this->intensity = $intensity; return $this; }
+
+    public function getDescription(): ?string { return $this->description; }
+    public function setDescription(?string $description): static { $this->description = $description; return $this; }
 
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 

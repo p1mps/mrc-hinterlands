@@ -279,3 +279,128 @@ strong, b {
     margin-bottom: 0 !important;
     color: white;
 }
+
+.contract-description h1,
+.contract-description h2,
+.contract-description h3,
+.contract-description h4,
+.contract-description h5,
+.contract-description h6 {
+    font-family: var(--bt-font-header);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--bt-cyan);
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--bt-panel-border);
+    padding-bottom: 4px;
+}
+
+.contract-description h1 { font-size: 1.5rem; }
+.contract-description h2 { font-size: 1.3rem; }
+.contract-description h3 { font-size: 1.15rem; }
+.contract-description h4 { font-size: 1.05rem; }
+
+.contract-description p {
+    color: var(--bt-text);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.contract-description strong,
+.contract-description b {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.contract-description em {
+    color: var(--bt-muted);
+    font-style: italic;
+}
+
+.contract-description a {
+    color: var(--bt-cyan);
+    text-decoration: underline;
+}
+
+.contract-description a:hover {
+    color: #5ce6ff;
+}
+
+.contract-description code {
+    font-family: var(--bt-font-mono);
+    background-color: rgba(11, 15, 20, 0.8);
+    color: var(--bt-amber);
+    padding: 1px 5px;
+    border-radius: 2px;
+    font-size: 0.9em;
+}
+
+.contract-description pre {
+    font-family: var(--bt-font-mono);
+    background-color: var(--bt-panel-bg);
+    border: 1px solid var(--bt-panel-border);
+    border-left: 3px solid var(--bt-cyan);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin: 0.75rem 0;
+    overflow-x: auto;
+}
+
+.contract-description pre code {
+    background: none;
+    padding: 0;
+    color: var(--bt-text);
+    font-size: 0.85rem;
+}
+
+.contract-description blockquote {
+    border-left: 3px solid var(--bt-muted);
+    padding: 6px 16px;
+    margin: 0.75rem 0;
+    color: var(--bt-muted);
+    font-style: italic;
+    background-color: rgba(30, 44, 66, 0.2);
+    border-radius: 2px;
+}
+
+.contract-description ul,
+.contract-description ol {
+    color: var(--bt-text);
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.contract-description li {
+    color: var(--bt-text);
+    line-height: 1.6;
+    margin-bottom: 0.25rem;
+}
+
+.contract-description hr {
+    border-color: var(--bt-panel-border);
+    margin: 1rem 0;
+}
+
+.contract-description table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0;
+}
+
+.contract-description table th {
+    font-family: var(--bt-font-header);
+    text-transform: uppercase;
+    color: var(--bt-amber);
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--bt-panel-border);
+    padding: 6px 10px;
+    text-align: left;
+}
+
+.contract-description table td {
+    color: var(--bt-text);
+    border-bottom: 1px solid var(--bt-panel-border);
+    padding: 6px 10px;
+}

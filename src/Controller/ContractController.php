@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Contract;
+use App\Enum\CommandRights;
 use App\Enum\ContractStatus;
+use App\Enum\ContractType;
 use App\Form\ContractEditFormType;
 use App\Form\PostTrackFormType;
+use App\Service\ContractGeneratorService;
 use App\Service\ContractService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,13 +18,61 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ContractController extends AbstractController
 {
-    #[Route('/contract', name: 'app_contract')]
-    public function index(EntityManagerInterface $em): Response
+    #[Route('/contract', name: 'app_contracts')]
+    public function index(EntityManagerInterface $em, ContractGeneratorService $generator): Response
     {
         $contracts = $em->getRepository(Contract::class)->findAll();
         return $this->render('contract/index.html.twig', [
             'contracts' => $contracts,
         ]);
+    }
+
+    #[Route('/contract/generate', name: 'app_contracts_generate', methods: ['GET'])]
+    public function generate(Request $request, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
+    {
+        $scale = $request->query->getInt('scale', 1);
+        $data = $generator->generate($scale);
+
+        return $this->render('contract/generate.html.twig', [
+            'data'    => $data,
+            'scale'   => $scale,
+        ]);
+    }
+
+    #[Route('/contract/generate/accept', name: 'app_contracts_accept', methods: ['POST'])]
+    public function acceptGenerated(Request $request, EntityManagerInterface $em, ContractService $contractService,  ContractGeneratorService $generator): Response
+    {
+        $data = [
+            'type'             => ContractType::from($request->request->get('type')),
+            'employer'         => $request->request->get('employer'),
+            'employerAffiliation' => $request->request->get('affiliation'),
+            'scale'            => $request->request->getInt('scale'),
+            'durationMonths'   => $request->request->getInt('duration'),
+            'basePayPercent'   => $request->request->get('basePayPercent') ?: null,
+            'commandRights'    => CommandRights::from($request->request->get('commandRights')),
+            'supportTerms'     => $request->request->get('supportTerms'),
+            'salvageRights'    => $request->request->get('salvageRights'),
+            'transportTerms'   => $request->request->get('transportTerms'),
+            'numberOfTracks'   => $request->request->getInt('numberOfTracks'),
+        ];
+
+        $contract = $contractService->createContract($data);
+        $opposingData = $generator->generateOpposing($data['type'], $data['scale'], $data['numberOfTracks']);
+        $opposing = $contractService->createContract($opposingData);
+        $opposing->setLinkedContract($contract);
+        $contract->setLinkedContract($opposing);
+        $em->persist($contract);
+        $em->persist($opposing);
+        $em->flush();
+        $this->addFlash('success', 'Contract generated.');
+
+        return $this->redirectToRoute('app_contracts');
+    }
+
+    #[Route('/contract/generate/discard', name: 'app_contracts_discard', methods: ['POST'])]
+    public function discard(): Response
+    {
+        return $this->redirectToRoute('app_contracts');
     }
 
     #[Route('/contract/new', name: 'app_contract_new')]
@@ -44,19 +95,77 @@ class ContractController extends AbstractController
         ]);
     }
 
-    #[Route('/contract/{id}/accept', name: 'app_contract_accept')]
-    public function accept(Contract $contract, EntityManagerInterface $em, ContractService $contractService): Response
+    #[Route('/contract/{id}', name: 'app_contracts_show')]
+    public function show(Contract $contract): Response
+    {
+        return $this->render('contract/show.html.twig', [
+            'contract' => $contract,
+        ]);
+    }
+
+    #[Route('/contract/{id}/edit', name: 'app_contracts_edit')]
+    public function edit(Contract $contract, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(ContractEditFormType::class, $contract);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Contract updated.');
+
+            return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
+        }
+
+        return $this->render('contract/edit.html.twig', [
+            'contract' => $contract,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/contract/{id}/accept', name: 'app_contract_accept', methods: ['POST'])]
+    public function accept(Contract $contract, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
     {
         if ($contract->getStatus() !== ContractStatus::Available) {
             $this->addFlash('error', 'Contract is not available.');
-            return $this->redirectToRoute('app_contract');
+            return $this->redirectToRoute('app_contracts');
         }
 
+        $contract->setCompany($this->getUser()->getCompany());
         $contractService->acceptContract($contract);
+        $opposingData = $generator->generateOpposing($contract->getType(), $contract->getScale(), $contract->getNumberOfTracks());
+        $opposing = $contractService->createContract($opposingData);
+        $opposing->setLinkedContract($contract);
+        $contract->setLinkedContract($opposing);
+        $em->persist($opposing);
+
         $em->flush();
         $this->addFlash('success', 'Contract accepted.');
 
-        return $this->redirectToRoute('app_contract');
+        return $this->redirectToRoute('app_contracts');
+    }
+
+    #[Route('/contract/{id}/delete', name: 'app_contracts_delete', methods: ['POST'])]
+    public function delete(Contract $contract, EntityManagerInterface $em): Response
+    {
+        if ($contract->isOpposing()) {
+            $primary = $em->getRepository(Contract::class)->findOneBy(['linkedContract' => $contract]);
+            if ($primary) {
+                $primary->setLinkedContract(null);
+                $em->flush();
+            }
+        } else {
+            $linked = $contract->getLinkedContract();
+            if ($linked) {
+                $em->remove($linked);
+                $contract->setLinkedContract(null);
+                $em->flush();
+            }
+        }
+        $em->remove($contract);
+        $em->flush();
+        $this->addFlash('success', 'Contract deleted.');
+
+        return $this->redirectToRoute('app_contracts');
     }
 
     #[Route('/contract/{id}/track-setup', name: 'app_contract_track_setup')]

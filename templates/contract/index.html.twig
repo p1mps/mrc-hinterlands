@@ -15,6 +15,7 @@
             <th>Status</th>
             <th>Tracks</th>
             <th>Claimed By</th>
+            <th>Linked</th>
             <th></th>
         </tr>
     </thead>
@@ -27,8 +28,14 @@
         <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
         <td>{{ c.tracksCompleted }}/{{ c.numberOfTracks }}</td>
         <td>{{ c.company ? c.company.name : '—' }}</td>
+        <td>{{ c.isOpposing ? 'Yes' : 'No' }}</td>
         <td class="text-nowrap">
             <a href="{{ path('app_contracts_show', {id: c.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
+            {% if c.status.value == 'available' and not c.company %}
+            <form method="post" action="{{ path('app_contract_accept', {id: c.id}) }}" class="d-inline">
+                <button class="btn btn-sm btn-success">Claim</button>
+            </form>
+            {% endif %}
             <form method="post" action="{{ path('app_contracts_delete', {id: c.id}) }}" class="d-inline"
                   onsubmit="return confirm('Delete this contract?')">
                 <button class="btn btn-sm btn-danger">Del</button>
@@ -36,7 +43,7 @@
         </td>
     </tr>
     {% else %}
-    <tr><td colspan="7" class="text-muted">No contracts yet.</td></tr>
+    <tr><td colspan="8" class="text-muted">No contracts yet.</td></tr>
     {% endfor %}
     </tbody>
 </table>

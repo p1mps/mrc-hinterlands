@@ -28,10 +28,10 @@ class ContractTypeTable {
             ['min'=>10,'max'=>12,'type'=>ContractType::Invasion],
         ]],
         ['min'=>10,'max'=>12,'type'=>ContractType::Invasion,'duration'=>6,'opposing'=>[
-            ['min'=>2,'max'=>4,'type'=>ContractType::Expedition],
-            ['min'=>5,'max'=>8,'type'=>ContractType::Garrison],
-            ['min'=>9,'max'=>10,'type'=>ContractType::Raid],
-            ['min'=>11,'max'=>12,'type'=>ContractType::Retainer],
+            ['min'=>2,'max'=>5,'type'=>ContractType::Garrison],
+            ['min'=>6,'max'=>8,'type'=>ContractType::Retainer],
+            ['min'=>9,'max'=>9,'type'=>ContractType::Raid],
+            ['min'=>10,'max'=>12,'type'=>ContractType::Invasion],
         ]],
     ];
 

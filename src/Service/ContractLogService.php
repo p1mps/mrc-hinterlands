@@ -55,6 +55,7 @@ class ContractLogService
         }
 
         $this->em->remove($entry);
+        $this->em->flush();
     }
 
     public function calculateCurrentMonth(Contract $contract): int

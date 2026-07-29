@@ -35,7 +35,7 @@ class MechAcquisitionService
         $newUnit = new Unit();
 
         // Map fields from SalvagedMech to Unit
-        $newUnit->setName(null);
+        $newUnit->setName($salvagedMech->getModel() ?? '');
         $newUnit->setChassis($salvagedMech->getModel() ?? 'Unknown Chassis');
         $newUnit->setTonnage($salvagedMech->getTonnage() ?? 0);
         $newUnit->setBv($bvCost); // Using BV cost as the BV value for the unit

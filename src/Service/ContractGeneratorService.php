@@ -84,12 +84,13 @@ class ContractGeneratorService {
         ];
     }
 
-    public function generateOpposing(ContractType $primaryType, int $scale): array {
+    public function generateOpposing(ContractType $primaryType, int $scale, int $numberOfTracks): array {
         $oppRoll      = $this->dice->roll(2, 6);
         $opposingType = ContractTypeTable::lookupOpposing($primaryType, $oppRoll);
         $result       = $this->generate($scale);
         $result['type']       = $opposingType;
         $result['isOpposing'] = true;
+        $result['numberOfTracks'] = $numberOfTracks;
         return $result;
     }
 

@@ -18,32 +18,62 @@ class ContractService
         private readonly ContractGeneratorService $generator,
     ) {}
 
-    public function createContract(array $data): Contract
+    public function createContract(Contract|array $data): Contract
     {
-        $contract = (new Contract())
-            ->setType($data['type'])
-            ->setEmployer($data['employer'])
-            ->setEmployerAffiliation($data['employerAffiliation'])
-            ->setScale($data['scale'])
-            ->setDurationMonths($data['durationMonths'])
-            ->setBasePayPercent($data['basePayPercent'] ?? null)
-            ->setCommandRights($data['commandRights'])
-            ->setSupportTerms($data['supportTerms'])
-            ->setSalvageRights($data['salvageRights'])
-            ->setTransportTerms($data['transportTerms'])
-            ->setNumberOfTracks($data['numberOfTracks'])
-            ->setIsOpposing($data['isOpposing'] ?? false);
+        $contract = (new Contract());
 
-        if ($data['company'] ?? null) {
-            $contract->setCompany($data['company']);
-        }
+        if ($data instanceof Contract) {
+            $contract
+                ->setType($data->getType())
+                ->setEmployer($data->getEmployer())
+                ->setEmployerAffiliation($data->getEmployerAffiliation())
+                ->setScale($data->getScale())
+                ->setDurationMonths($data->getDurationMonths())
+                ->setBasePayPercent($data->getBasePayPercent())
+                ->setCommandRights($data->getCommandRights())
+                ->setSupportTerms($data->getSupportTerms())
+                ->setSalvageRights($data->getSalvageRights())
+                ->setTransportTerms($data->getTransportTerms())
+                ->setNumberOfTracks($data->getNumberOfTracks())
+                ->setIsOpposing($data->isOpposing());
 
-        if ($data['opposingCompany'] ?? null) {
-            $contract->setOpposingCompany($data['opposingCompany']);
-        }
+            if ($data->getCompany()) {
+                $contract->setCompany($data->getCompany());
+            }
 
-        if ($data['linkedContract'] ?? null) {
-            $contract->setLinkedContract($data['linkedContract']);
+            if ($data->getOpposingCompany()) {
+                $contract->setOpposingCompany($data->getOpposingCompany());
+            }
+
+            if ($data->getLinkedContract()) {
+                $contract->setLinkedContract($data->getLinkedContract());
+            }
+        } else {
+            $contract
+                ->setType($data['type'])
+                ->setEmployer($data['employer'])
+                ->setEmployerAffiliation($data['employerAffiliation'] ?? '')
+                ->setScale($data['scale'])
+                ->setDurationMonths($data['durationMonths'] ?? 0)
+                ->setBasePayPercent($data['basePayPercent'] ?? null)
+                ->setCommandRights($data['commandRights'])
+                ->setSupportTerms($data['supportTerms'])
+                ->setSalvageRights($data['salvageRights'])
+                ->setTransportTerms($data['transportTerms'])
+                ->setNumberOfTracks($data['numberOfTracks'])
+                ->setIsOpposing($data['isOpposing'] ?? false);
+
+            if ($data['company'] ?? null) {
+                $contract->setCompany($data['company']);
+            }
+
+            if ($data['opposingCompany'] ?? null) {
+                $contract->setOpposingCompany($data['opposingCompany']);
+            }
+
+            if ($data['linkedContract'] ?? null) {
+                $contract->setLinkedContract($data['linkedContract']);
+            }
         }
 
         return $contract;
