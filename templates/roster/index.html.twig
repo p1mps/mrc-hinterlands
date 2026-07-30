@@ -36,6 +36,12 @@
     </td>
     <td class="text-nowrap">
         <a href="{{ path('app_roster_edit', {id: unit.id}) }}" class="btn btn-sm btn-secondary">Edit</a>
+        {% if unit.damageState.value != 'None' %}
+            <form method="post" action="{{ path('app_roster_repair', {id: unit.id}) }}" class="d-inline"
+                  onsubmit="return confirm('Repair this unit? This will deduct SP based on tonnage and damage state.');">
+                <button class="btn btn-sm btn-info">Repair</button>
+            </form>
+        {% endif %}
         <form method="post" action="{{ path('app_roster_delete', {id: unit.id}) }}" class="d-inline"
               onsubmit="return confirm('Delete this unit?')">
             <button class="btn btn-sm btn-danger">Del</button>
@@ -43,7 +49,7 @@
     </td>
 </tr>
 {% else %}
-<tr><td colspan="9" class="text-muted">No units yet.</td></tr>
+<tr><td colspan="10" class="text-muted">No units yet.</td></tr>
 {% endfor %}
 </tbody>
 </table>

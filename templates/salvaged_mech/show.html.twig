@@ -8,21 +8,46 @@
 <tr><th>Model</th><td>{{ salvaged_mech.model ?? '—' }}</td></tr>
 <tr><th>Tonnage</th><td>{{ salvaged_mech.tonnage ?? '—' }}</td></tr>
 <tr><th>BV Cost</th><td>{{ salvaged_mech.bvCost ?? '—' }}</td></tr>
+<tr><th>Salvage Value (BV/2)</th><td>{{ salvaged_mech.salvageValue ?? '—' }}</td></tr>
+<tr><th>Salvage Rights</th><td>{{ salvaged_mech.salvageRightsPercent is null ? 'Exchange (25%)' : (salvaged_mech.salvageRightsPercent ~ '%') }}</td></tr>
+<tr><th>Damage State</th><td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td></tr>
+<tr><th>Tech Base</th><td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td></tr>
+<tr><th>Contract ID</th><td>{{ salvaged_mech.contractId ?? '—' }}</td></tr>
+<tr><th>Acquired</th><td>{{ salvaged_mech.isAcquired ? 'Yes' : 'No' }}</td></tr>
+<tr><th>Truly Destroyed</th><td>{{ salvaged_mech.isTrulyDestroyed ? 'Yes' : 'No' }}</td></tr>
+<tr><th>SP Taken</th><td>{{ salvaged_mech.spTaken ?? '—' }}</td></tr>
+<tr><th>Scrapyard</th><td>{{ salvaged_mech.isScrapyard ? 'Yes' : 'No' }}</td></tr>
 </table>
 </div>
 </div>
 </div>
+
+{% set isScrapyard = salvaged_mech.isScrapyard %}
+{% set acquisitionCost = isScrapyard
+    ? salvageCalc.calculateSalvageValue(salvaged_mech.bvCost)
+    : (salvaged_mech.salvageValue ?? salvaged_mech.bvCost) %}
+{% set scrapyardNote = isScrapyard ? ' (Scrapyard: half BV, stays Crippled)' : '' %}
 
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
     <a href="{{ path('app_salvaged_mech_index') }}" class="btn btn-outline-secondary">Back to list</a>
     <div class="d-flex gap-2">
         <a href="{{ path('app_salvaged_mech_edit', {id: salvaged_mech.id}) }}" class="btn btn-primary">Edit</a>
         
-        {% if not salvaged_mech.isAcquired %}
-            <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech? This will deduct BV cost from your support points.');" class="d-inline">
+        {% if not salvaged_mech.isAcquired and not salvaged_mech.isTrulyDestroyed and salvaged_mech.spTaken is null %}
+            <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech?{{ scrapyardNote }} This will deduct {{ acquisitionCost }} support points.');" class="d-inline">
                 <input type="hidden" name="_token" value="{{ csrf_token('acquire' ~ salvaged_mech.id) }}">
                 <button class="btn btn-success">Acquire Mech</button>
             </form>
+            
+            {% if salvaged_mech.salvageValue is not null %}
+                {% set isExchange = salvaged_mech.salvageRightsPercent is null or salvaged_mech.salvageRightsPercent == 0 %}
+                {% if isExchange %}
+                    <form method="post" action="{{ path('app_salvaged_mech_take_sp', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Take SP payout for this mech? This will add salvage SP to your company.');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('take_sp' ~ salvaged_mech.id) }}">
+                        <button class="btn btn-warning">Take SP Payout</button>
+                    </form>
+                {% endif %}
+            {% endif %}
         {% endif %}
     </div>
 </div>

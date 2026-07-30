@@ -5,59 +5,78 @@ namespace App\Service;
 use App\Entity\MercenaryCompany;
 use App\Entity\SalvagedMech;
 use App\Entity\Unit;
+use App\Enum\DamageState;
 use App\Enum\UnitType;
+use App\Service\SalvageCalculationService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MechAcquisitionService
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly SalvageCalculationService $salvageCalc
+    ) {}
 
     /**
-     * Acquires a salvaged mech by deducting support points, creating a new Unit in the roster,
-     * and removing the SalvagedMech entry.
+     * Acquires a salvaged mech by deducting support points and creating a new Unit in the roster.
+     *
+     * Uses salvageValue (if set) or falls back to bvCost for backward compatibility.
+     * The SalvagedMech entry is NOT removed from the DB — it stays as a record.
      *
      * @throws \Exception
      */
     public function acquireMech(SalvagedMech $salvagedMech, MercenaryCompany $company): void
     {
-        // 1. Validate BV Cost
-        if ($salvagedMech->getBvCost() === null || $salvagedMech->getBvCost() <= 0) {
-            throw new \InvalidArgumentException('Salvaged Mech must have a valid BV cost.');
+        // Determine cost: scrapyard uses half BV, otherwise uses salvageValue or bvCost
+        if ($salvagedMech->isScrapyard()) {
+            $cost = $this->salvageCalc->calculateSalvageValue($salvagedMech->getBvCost());
+        } else {
+            $cost = $salvagedMech->getSalvageValue() ?? $salvagedMech->getBvCost();
+        }
+        
+        if ($cost === null || $cost <= 0) {
+            throw new \InvalidArgumentException('Salvaged Mech must have a valid BV cost or salvage value.');
         }
 
-        $bvCost = $salvagedMech->getBvCost();
+        // Deduct Support Points from Company
+        $deductionLabel = 'Acquisition of ' . ($salvagedMech->getModel() ?: 'Unknown Mech');
+        if ($salvagedMech->isScrapyard()) {
+            $deductionLabel .= ' (Scrapyard)';
+        }
+        $company->deductSupportPoints($cost, $deductionLabel);
 
-        // 2. Deduct Support Points from Company
-        // This will throw an exception if insufficient funds
-        $company->deductSupportPoints($bvCost, "Acquisition of {$salvagedMech->getModel()}");
-
-        // 3. Create New Roster Unit
+        // Create New Roster Unit
         $newUnit = new Unit();
 
         // Map fields from SalvagedMech to Unit
         $newUnit->setName($salvagedMech->getModel() ?? '');
         $newUnit->setChassis($salvagedMech->getModel() ?? 'Unknown Chassis');
         $newUnit->setTonnage($salvagedMech->getTonnage() ?? 0);
-        $newUnit->setBv($bvCost); // Using BV cost as the BV value for the unit
+        $newUnit->setBv($cost);
 
-        // Set Unit Type to Mech (assuming UnitType enum has a Mech case)
         try {
             $newUnit->setUnitType(UnitType::Mech);
         } catch (\ValueError $e) {
-            // Fallback if 'Mech' is not defined in UnitType enum
-            // Try to find a suitable type or throw error
             throw new \InvalidArgumentException('Could not determine UnitType for Mech. Ensure UnitType::Mech exists.');
         }
 
         // Link to company
         $newUnit->setCompany($company);
 
-        // 4. Mark Salvaged Mech as Acquired (optional if we delete immediately, but good for audit)
+        // Scrapyard: force Crippled status, normal: None (default)
+        if ($salvagedMech->isScrapyard()) {
+            try {
+                $newUnit->setDamageState(DamageState::Crippled);
+            } catch (\ValueError $e) {
+                throw new \InvalidArgumentException('Could not set Crippled damage state.');
+            }
+        }
+
+        // Mark Salvaged Mech as Acquired
         $salvagedMech->setAcquired(true);
 
-        // 5. Persist Changes
+        // Persist Changes
         $this->em->persist($newUnit);
-        $this->em->remove($salvagedMech);
         $this->em->flush();
     }
 }

@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Service;
 use App\Entity\MercenaryCompany;
 use App\Entity\Pilot;
 use App\Entity\Unit;
+use App\Enum\DamageState;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -13,12 +14,14 @@ use PHPUnit\Framework\TestCase;
 class RosterServiceTest extends TestCase
 {
     private EntityManagerInterface $em;
+    private \App\Service\SalvageCalculationService $salvageCalc;
     private \App\Service\RosterService $service;
 
     protected function setUp(): void
     {
         $this->em = $this->createMock(EntityManagerInterface::class);
-        $this->service = new \App\Service\RosterService($this->em);
+        $this->salvageCalc = $this->createStub(\App\Service\SalvageCalculationService::class);
+        $this->service = new \App\Service\RosterService($this->em, $this->salvageCalc);
     }
 
     private function makeCompany(): MercenaryCompany
@@ -305,5 +308,164 @@ class RosterServiceTest extends TestCase
             ->method('flush');
 
         $this->service->deleteUnit($unit);
+    }
+
+    // ── repairUnit ────────────────────────────────────────────────────────
+
+    private function makeRepairUnit(
+        ?DamageState $damageState = DamageState::Structural,
+        int $tonnage = 100,
+        ?string $name = 'Thunderbird TBR-1',
+        ?string $chassis = 'Thunderbird TBR-1'
+    ): Unit {
+        $unit = $this->createMock(Unit::class);
+        $unit->method('getDamageState')->willReturn($damageState);
+        $unit->method('getTonnage')->willReturn($tonnage);
+        $unit->method('getName')->willReturn($name);
+        $unit->method('getChassis')->willReturn($chassis);
+        $unit->method('setDamageState')->willReturnSelf();
+
+        return $unit;
+    }
+
+    public function testRepairUnitSucceeds(): void
+    {
+        $company = $this->makeCompany();
+        $unit = $this->makeRepairUnit();
+
+        $this->salvageCalc->method('calculateRepairCost')->willReturn(200);
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $unit->expects($this->once())
+            ->method('setDamageState')
+            ->with(DamageState::None);
+
+        $result = $this->service->repairUnit($unit, $company);
+
+        $this->assertNull($result);
+    }
+
+    public function testRepairUnitSetsDamageStateToNone(): void
+    {
+        $company = $this->makeCompany();
+        $unit = $this->makeRepairUnit(DamageState::Crippled);
+
+        $this->salvageCalc->method('calculateRepairCost')->willReturn(300);
+
+        $unit->expects($this->once())
+            ->method('setDamageState')
+            ->with(DamageState::None);
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $result = $this->service->repairUnit($unit, $company);
+
+        $this->assertNull($result);
+    }
+
+    public function testRepairUnitFailsWhenAlreadyNone(): void
+    {
+        $company = $this->makeCompany();
+        $unit = $this->makeRepairUnit(DamageState::None);
+
+        $this->salvageCalc->method('calculateRepairCost')->willReturn(0);
+
+        $this->em->expects($this->never())
+            ->method('flush');
+
+        $result = $this->service->repairUnit($unit, $company);
+
+        $this->assertEquals('Unit is already fully repaired.', $result);
+    }
+
+    public function testRepairUnitFailsInsufficientFunds(): void
+    {
+        $company = $this->makeCompany();
+        $unit = $this->makeRepairUnit();
+
+        $this->salvageCalc->method('calculateRepairCost')->willReturn(200);
+
+        $company->method('deductSupportPoints')
+            ->willThrowException(new \Exception('Insufficient support points. Current balance: 100, Requested deduction: 200'));
+
+        $this->em->expects($this->never())
+            ->method('flush');
+
+        $result = $this->service->repairUnit($unit, $company);
+
+        $this->assertStringContainsString('Insufficient support points', $result);
+    }
+
+    public function testRepairUnitFailsWhenCalculateCostReturnsNull(): void
+    {
+        $company = $this->makeCompany();
+        $unit = $this->makeRepairUnit();
+
+        $this->salvageCalc->method('calculateRepairCost')->willReturn(null);
+
+        $this->em->expects($this->never())
+            ->method('flush');
+
+        $result = $this->service->repairUnit($unit, $company);
+
+        $this->assertEquals('Could not calculate repair cost.', $result);
+    }
+
+    public function testRepairUnitWithArmorOnlyDamage(): void
+    {
+        $company = $this->makeCompany();
+        $unit = $this->makeRepairUnit(DamageState::ArmorOnly, 80);
+
+        $this->salvageCalc->method('calculateRepairCost')->willReturn(40);
+
+        $unit->expects($this->once())
+            ->method('setDamageState')
+            ->with(DamageState::None);
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $result = $this->service->repairUnit($unit, $company);
+
+        $this->assertNull($result);
+    }
+
+    public function testRepairUnitWithDestroyedDamage(): void
+    {
+        $company = $this->makeCompany();
+        $unit = $this->makeRepairUnit(DamageState::Destroyed, 120);
+
+        $this->salvageCalc->method('calculateRepairCost')->willReturn(600);
+
+        $unit->expects($this->once())
+            ->method('setDamageState')
+            ->with(DamageState::None);
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $result = $this->service->repairUnit($unit, $company);
+
+        $this->assertNull($result);
+    }
+
+    public function testRepairUnitDeductsCorrectSupportPoints(): void
+    {
+        $company = $this->createMock(MercenaryCompany::class);
+        $unit = $this->makeRepairUnit(DamageState::Structural, 100);
+
+        $this->salvageCalc->method('calculateRepairCost')->willReturn(200);
+
+        $company->expects($this->once())
+            ->method('deductSupportPoints')
+            ->with(200, 'Repair of Thunderbird TBR-1 (Thunderbird TBR-1)');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->repairUnit($unit, $company);
     }
 }

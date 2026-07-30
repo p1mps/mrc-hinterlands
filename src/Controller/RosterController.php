@@ -79,4 +79,18 @@ class RosterController extends AbstractController
         $this->addFlash('success', 'Unit deleted.');
         return $this->redirectToRoute('app_roster');
     }
+
+    #[Route('/{id}/repair', name: 'app_roster_repair', methods: ['POST'])]
+    public function repair(Unit $unit, Request $request, RosterService $rosterService): Response
+    {
+        $company = $this->getUser()->getCompany();
+        $error = $rosterService->repairUnit($unit, $company);
+        if ($error) {
+            $this->addFlash('danger', $error);
+        } else {
+            $this->addFlash('success', 'Unit repaired successfully.');
+        }
+
+        return $this->redirectToRoute('app_roster');
+    }
 }

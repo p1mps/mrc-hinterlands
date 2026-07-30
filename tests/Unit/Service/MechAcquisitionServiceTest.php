@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Service;
 use App\Entity\MercenaryCompany;
 use App\Entity\SalvagedMech;
 use App\Entity\Unit;
+use App\Enum\DamageState;
 use App\Enum\UnitType;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -12,12 +13,14 @@ use PHPUnit\Framework\TestCase;
 class MechAcquisitionServiceTest extends TestCase
 {
     private EntityManagerInterface $em;
+    private \App\Service\SalvageCalculationService $salvageCalc;
     private \App\Service\MechAcquisitionService $service;
 
     protected function setUp(): void
     {
         $this->em = $this->createMock(EntityManagerInterface::class);
-        $this->service = new \App\Service\MechAcquisitionService($this->em);
+        $this->salvageCalc = $this->createStub(\App\Service\SalvageCalculationService::class);
+        $this->service = new \App\Service\MechAcquisitionService($this->em, $this->salvageCalc);
     }
 
     private function makeSalvagedMech(array $overrides = []): SalvagedMech
@@ -28,6 +31,7 @@ class MechAcquisitionServiceTest extends TestCase
             'tonnage' => 80,
             'bvCost' => 300,
             'acquired' => false,
+            'scrapyard' => false,
         ];
         foreach ($defaults as $key => $value) {
             $setter = 'set' . ucfirst($key);
@@ -40,6 +44,13 @@ class MechAcquisitionServiceTest extends TestCase
         $mechan->setTonnage($merged['tonnage']);
         $mechan->setBvCost($merged['bvCost']);
         $mechan->setAcquired($merged['acquired']);
+        $mechan->setScrapyard($merged['scrapyard'] ?? false);
+        if (isset($merged['salvageValue'])) {
+            $mechan->setSalvageValue($merged['salvageValue']);
+        }
+        if (isset($merged['salvageRightsPercent'])) {
+            $mechan->setSalvageRightsPercent($merged['salvageRightsPercent']);
+        }
 
         return $mechan;
     }
@@ -60,19 +71,14 @@ class MechAcquisitionServiceTest extends TestCase
 
     // ── Happy Path ────────────────────────────────────────────────────────
 
-    public function testAcquireMechCreatesUnitAndRemovesSalvagedMech(): void
+    public function testAcquireMechCreatesUnit(): void
     {
         $mechan = $this->makeSalvagedMech();
         $company = $this->makeCompany();
 
-        // persist() is called once for the new Unit; SalvagedMech is already managed so setAcquired()
-        // doesn't need a separate persist() — only remove() marks it for deletion
+        // persist() is called once for the new Unit; SalvagedMech is marked as acquired but NOT removed
         $this->em->expects($this->once())
             ->method('persist');
-
-        $this->em->expects($this->once())
-            ->method('remove')
-            ->with($mechan);
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -99,9 +105,6 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
-            ->method('remove');
-
-        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -123,9 +126,6 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->em->expects($this->once())
             ->method('persist');
-
-        $this->em->expects($this->once())
-            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -150,9 +150,6 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
-            ->method('remove');
-
-        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -169,7 +166,7 @@ class MechAcquisitionServiceTest extends TestCase
         $company = $this->makeCompany();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Salvaged Mech must have a valid BV cost.');
+        $this->expectExceptionMessage('Salvaged Mech must have a valid BV cost or salvage value.');
 
         $this->service->acquireMech($mechan, $company);
     }
@@ -180,7 +177,7 @@ class MechAcquisitionServiceTest extends TestCase
         $company = $this->makeCompany();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Salvaged Mech must have a valid BV cost.');
+        $this->expectExceptionMessage('Salvaged Mech must have a valid BV cost or salvage value.');
 
         $this->service->acquireMech($mechan, $company);
     }
@@ -191,7 +188,7 @@ class MechAcquisitionServiceTest extends TestCase
         $company = $this->makeCompany();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Salvaged Mech must have a valid BV cost.');
+        $this->expectExceptionMessage('Salvaged Mech must have a valid BV cost or salvage value.');
 
         $this->service->acquireMech($mechan, $company);
     }
@@ -205,9 +202,6 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->em->expects($this->once())
             ->method('persist');
-
-        $this->em->expects($this->once())
-            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -268,9 +262,6 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
-            ->method('remove');
-
-        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -293,9 +284,6 @@ class MechAcquisitionServiceTest extends TestCase
                     $captured[] = $obj;
                 }
             });
-
-        $this->em->expects($this->once())
-            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -324,9 +312,6 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
-            ->method('remove');
-
-        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -349,9 +334,6 @@ class MechAcquisitionServiceTest extends TestCase
                     $captured[] = $obj;
                 }
             });
-
-        $this->em->expects($this->once())
-            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -377,9 +359,6 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
-            ->method('remove');
-
-        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -399,9 +378,6 @@ class MechAcquisitionServiceTest extends TestCase
             ->method('persist');
 
         $this->em->expects($this->once())
-            ->method('remove');
-
-        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -419,9 +395,6 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->em->expects($this->once())
             ->method('persist');
-
-        $this->em->expects($this->once())
-            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -447,5 +420,236 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->em->expects($this->never())
             ->method('flush');
+    }
+
+    // ── Scrapyard Tests ────────────────────────────────────────────────────
+
+    private function makeScrapyardMech(array $overrides = []): SalvagedMech
+    {
+        $defaults = array_merge([
+            'model' => 'Catapult CAT-PU1',
+            'tonnage' => 80,
+            'bvCost' => 300,
+            'acquired' => false,
+            'scrapyard' => true,
+        ], $overrides);
+        return $this->makeSalvagedMech($defaults);
+    }
+
+    public function testAcquireMechScrapyardSetsCrippledDamageState(): void
+    {
+        $mechan = $this->makeScrapyardMech();
+        $company = $this->makeCompany();
+
+        $this->salvageCalc->method('calculateSalvageValue')->willReturn(150);
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->never())
+            ->method('remove');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->acquireMech($mechan, $company);
+
+        $this->assertCount(1, $captured);
+        $this->assertEquals(DamageState::Crippled, $captured[0]->getDamageState());
+    }
+
+    public function testAcquireMechScrapyardUsesHalfBVAsCost(): void
+    {
+        $mechan = $this->makeScrapyardMech(['bvCost' => 400]);
+        $company = $this->makeCompany();
+
+        $this->salvageCalc->method('calculateSalvageValue')->willReturn(200);
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->never())
+            ->method('remove');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->acquireMech($mechan, $company);
+
+        $this->assertCount(1, $captured);
+        $this->assertEquals(200, $captured[0]->getBv());
+    }
+
+    public function testAcquireMechScrapyardDoesNotRemoveSalvagedMech(): void
+    {
+        $mechan = $this->makeScrapyardMech();
+        $company = $this->makeCompany();
+
+        $this->salvageCalc->method('calculateSalvageValue')->willReturn(150);
+
+        $this->em->expects($this->once())
+            ->method('persist');
+
+        $this->em->expects($this->never())
+            ->method('remove');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->acquireMech($mechan, $company);
+
+        $this->assertTrue($mechan->isAcquired());
+    }
+
+    public function testAcquireMechScrapyardWithNullBvCost(): void
+    {
+        $mechan = $this->makeScrapyardMech(['bvCost' => null]);
+        $company = $this->makeCompany();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Salvaged Mech must have a valid BV cost or salvage value.');
+
+        $this->service->acquireMech($mechan, $company);
+    }
+
+    public function testAcquireMechScrapyardWithInsufficientFunds(): void
+    {
+        $mechan = $this->makeScrapyardMech(['bvCost' => 1000]);
+        $company = $this->makeCompany(400);
+
+        $this->salvageCalc->method('calculateSalvageValue')->willReturn(500);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageMatches('/Insufficient support points/');
+
+        $this->service->acquireMech($mechan, $company);
+
+        $this->assertFalse($mechan->isAcquired());
+    }
+
+    public function testAcquireMechNonScrapyardStillRemovesSalvagedMech(): void
+    {
+        $mechan = $this->makeSalvagedMech(['bvCost' => 300, 'salvageValue' => 150]);
+        $company = $this->makeCompany();
+
+        $this->em->expects($this->once())
+            ->method('persist');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->acquireMech($mechan, $company);
+
+        $this->assertTrue($mechan->isAcquired());
+    }
+
+    public function testAcquireMechNonScrapyardUsesSalvageValueWhenSet(): void
+    {
+        $mechan = $this->makeSalvagedMech(['bvCost' => 500, 'salvageValue' => 200]);
+        $company = $this->makeCompany();
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->acquireMech($mechan, $company);
+
+        $this->assertCount(1, $captured);
+        $this->assertEquals(200, $captured[0]->getBv());
+    }
+
+    public function testAcquireMechNonScrapyardFallsBackToBvCostWhenNoSalvageValue(): void
+    {
+        $mechan = $this->makeSalvagedMech(['bvCost' => 400]);
+        $company = $this->makeCompany();
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->acquireMech($mechan, $company);
+
+        $this->assertCount(1, $captured);
+        $this->assertEquals(400, $captured[0]->getBv());
+    }
+
+    public function testAcquireMechNonScrapyardSetsNoneDamageState(): void
+    {
+        $mechan = $this->makeSalvagedMech(['bvCost' => 300]);
+        $company = $this->makeCompany();
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->acquireMech($mechan, $company);
+
+        $this->assertCount(1, $captured);
+        $this->assertEquals(DamageState::None, $captured[0]->getDamageState());
+    }
+
+    public function testAcquireMechScrapyardAddsScrapyardLabelToDeduction(): void
+    {
+        $mechan = $this->makeScrapyardMech(['model' => 'Gravino GRV-NI1']);
+        $company = $this->createMock(MercenaryCompany::class);
+
+        $this->salvageCalc->method('calculateSalvageValue')->willReturn(150);
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->never())
+            ->method('remove');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $company->expects($this->once())
+            ->method('deductSupportPoints')
+            ->with(150, 'Acquisition of Gravino GRV-NI1 (Scrapyard)');
+
+        $this->service->acquireMech($mechan, $company);
     }
 }

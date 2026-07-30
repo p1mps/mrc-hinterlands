@@ -5,11 +5,16 @@ namespace App\Service;
 use App\Entity\MercenaryCompany;
 use App\Entity\Pilot;
 use App\Entity\Unit;
+use App\Enum\DamageState;
+use App\Service\SalvageCalculationService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RosterService
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly SalvageCalculationService $salvageCalc
+    ) {}
 
     /** @return \Doctrine\Common\Collections\Collection<Unit> */
     public function getUnits(MercenaryCompany $company): \Doctrine\Common\Collections\Collection
@@ -62,5 +67,46 @@ class RosterService
     {
         $this->em->remove($unit);
         $this->em->flush();
+    }
+
+    /**
+     * Repairs a unit from its current damage state to None (fully repaired).
+     * Deducts SP from company. Returns null on success, error string on failure.
+     */
+    public function repairUnit(Unit $unit, MercenaryCompany $company): ?string
+    {
+        $currentDamage = $unit->getDamageState();
+        if ($currentDamage === DamageState::None) {
+            return 'Unit is already fully repaired.';
+        }
+
+        $repairCost = $this->salvageCalc->calculateRepairCost(
+            $unit->getTonnage(),
+            $currentDamage,
+            null
+        );
+
+        if ($repairCost === null) {
+            return 'Could not calculate repair cost.';
+        }
+
+        if ($repairCost === 0) {
+            return 'Unit is already fully repaired.';
+        }
+
+        try {
+            $company->deductSupportPoints($repairCost, 'Repair of ' . $unit->getName() . ' (' . $unit->getChassis() . ')');
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+        try {
+            $unit->setDamageState(DamageState::None);
+        } catch (\ValueError $e) {
+            return 'Could not repair unit.';
+        }
+
+        $this->em->flush();
+        return null;
     }
 }

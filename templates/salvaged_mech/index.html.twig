@@ -5,7 +5,10 @@
 {% block body %}
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
     <h2>Salvaged Mechs</h2>
-    <a href="{{ path('app_salvaged_mech_new') }}" class="btn btn-primary align-self-start align-self-sm-auto">Create new</a>
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_salvaged_mech_new') }}" class="btn btn-primary">Scrapyard</a>
+        <a href="{{ path('app_salvaged_mech_new_with_check') }}" class="btn btn-success">Battlefield Salvage</a>
+    </div>
 </div>
 
 <div class="table-responsive">
@@ -15,22 +18,42 @@
             <th>Model</th>
             <th>Tonnage</th>
             <th>BV Cost</th>
+            <th>Salvage Value</th>
+            <th>Damage State</th>
+            <th>Tech Base</th>
+            <th>Scrapyard</th>
+            <th>Status</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
     {% for salvaged_mech in salvaged_mechs %}
-    <tr>
+    <tr{% if salvaged_mech.isTrulyDestroyed %} class="table-danger"{% endif %}{% if salvaged_mech.isAcquired %} class="table-success"{% endif %}>
         <td>{{ salvaged_mech.model }}</td>
         <td>{{ salvaged_mech.tonnage }}</td>
         <td>{{ salvaged_mech.bvCost ?? '—' }}</td>
-        <td class="text-nowrap">
-            <a href="{{ path('app_salvaged_mech_show', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
-            <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-        </td>
-    </tr>
-    {% else %}
-    <tr><td colspan="6" class="text-muted">No records found.</td></tr>
+        <td>{{ salvaged_mech.salvageValue ?? '—' }}</td>
+        <td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td>
+            <td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td>
+            <td>{{ salvaged_mech.scrapyard ? 'Yes' : 'No' }}</td>
+            <td>
+                {% if salvaged_mech.isTrulyDestroyed %}
+                    <span class="badge bg-danger">Truly Destroyed</span>
+                {% elseif salvaged_mech.isAcquired %}
+                    <span class="badge bg-success">Acquired</span>
+                {% elseif salvaged_mech.spTaken is not null %}
+                    <span class="badge bg-warning">SP Taken ({{ salvaged_mech.spTaken }})</span>
+                {% else %}
+                    <span class="badge bg-info">Available</span>
+                {% endif %}
+            </td>
+            <td class="text-nowrap">
+                <a href="{{ path('app_salvaged_mech_show', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
+                <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9" class="text-muted">No records found.</td></tr>
     {% endfor %}
     </tbody>
 </table>

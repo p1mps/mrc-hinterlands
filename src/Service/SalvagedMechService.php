@@ -11,6 +11,7 @@ class SalvagedMechService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly MechAcquisitionService $acquisition,
+        private readonly SalvageCalculationService $salvageCalc
     ) {}
 
     /** @return SalvagedMech[] */
@@ -44,5 +45,25 @@ class SalvagedMechService
     public function acquireMech(SalvagedMech $mechan, MercenaryCompany $company): void
     {
         $this->acquisition->acquireMech($mechan, $company);
+    }
+
+    public function calculateSalvageValue(?int $bvCost): ?int
+    {
+        return $this->salvageCalc->calculateSalvageValue($bvCost);
+    }
+
+    public function calculateRepairCost(?int $tonnage, ?string $damageState, ?string $techBase): ?int
+    {
+        return $this->salvageCalc->calculateRepairCost($tonnage, $damageState, $techBase);
+    }
+
+    public function calculateAcquisitionCost(?int $salvageValue, ?int $salvageRightsPercent): ?int
+    {
+        return $this->salvageCalc->calculateAcquisitionCost($salvageValue, $salvageRightsPercent);
+    }
+
+    public function calculateSpPayout(?int $salvageValue, ?int $salvageRightsPercent): ?int
+    {
+        return $this->salvageCalc->calculateSpPayout($salvageValue, $salvageRightsPercent);
     }
 }

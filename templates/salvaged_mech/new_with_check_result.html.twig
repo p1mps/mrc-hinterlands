@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Battlefield Salvage Result{% endblock %}
+
+{% block body %}
+    <h2>Battlefield Salvage Result</h2>
+
+    <div class="alert alert-success mb-4">
+        <h4>Salvage Successful</h4>
+        <p class="mb-0">
+            The mech has been successfully salvaged and added to your records.
+        </p>
+    </div>
+
+    <div class="row mb-4">
+    <div class="col-12 col-md-8 col-lg-6">
+    <div class="table-responsive">
+    <table class="table table-bordered table-sm">
+    <tr><th>Model</th><td>{{ salvaged_mech.model ?? '—' }}</td></tr>
+    <tr><th>Tonnage</th><td>{{ salvaged_mech.tonnage ?? '—' }}</td></tr>
+    <tr><th>BV Cost</th><td>{{ salvaged_mech.bvCost ?? '—' }}</td></tr>
+    <tr><th>Salvage Value (BV/2)</th><td>{{ salvaged_mech.salvageValue ?? '—' }}</td></tr>
+    <tr><th>Salvage Rights</th><td>{{ salvaged_mech.salvageRightsPercent is null ? 'Exchange (25%)' : (salvaged_mech.salvageRightsPercent ~ '%') }}</td></tr>
+    <tr><th>Damage State</th><td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td></tr>
+    <tr><th>Tech Base</th><td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td></tr>
+    <tr><th>Truly Destroyed</th><td>{{ salvaged_mech.isTrulyDestroyed ? 'Yes' : 'No' }}</td></tr>
+    </table>
+    </div>
+    </div>
+    </div>
+
+    <a href="{{ path('app_salvaged_mech_index') }}" class="btn btn-outline-secondary">Back to list</a>
+{% endblock %}

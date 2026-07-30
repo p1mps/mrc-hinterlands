@@ -72,4 +72,40 @@
 {% else %}
 <p class="text-muted">No log entries yet.</p>
 {% endfor %}
+
+{% if contract.salvagedMechs and contract.salvagedMechs|length > 0 %}
+<h4 class="mt-4">Salvaged Mechs for this Contract</h4>
+<div class="table-responsive">
+<table class="table table-sm table-bordered">
+    <thead>
+        <tr>
+            <th>Model</th>
+            <th>Salvage Value</th>
+            <th>Salvage Rights</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for mech in contract.salvagedMechs %}
+    <tr{% if mech.isTrulyDestroyed %} class="table-danger"{% endif %}>
+        <td>{{ mech.model }}</td>
+        <td>{{ mech.salvageValue ?? '—' }}</td>
+        <td>{{ mech.salvageRightsPercent is null ? 'Exchange (25%)' : (mech.salvageRightsPercent ~ '%') }}</td>
+        <td>
+            {% if mech.isTrulyDestroyed %}
+                <span class="badge bg-danger">Truly Destroyed</span>
+            {% elseif mech.isAcquired %}
+                <span class="badge bg-success">Acquired</span>
+            {% elseif mech.spTaken is not null %}
+                <span class="badge bg-warning">SP Taken</span>
+            {% else %}
+                <span class="badge bg-info">Available</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
 {% endblock %}

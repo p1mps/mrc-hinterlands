@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <h2>Edit Salvaged Mech — {{ salvaged_mech.model }}</h2>
+    <h2>Edit Battlefield Salvage — {{ salvaged_mech.model }}</h2>
     <a href="{{ path('app_salvaged_mech_show', {id: salvaged_mech.id}) }}" class="btn btn-outline-secondary mb-3">Back to Details</a>
 
     {{ form_start(form, {attr: {class: 'row g-3'}}) }}
@@ -8,17 +8,8 @@
     <div class="col-md-6">{{ form_row(form.model) }}</div>
     <div class="col-md-6">{{ form_row(form.tonnage) }}</div>
     <div class="col-md-6">{{ form_row(form.bvCost) }}</div>
-    <div class="col-md-6">{{ form_row(form.contract) }}</div>
     <div class="col-md-6">{{ form_row(form.damageState) }}</div>
     <div class="col-md-6">{{ form_row(form.techBase) }}</div>
-    <div class="col-md-6">{{ form_row(form.salvageRightsPercent) }}</div>
-
-    <div class="col-12">
-        <div class="form-check">
-            {{ form_widget(form.scrapyard, {'attr': {'class': 'form-check-input'}}) }}
-            {{ form_label(form.scrapyard, null, {'label_attr': {'class': 'form-check-label'}}) }}
-        </div>
-    </div>
 
     <div class="col-12">
         <button class="btn btn-primary">Save Changes</button>

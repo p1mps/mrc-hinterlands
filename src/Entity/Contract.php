@@ -100,11 +100,15 @@ class Contract {
     #[ORM\OneToMany(mappedBy: 'linkedContract', targetEntity: self::class)]
     private Collection $opposingContracts;
 
+    #[ORM\OneToMany(mappedBy: 'contract', targetEntity: SalvagedMech::class)]
+    private Collection $salvagedMechs;
+
     public function __construct() {
         $this->createdAt = new \DateTimeImmutable();
         $this->trackRecords = new ArrayCollection();
         $this->logEntries = new ArrayCollection();
         $this->opposingContracts = new ArrayCollection();
+        $this->salvagedMechs = new ArrayCollection();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -180,6 +184,7 @@ class Contract {
     public function getTrackRecords(): Collection { return $this->trackRecords; }
     public function getLogEntries(): Collection { return $this->logEntries; }
     public function getOpposingContracts(): Collection { return $this->opposingContracts; }
+    public function getSalvagedMechs(): Collection { return $this->salvagedMechs; }
 
     public function parseTransportPercent(): int {
         if (!$this->transportTerms || $this->transportTerms === '—') return 0;
