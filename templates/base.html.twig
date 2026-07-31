@@ -34,7 +34,7 @@
                             <input type="hidden" name="_switch_user" id="impersonateSelect" value="">
                             <select class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.querySelector('#impersonateSelect').value = this.value; this.form.submit()">
                                 <option value="">Switch user...</option>
-                                {% for user in users %}
+                                {% for user in users ?? [] %}
                                     <option value="{{ user.username }}" {% if user.username == app.user.username %}selected{% endif %}>{{ user.username }}</option>
                                 {% endfor %}
                             </select>
