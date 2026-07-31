@@ -6,7 +6,7 @@
 </div>
 <div class="table-responsive">
 <table class="table table-striped align-middle">
-<thead><tr><th>Name</th><th>Named</th><th>Gunnery</th><th>Piloting</th><th>XP</th><th>Unit</th><th></th></tr></thead>
+<thead><tr><th>Name</th><th>Named</th><th>Gunnery</th><th>Piloting</th><th>Gunnery XP</th><th>Piloting XP</th><th>Unit</th><th></th></tr></thead>
 <tbody>
 {% for pilot in pilots %}
 <tr class="{{ thresholdAlerts[pilot.id] is defined ? 'table-warning' : '' }}">
@@ -14,7 +14,8 @@
     <td>{{ pilot.isNamed ? 'Yes' : 'No' }}</td>
     <td>{{ pilot.gunnery }}</td>
     <td>{{ pilot.piloting }}</td>
-    <td>{{ pilot.xp }}{% if thresholdAlerts[pilot.id] is defined %} <span class="badge bg-warning text-dark">{{ thresholdAlerts[pilot.id] }}</span>{% endif %}</td>
+    <td>{{ pilot.gunneryXp }}{% if thresholdAlerts[pilot.id] is defined %} <span class="badge bg-warning text-dark">{{ thresholdAlerts[pilot.id] }}</span>{% endif %}</td>
+    <td>{{ pilot.pilotingXp }}</td>
     <td>{{ pilot.unit ? pilot.unit.name : '—' }}</td>
     <td class="text-nowrap">
         <a href="{{ path('app_pilots_edit', {id: pilot.id}) }}" class="btn btn-sm btn-secondary">Edit</a>
@@ -25,7 +26,7 @@
     </td>
 </tr>
 {% else %}
-<tr><td colspan="7" class="text-muted">No pilots yet.</td></tr>
+<tr><td colspan="8" class="text-muted">No pilots yet.</td></tr>
 {% endfor %}
 </tbody>
 </table>

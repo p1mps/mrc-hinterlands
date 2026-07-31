@@ -31,7 +31,10 @@ class Pilot {
     private int $piloting = 5;
 
     #[ORM\Column]
-    private int $xp = 0;
+    private int $gunneryXp = 0;
+
+    #[ORM\Column]
+    private int $pilotingXp = 0;
 
     public function getId(): ?int { return $this->id; }
 
@@ -52,6 +55,9 @@ class Pilot {
     public function getPiloting(): int { return $this->piloting; }
     public function setPiloting(int $piloting): static { $this->piloting = $piloting; return $this; }
 
-    public function getXp(): int { return $this->xp; }
-    public function setXp(int $xp): static { $this->xp = $xp; return $this; }
+    public function getGunneryXp(): int { return $this->gunneryXp; }
+    public function setGunneryXp(int $gunneryXp): static { $this->gunneryXp = $gunneryXp; return $this; }
+
+    public function getPilotingXp(): int { return $this->pilotingXp; }
+    public function setPilotingXp(int $pilotingXp): static { $this->pilotingXp = $pilotingXp; return $this; }
 }

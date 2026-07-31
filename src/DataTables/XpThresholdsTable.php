@@ -12,14 +12,14 @@ class XpThresholdsTable {
         0 => [2200, 2200],
     ];
 
-    public static function checkImprovement(int $gunnery, int $piloting, int $xp): ?string {
+    public static function checkImprovement(int $gunnery, int $piloting, int $gunneryXp, int $pilotingXp): ?string {
         $messages = [];
         $nextGunnery = $gunnery - 1;
-        if ($nextGunnery >= 0 && isset(self::THRESHOLDS[$nextGunnery]) && $xp >= self::THRESHOLDS[$nextGunnery][0]) {
+        if ($nextGunnery >= 0 && isset(self::THRESHOLDS[$nextGunnery]) && $gunneryXp >= self::THRESHOLDS[$nextGunnery][0]) {
             $messages[] = "Gunnery can improve to $nextGunnery (" . self::THRESHOLDS[$nextGunnery][0] . " XP)";
         }
         $nextPiloting = $piloting - 1;
-        if ($nextPiloting >= 0 && isset(self::THRESHOLDS[$nextPiloting]) && $xp >= self::THRESHOLDS[$nextPiloting][1]) {
+        if ($nextPiloting >= 0 && isset(self::THRESHOLDS[$nextPiloting]) && $pilotingXp >= self::THRESHOLDS[$nextPiloting][1]) {
             $messages[] = "Piloting can improve to $nextPiloting (" . self::THRESHOLDS[$nextPiloting][1] . " XP)";
         }
         return $messages ? implode(', ', $messages) : null;

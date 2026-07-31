@@ -102,7 +102,8 @@ class PilotServiceTest extends TestCase
         $pilot->setIsNamed(false);
         $pilot->setGunnery(4);
         $pilot->setPiloting(5);
-        $pilot->setXp(9999);
+        $pilot->setGunneryXp(9999);
+        $pilot->setPilotingXp(9999);
 
         $collection = new ArrayCollection([$pilot]);
         $result = $this->service->getXpThresholdAlerts($collection);
@@ -119,7 +120,8 @@ class PilotServiceTest extends TestCase
         $pilot->setIsNamed(true);
         $pilot->setGunnery(6);
         $pilot->setPiloting(7);
-        $pilot->setXp(100);
+        $pilot->setGunneryXp(100);
+        $pilot->setPilotingXp(100);
 
         $collection = new ArrayCollection([$pilot]);
         $result = $this->service->getXpThresholdAlerts($collection);
@@ -137,14 +139,16 @@ class PilotServiceTest extends TestCase
         $namedPilot->setIsNamed(true);
         $namedPilot->setGunnery(4);
         $namedPilot->setPiloting(5);
-        $namedPilot->setXp(0);
+        $namedPilot->setGunneryXp(0);
+        $namedPilot->setPilotingXp(0);
 
         $unnamedPilot = new Pilot();
         $unnamedPilot->setName('Unnamed Pilot');
         $unnamedPilot->setIsNamed(false);
         $unnamedPilot->setGunnery(10);
         $unnamedPilot->setPiloting(10);
-        $unnamedPilot->setXp(9999);
+        $unnamedPilot->setGunneryXp(9999);
+        $unnamedPilot->setPilotingXp(9999);
 
         $collection = new ArrayCollection([$namedPilot, $unnamedPilot]);
         $result = $this->service->getXpThresholdAlerts($collection);
@@ -169,7 +173,8 @@ class PilotServiceTest extends TestCase
         $pilot->setIsNamed(true);
         $pilot->setGunnery(4);
         $pilot->setPiloting(5);
-        $pilot->setXp(0);
+        $pilot->setGunneryXp(0);
+        $pilot->setPilotingXp(0);
 
         $collection = new ArrayCollection([$pilot]);
         $result = $this->service->getXpThresholdAlerts($collection);
@@ -186,7 +191,8 @@ class PilotServiceTest extends TestCase
         $pilot->setIsNamed(true);
         $pilot->setGunnery(8);
         $pilot->setPiloting(9);
-        $pilot->setXp(500);
+        $pilot->setGunneryXp(500);
+        $pilot->setPilotingXp(500);
 
         $collection = new ArrayCollection([$pilot]);
         $result = $this->service->getXpThresholdAlerts($collection);
@@ -203,7 +209,8 @@ class PilotServiceTest extends TestCase
         $namedPilot1->setIsNamed(true);
         $namedPilot1->setGunnery(5);
         $namedPilot1->setPiloting(6);
-        $namedPilot1->setXp(50);
+        $namedPilot1->setGunneryXp(50);
+        $namedPilot1->setPilotingXp(50);
 
         $namedPilot2 = new Pilot();
         $this->setPilotId($namedPilot2, 11);
@@ -211,14 +218,16 @@ class PilotServiceTest extends TestCase
         $namedPilot2->setIsNamed(true);
         $namedPilot2->setGunnery(3);
         $namedPilot2->setPiloting(4);
-        $namedPilot2->setXp(10);
+        $namedPilot2->setGunneryXp(10);
+        $namedPilot2->setPilotingXp(10);
 
         $unnamedPilot = new Pilot();
         $unnamedPilot->setName('Rookie Pilot');
         $unnamedPilot->setIsNamed(false);
         $unnamedPilot->setGunnery(10);
         $unnamedPilot->setPiloting(10);
-        $unnamedPilot->setXp(9999);
+        $unnamedPilot->setGunneryXp(9999);
+        $unnamedPilot->setPilotingXp(9999);
 
         $collection = new ArrayCollection([$namedPilot1, $namedPilot2, $unnamedPilot]);
         $result = $this->service->getXpThresholdAlerts($collection);
@@ -235,7 +244,8 @@ class PilotServiceTest extends TestCase
         $pilot1->setIsNamed(true);
         $pilot1->setGunnery(4);
         $pilot1->setPiloting(5);
-        $pilot1->setXp(0);
+        $pilot1->setGunneryXp(0);
+        $pilot1->setPilotingXp(0);
 
         $pilot2 = new Pilot();
         $this->setPilotId($pilot2, 101);
@@ -243,7 +253,8 @@ class PilotServiceTest extends TestCase
         $pilot2->setIsNamed(true);
         $pilot2->setGunnery(4);
         $pilot2->setPiloting(5);
-        $pilot2->setXp(0);
+        $pilot2->setGunneryXp(0);
+        $pilot2->setPilotingXp(0);
 
         $collection = new ArrayCollection([$pilot1, $pilot2]);
         $result = $this->service->getXpThresholdAlerts($collection);
@@ -656,7 +667,8 @@ class PilotServiceTest extends TestCase
         $pilot->setIsNamed(true);
         $pilot->setGunnery(7);
         $pilot->setPiloting(8);
-        $pilot->setXp(250);
+        $pilot->setGunneryXp(250);
+        $pilot->setPilotingXp(250);
 
         $this->emMock
             ->expects($this->once())

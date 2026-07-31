@@ -153,7 +153,8 @@ class FullStackIntegrationTest extends WebTestCase
         $pilot->setIsNamed(true);
         $pilot->setGunnery(4);
         $pilot->setPiloting(5);
-        $pilot->setXp(100);
+        $pilot->setGunneryXp(100);
+        $pilot->setPilotingXp(100);
         $pilot->setCompany($this->em->getRepository(MercenaryCompany::class)->find($userRef['companyId']));
 
         $this->em->persist($pilot);
@@ -166,7 +167,7 @@ class FullStackIntegrationTest extends WebTestCase
         $this->assertTrue($createdPilot->isNamed());
         $this->assertEquals(4, $createdPilot->getGunnery());
         $this->assertEquals(5, $createdPilot->getPiloting());
-        $this->assertEquals(100, $createdPilot->getXp());
+        $this->assertEquals(100, $createdPilot->getGunneryXp());
     }
 
     public function testCreatePilotPersistedToDatabase(): void
@@ -178,7 +179,8 @@ class FullStackIntegrationTest extends WebTestCase
         $pilot->setIsNamed(true);
         $pilot->setGunnery(4);
         $pilot->setPiloting(5);
-        $pilot->setXp(0);
+        $pilot->setGunneryXp(0);
+        $pilot->setPilotingXp(0);
         $pilot->setCompany($this->em->getRepository(MercenaryCompany::class)->find($userRef['companyId']));
 
         $this->em->persist($pilot);
@@ -190,7 +192,7 @@ class FullStackIntegrationTest extends WebTestCase
         $this->assertTrue($createdPilot->isNamed());
         $this->assertEquals(4, $createdPilot->getGunnery());
         $this->assertEquals(5, $createdPilot->getPiloting());
-        $this->assertEquals(0, $createdPilot->getXp());
+        $this->assertEquals(0, $createdPilot->getGunneryXp());
     }
 
     public function testEditPilotUpdatesData(): void
@@ -201,7 +203,8 @@ class FullStackIntegrationTest extends WebTestCase
         $pilot->setIsNamed(false);
         $pilot->setGunnery(4);
         $pilot->setPiloting(5);
-        $pilot->setXp(100);
+        $pilot->setGunneryXp(100);
+        $pilot->setPilotingXp(100);
         $pilot->setCompany($this->em->getRepository(MercenaryCompany::class)->find($userRef['companyId']));
 
         $this->em->persist($pilot);
@@ -214,7 +217,8 @@ class FullStackIntegrationTest extends WebTestCase
         $pilot->setIsNamed(true);
         $pilot->setGunnery(5);
         $pilot->setPiloting(6);
-        $pilot->setXp(200);
+        $pilot->setGunneryXp(200);
+        $pilot->setPilotingXp(200);
         $this->em->flush();
 
         $updatedPilot = $this->em->getRepository(Pilot::class)->find($pilotId);
@@ -223,7 +227,7 @@ class FullStackIntegrationTest extends WebTestCase
         $this->assertTrue($updatedPilot->isNamed());
         $this->assertEquals(5, $updatedPilot->getGunnery());
         $this->assertEquals(6, $updatedPilot->getPiloting());
-        $this->assertEquals(200, $updatedPilot->getXp());
+        $this->assertEquals(200, $updatedPilot->getGunneryXp());
     }
 
     public function testDeletePilotRemovesFromDatabase(): void
@@ -234,7 +238,8 @@ class FullStackIntegrationTest extends WebTestCase
         $pilot->setIsNamed(false);
         $pilot->setGunnery(4);
         $pilot->setPiloting(5);
-        $pilot->setXp(0);
+        $pilot->setGunneryXp(0);
+        $pilot->setPilotingXp(0);
         $pilot->setCompany($this->em->getRepository(MercenaryCompany::class)->find($userRef['companyId']));
 
         $this->em->persist($pilot);
@@ -358,7 +363,8 @@ class FullStackIntegrationTest extends WebTestCase
         $pilot->setIsNamed(false);
         $pilot->setGunnery(4);
         $pilot->setPiloting(5);
-        $pilot->setXp(0);
+        $pilot->setGunneryXp(0);
+        $pilot->setPilotingXp(0);
         $pilot->setCompany($this->em->getRepository(MercenaryCompany::class)->find($userRef['companyId']));
 
         $this->em->persist($pilot);

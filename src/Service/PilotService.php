@@ -26,7 +26,8 @@ class PilotService
                 $alert = XpThresholdsTable::checkImprovement(
                     $pilot->getGunnery(),
                     $pilot->getPiloting(),
-                    $pilot->getXp()
+                    $pilot->getGunneryXp(),
+                    $pilot->getPilotingXp()
                 );
                 if ($alert) {
                     $alerts[$pilot->getId()] = $alert;
