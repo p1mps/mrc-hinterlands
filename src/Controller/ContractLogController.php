@@ -85,12 +85,12 @@ class ContractLogController extends AbstractController
                 'maintenance' => $this->logService->handleMaintenance($contract, $company, $currentMonth),
                 'base_pay'    => $this->logService->handleBasePay($contract, $company, $currentMonth),
                 'track_setup' => $this->logService->handleTrackSetup($contract, $request->request->getInt('month'), $request->request->getBoolean('toftt')),
-                'post_track'  => $this->logService->handlePostTrack($contract, $company, $postTrackForm, $postTrackForm->getData() ?? [], $request->request->getInt('month')),
+                'post_track'  => $this->handlePostTrackAction($contract, $company, $postTrackForm, $request->request->getInt('month')),
                 'downtime'    => $this->logService->handleDowntime($contract, $company, $request->request->getInt('month'), $request->request->getString('note', ''), $request->request->getInt('amount', 0)),
                 default       => null,
             };
 
-            if ($action !== 'post_track' || ($postTrackForm->isSubmitted() && $postTrackForm->isValid())) {
+            if ($action !== 'post_track') {
                 return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
             }
         }
@@ -100,5 +100,14 @@ class ContractLogController extends AbstractController
             'currentMonth'  => $currentMonth,
             'postTrackForm' => $postTrackForm,
         ]);
+    }
+
+    private function handlePostTrackAction(Contract $contract, $company, object $form, int $month): void
+    {
+        try {
+            $this->logService->handlePostTrack($contract, $company, $form, $form->getData() ?? [], $month);
+        } catch (\RuntimeException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
     }
 }

@@ -46,9 +46,11 @@ class ContractLogService
             return;
         }
 
-        if ($entry->getEntryType() === ContractLogEntryType::PostTrack) {
-            $this->revertPostTrack($contract);
-        }
+        match ($entry->getEntryType()) {
+            ContractLogEntryType::TrackSetup => $this->revertTrackSetup($entry),
+            ContractLogEntryType::PostTrack  => $this->revertPostTrack($contract),
+            default                          => null,
+        };
 
         if ($entry->getSupportPointEntry()) {
             $this->em->remove($entry->getSupportPointEntry());
@@ -174,15 +176,19 @@ class ContractLogService
 
     public function handlePostTrack(Contract $contract, $company, object $form, array $formData, int $month): void
     {
-        $tier = $formData['combatPayTier'];
-        $combatPay = $contract->calculateMonthlyCombatPay($tier);
-        $salvageClaimed = $formData['salvageClaimed'] ?? false;
-
         $pendingTrack = $contract->getTrackRecords()->filter(
             fn(TrackRecord $t) => $t->getStatus() === TrackStatus::Pending
         )->first() ?: null;
 
-        $toftt = $pendingTrack?->isTakingOneForTeam() ?? false;
+        if (!$pendingTrack) {
+            throw new \RuntimeException('No pending track record to post.');
+        }
+
+        $tier = $formData['combatPayTier'];
+        $combatPay = $contract->calculateMonthlyCombatPay($tier);
+        $salvageClaimed = $formData['salvageClaimed'] ?? false;
+
+        $toftt = $pendingTrack->isTakingOneForTeam();
         if ($toftt) {
             $combatPay = (int) floor($combatPay / 2);
         }
@@ -196,11 +202,9 @@ class ContractLogService
             $this->em->persist($sp);
         }
 
-        if ($pendingTrack) {
-            $pendingTrack->setStatus(TrackStatus::Completed);
-            $pendingTrack->setCompletedAt(new \DateTimeImmutable());
-            $pendingTrack->setCombatPayTier($tier);
-        }
+        $pendingTrack->setStatus(TrackStatus::Completed);
+        $pendingTrack->setCompletedAt(new \DateTimeImmutable());
+        $pendingTrack->setCombatPayTier($tier);
 
         $contract->setTracksCompleted($contract->getTracksCompleted() + 1);
         if ($contract->getTracksCompleted() >= $contract->getNumberOfTracks()) {
@@ -253,12 +257,6 @@ class ContractLogService
 
     private function revertPostTrack(Contract $contract): void
     {
-        if ($contract->getTracksCompleted() > 0) {
-            $contract->setTracksCompleted($contract->getTracksCompleted() - 1);
-        }
-
-        $contract->setStatus(ContractStatus::Active);
-
         $completedTracks = $contract->getTrackRecords()->filter(
             fn(TrackRecord $t) => $t->getStatus() === TrackStatus::Completed
         );
@@ -268,6 +266,33 @@ class ContractLogService
             $lastCompletedTrack->setStatus(TrackStatus::Pending);
             $lastCompletedTrack->setCompletedAt(null);
             $lastCompletedTrack->setCombatPayTier(null);
+        }
+
+        $this->recalculateContractState($contract);
+    }
+
+    private function revertTrackSetup(ContractLogEntry $entry): void
+    {
+        $track = $entry->getTrack();
+        if ($track) {
+            $this->em->remove($track);
+        }
+    }
+
+    private function recalculateContractState(Contract $contract): void
+    {
+        $completedTracks = $contract->getTrackRecords()->filter(
+            fn(TrackRecord $t) => $t->getStatus() === TrackStatus::Completed
+        );
+
+        $contract->setTracksCompleted($completedTracks->count());
+
+        if ($contract->getTrackRecords()->isEmpty() || $completedTracks->isEmpty()) {
+            $contract->setStatus(ContractStatus::Available);
+        } elseif ($completedTracks->count() >= $contract->getNumberOfTracks()) {
+            $contract->setStatus(ContractStatus::Completed);
+        } else {
+            $contract->setStatus(ContractStatus::Active);
         }
     }
 }

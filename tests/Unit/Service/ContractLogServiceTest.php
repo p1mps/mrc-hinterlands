@@ -243,10 +243,39 @@ class ContractLogServiceTest extends TestCase
 
     public function testDeleteEntryReversesPostTrackAndRemovesEntries(): void
     {
-        $contract = $this->makeContract([
-            'tracksCompleted' => 2,
-            'status' => ContractStatus::Completed,
-        ]);
+        $contract = new Contract();
+        $contract->setType(ContractType::Raid);
+        $contract->setNumberOfTracks(3);
+        $contract->setTracksCompleted(2);
+        $contract->setStatus(ContractStatus::Active);
+
+        $completedTrack1 = new TrackRecord();
+        $completedTrack1->setContract($contract)
+            ->setTrackNumber(1)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Completed)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($completedTrack1);
+
+        $completedTrack2 = new TrackRecord();
+        $completedTrack2->setContract($contract)
+            ->setTrackNumber(2)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Completed)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($completedTrack2);
+
+        $pendingTrack = new TrackRecord();
+        $pendingTrack->setContract($contract)
+            ->setTrackNumber(3)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Pending)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($pendingTrack);
+
         $entry = $this->makeLogEntry([
             'contract' => $contract,
             'entryType' => ContractLogEntryType::PostTrack,
@@ -259,38 +288,122 @@ class ContractLogServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $contract->expects($this->once())
-            ->method('setTracksCompleted')
-            ->with(1);
-
-        $contract->expects($this->once())
-            ->method('setStatus')
-            ->with(ContractStatus::Active);
-
         $this->service->deleteEntry($contract, $entry);
+
+        $this->assertEquals(1, $contract->getTracksCompleted());
+        $this->assertEquals(ContractStatus::Active, $contract->getStatus());
     }
 
-    public function testDeleteEntryDoesNotRevertWhenTracksCompletedIsZero(): void
+    public function testDeleteEntryRevertsPostTrackToAvailableWhenAllTracksDeleted(): void
     {
-        $contract = $this->makeContract([
-            'tracksCompleted' => 0,
-            'status' => ContractStatus::Completed,
-        ]);
+        $contract = new Contract();
+        $contract->setType(ContractType::Raid);
+        $contract->setNumberOfTracks(1);
+        $contract->setTracksCompleted(1);
+        $contract->setStatus(ContractStatus::Completed);
+
+        $completedTrack = new TrackRecord();
+        $completedTrack->setContract($contract)
+            ->setTrackNumber(1)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Completed)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($completedTrack);
+
         $entry = $this->makeLogEntry([
             'contract' => $contract,
             'entryType' => ContractLogEntryType::PostTrack,
             'supportPointEntry' => null,
         ]);
 
-        // When tracksCompleted is 0, the condition `if ($contract->getTracksCompleted() > 0)` is false,
-        // so setTracksCompleted is never called. The contract's default (0) is already correct.
-        $contract->expects($this->once())
-            ->method('getTracksCompleted')
-            ->willReturn(0);
+        $this->em->expects($this->once())
+            ->method('remove')
+            ->with($entry);
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->deleteEntry($contract, $entry);
+
+        $this->assertEquals(0, $contract->getTracksCompleted());
+        $this->assertEquals(ContractStatus::Available, $contract->getStatus());
+    }
+
+    public function testDeleteEntryRevertsPostTrackToCompletedWhenStillEnoughTracks(): void
+    {
+        $contract = new Contract();
+        $contract->setType(ContractType::Raid);
+        $contract->setNumberOfTracks(3);
+        $contract->setTracksCompleted(3);
+        $contract->setStatus(ContractStatus::Completed);
+
+        $completedTrack1 = new TrackRecord();
+        $completedTrack1->setContract($contract)
+            ->setTrackNumber(1)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Completed)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($completedTrack1);
+
+        $completedTrack2 = new TrackRecord();
+        $completedTrack2->setContract($contract)
+            ->setTrackNumber(2)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Completed)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($completedTrack2);
+
+        $completedTrack3 = new TrackRecord();
+        $completedTrack3->setContract($contract)
+            ->setTrackNumber(3)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Completed)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($completedTrack3);
+
+        $entry = $this->makeLogEntry([
+            'contract' => $contract,
+            'entryType' => ContractLogEntryType::PostTrack,
+            'supportPointEntry' => null,
+        ]);
 
         $this->em->expects($this->once())
             ->method('remove')
             ->with($entry);
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->deleteEntry($contract, $entry);
+
+        $this->assertEquals(2, $contract->getTracksCompleted());
+        $this->assertEquals(ContractStatus::Active, $contract->getStatus());
+    }
+
+    public function testDeleteEntryRemovesTrackSetupAndAssociatedTrackRecord(): void
+    {
+        $contract = $this->makeContract();
+        $track = $this->createMock(TrackRecord::class);
+        $entry = $this->makeLogEntry([
+            'contract' => $contract,
+            'entryType' => ContractLogEntryType::TrackSetup,
+            'track' => $track,
+            'supportPointEntry' => null,
+        ]);
+
+        $this->em->expects($this->exactly(2))
+            ->method('remove')
+            ->willReturnCallback(function ($obj) use ($track, $entry) {
+                static $callCount = 0;
+                if ($callCount === 0) {
+                    $this->assertSame($track, $obj);
+                } else {
+                    $this->assertSame($entry, $obj);
+                }
+                $callCount++;
+            });
         $this->em->expects($this->once())
             ->method('flush');
 
@@ -504,16 +617,24 @@ class ContractLogServiceTest extends TestCase
 
     public function testHandlePostTrackCompletesPendingTrackAndUpdatesContract(): void
     {
-        $contract = $this->makeContract([
-            'numberOfTracks' => 3,
-            'tracksCompleted' => 1,
-        ]);
-        $company = $this->makeCompany();
-        $pendingTrack = $this->makeTrackRecord(['takingOneForTeam' => false]);
+        $contract = new Contract();
+        $contract->setType(ContractType::Raid);
+        $contract->setCommandRights(CommandRights::Liaison);
+        $contract->setNumberOfTracks(3);
+        $contract->setTracksCompleted(1);
+        $contract->setScale(1);
+        $contract->setStatus(ContractStatus::Active);
 
-        $collection = new \Doctrine\Common\Collections\ArrayCollection();
-        $collection->add($pendingTrack);
-        $contract->method('getTrackRecords')->willReturn($collection);
+        $pendingTrack = new TrackRecord();
+        $pendingTrack->setContract($contract)
+            ->setTrackNumber(2)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Pending)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($pendingTrack);
+
+        $company = $this->makeCompany();
 
         $this->em->expects($this->exactly(2))
             ->method('persist');
@@ -521,13 +642,12 @@ class ContractLogServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        // After increment: tracksCompleted=2, numberOfTracks=3, status stays Active
-        $contract->expects($this->never())
-            ->method('setStatus');
-
         $this->service->handlePostTrack($contract, $company, new \stdClass(), [
             'combatPayTier' => CombatPayTier::Full,
         ], 1);
+
+        $this->assertEquals(2, $contract->getTracksCompleted());
+        $this->assertEquals(ContractStatus::Active, $contract->getStatus());
     }
 
     public function testHandlePostTrackSetsContractToCompletedWhenAllTracksDone(): void
@@ -544,10 +664,13 @@ class ContractLogServiceTest extends TestCase
         $contract->setBasePayPercent(50);
 
         $company = $this->makeCompany();
-        $pendingTrack = $this->makeTrackRecord(['takingOneForTeam' => false]);
-
-        $collection = new \Doctrine\Common\Collections\ArrayCollection();
-        $collection->add($pendingTrack);
+        $pendingTrack = new TrackRecord();
+        $pendingTrack->setContract($contract)
+            ->setTrackNumber(1)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Pending)
+            ->setTakingOneForTeam(false);
         $contract->getTrackRecords()->add($pendingTrack);
 
         $this->em->expects($this->exactly(2))
@@ -567,20 +690,25 @@ class ContractLogServiceTest extends TestCase
 
     public function testHandlePostTrackHalvesCombatPayForToftt(): void
     {
-        $contract = $this->makeContract([
-            'numberOfTracks' => 3,
-            'tracksCompleted' => 0,
-            'scale' => 2,
-        ]);
+        $contract = new Contract();
+        $contract->setType(ContractType::Raid);
+        $contract->setCommandRights(CommandRights::Liaison);
+        $contract->setNumberOfTracks(3);
+        $contract->setTracksCompleted(0);
+        $contract->setScale(2);
+        $contract->setStatus(ContractStatus::Active);
+
+        $pendingTrack = new TrackRecord();
+        $pendingTrack->setContract($contract)
+            ->setTrackNumber(1)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Pending)
+            ->setTakingOneForTeam(true);
+        $contract->getTrackRecords()->add($pendingTrack);
+
         $company = $this->makeCompany();
-        $pendingTrack = $this->makeTrackRecord(['takingOneForTeam' => true]);
 
-        $collection = new \Doctrine\Common\Collections\ArrayCollection();
-        $collection->add($pendingTrack);
-        $contract->method('getTrackRecords')->willReturn($collection);
-
-        // Full combat pay for scale 2, tier Full = 500 * 2 * 1.0 = 1000
-        // TOFTT halves it: floor(1000 / 2) = 500
         $this->em->expects($this->exactly(2))
             ->method('persist');
 
@@ -594,16 +722,24 @@ class ContractLogServiceTest extends TestCase
 
     public function testHandlePostTrackSkipsSupportPointWhenCombatPayIsZero(): void
     {
-        $contract = $this->makeContract([
-            'numberOfTracks' => 3,
-            'tracksCompleted' => 0,
-        ]);
-        $company = $this->makeCompany();
-        $pendingTrack = $this->makeTrackRecord(['takingOneForTeam' => false]);
+        $contract = new Contract();
+        $contract->setType(ContractType::Raid);
+        $contract->setCommandRights(CommandRights::Liaison);
+        $contract->setNumberOfTracks(3);
+        $contract->setTracksCompleted(0);
+        $contract->setScale(1);
+        $contract->setStatus(ContractStatus::Active);
 
-        $collection = new \Doctrine\Common\Collections\ArrayCollection();
-        $collection->add($pendingTrack);
-        $contract->method('getTrackRecords')->willReturn($collection);
+        $pendingTrack = new TrackRecord();
+        $pendingTrack->setContract($contract)
+            ->setTrackNumber(1)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Pending)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($pendingTrack);
+
+        $company = $this->makeCompany();
 
         // CombatPayTier::None has multiplier 0, so combatPay = 0, no SP entry
         $this->em->expects($this->once())
@@ -617,7 +753,7 @@ class ContractLogServiceTest extends TestCase
         ], 1);
     }
 
-    public function testHandlePostTrackWithNoPendingTrackStillCreatesLog(): void
+    public function testHandlePostTrackThrowsWhenNoPendingTrack(): void
     {
         $contract = $this->makeContract([
             'numberOfTracks' => 3,
@@ -628,13 +764,7 @@ class ContractLogServiceTest extends TestCase
         $collection = new \Doctrine\Common\Collections\ArrayCollection();
         $contract->method('getTrackRecords')->willReturn($collection);
 
-        // When combatPay > 0 (Full tier, scale 1 = 500), both SP entry and log entry are persisted
-        $this->em->expects($this->exactly(2))
-            ->method('persist');
-
-        $this->em->expects($this->once())
-            ->method('flush');
-
+        $this->expectException(\RuntimeException::class);
         $this->service->handlePostTrack($contract, $company, new \stdClass(), [
             'combatPayTier' => CombatPayTier::Full,
             'salvageClaimed' => true,
@@ -643,16 +773,24 @@ class ContractLogServiceTest extends TestCase
 
     public function testHandlePostTrackIncludesSalvageInDescription(): void
     {
-        $contract = $this->makeContract([
-            'numberOfTracks' => 3,
-            'tracksCompleted' => 0,
-        ]);
-        $company = $this->makeCompany();
-        $pendingTrack = $this->makeTrackRecord(['takingOneForTeam' => false]);
+        $contract = new Contract();
+        $contract->setType(ContractType::Raid);
+        $contract->setCommandRights(CommandRights::Liaison);
+        $contract->setNumberOfTracks(3);
+        $contract->setTracksCompleted(0);
+        $contract->setScale(1);
+        $contract->setStatus(ContractStatus::Active);
 
-        $collection = new \Doctrine\Common\Collections\ArrayCollection();
-        $collection->add($pendingTrack);
-        $contract->method('getTrackRecords')->willReturn($collection);
+        $pendingTrack = new TrackRecord();
+        $pendingTrack->setContract($contract)
+            ->setTrackNumber(1)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Pending)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($pendingTrack);
+
+        $company = $this->makeCompany();
 
         $this->em->expects($this->exactly(2))
             ->method('persist');
@@ -668,16 +806,24 @@ class ContractLogServiceTest extends TestCase
 
     public function testHandlePostTrackIncludesNoSalvageInDescription(): void
     {
-        $contract = $this->makeContract([
-            'numberOfTracks' => 3,
-            'tracksCompleted' => 0,
-        ]);
-        $company = $this->makeCompany();
-        $pendingTrack = $this->makeTrackRecord(['takingOneForTeam' => false]);
+        $contract = new Contract();
+        $contract->setType(ContractType::Raid);
+        $contract->setCommandRights(CommandRights::Liaison);
+        $contract->setNumberOfTracks(3);
+        $contract->setTracksCompleted(0);
+        $contract->setScale(1);
+        $contract->setStatus(ContractStatus::Active);
 
-        $collection = new \Doctrine\Common\Collections\ArrayCollection();
-        $collection->add($pendingTrack);
-        $contract->method('getTrackRecords')->willReturn($collection);
+        $pendingTrack = new TrackRecord();
+        $pendingTrack->setContract($contract)
+            ->setTrackNumber(1)
+            ->setMissionType('Patrol')
+            ->setTerrain('Plains')
+            ->setStatus(TrackStatus::Pending)
+            ->setTakingOneForTeam(false);
+        $contract->getTrackRecords()->add($pendingTrack);
+
+        $company = $this->makeCompany();
 
         $this->em->expects($this->exactly(2))
             ->method('persist');
