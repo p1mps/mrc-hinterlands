@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\DataTables\PlanetTable;
 
 class ContractController extends AbstractController
 {
@@ -57,8 +58,10 @@ class ContractController extends AbstractController
         ];
 
         $contract = $contractService->createContract($data);
+        $contract->setPlanet(PlanetTable::randomPlanet());
         $opposingData = $generator->generateOpposing($data['type'], $data['scale'], $data['numberOfTracks']);
         $opposing = $contractService->createContract($opposingData);
+        $opposing->setPlanet(PlanetTable::randomPlanet());
         $opposing->setLinkedContract($contract);
         $contract->setLinkedContract($opposing);
         $em->persist($contract);
@@ -149,6 +152,7 @@ class ContractController extends AbstractController
 
         $opposingData = $generator->generateOpposing($contract->getType(), $contract->getScale(), $contract->getNumberOfTracks());
         $opposing = $contractService->createContract($opposingData);
+        $opposing->setPlanet(PlanetTable::randomPlanet());
         $opposing->setLinkedContract($contract);
         $em->persist($opposing);
         $em->flush();

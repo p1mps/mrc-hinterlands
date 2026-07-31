@@ -16,11 +16,11 @@ class XpThresholdsTable {
         $messages = [];
         $nextGunnery = $gunnery - 1;
         if ($nextGunnery >= 0 && isset(self::THRESHOLDS[$nextGunnery]) && $xp >= self::THRESHOLDS[$nextGunnery][0]) {
-            $messages[] = "Gunnery can improve to $nextGunnery";
+            $messages[] = "Gunnery can improve to $nextGunnery (" . self::THRESHOLDS[$nextGunnery][0] . " XP)";
         }
         $nextPiloting = $piloting - 1;
         if ($nextPiloting >= 0 && isset(self::THRESHOLDS[$nextPiloting]) && $xp >= self::THRESHOLDS[$nextPiloting][1]) {
-            $messages[] = "Piloting can improve to $nextPiloting";
+            $messages[] = "Piloting can improve to $nextPiloting (" . self::THRESHOLDS[$nextPiloting][1] . " XP)";
         }
         return $messages ? implode(', ', $messages) : null;
     }

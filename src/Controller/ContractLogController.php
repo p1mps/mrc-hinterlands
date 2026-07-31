@@ -76,6 +76,7 @@ class ContractLogController extends AbstractController
         $company = $contract->getCompany();
         $action = $request->request->get('action');
         $postTrackForm = $this->createForm(PostTrackFormType::class);
+        $postTrackForm->handleRequest($request);
         $currentMonth = $this->logService->calculateCurrentMonth($contract);
 
         if ($request->isMethod('POST')) {

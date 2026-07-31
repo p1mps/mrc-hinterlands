@@ -10,6 +10,7 @@ use App\DataTables\EmployerAffiliationTable;
 use App\DataTables\EmployerTable;
 use App\DataTables\NumberOfTracksTable;
 use App\DataTables\PayRateTable;
+use App\DataTables\PlanetTable;
 use App\DataTables\SalvageRightsTable;
 use App\DataTables\SupportTermsTable;
 use App\DataTables\TerrainTable;
@@ -80,6 +81,7 @@ class ContractGeneratorService {
             'salvageRights'  => $salvageRights,
             'transportTerms' => $transportTerms,
             'numberOfTracks' => $numberOfTracks,
+            'planet'         => PlanetTable::randomPlanet(),
             'rolls'          => $rolls,
         ];
     }
