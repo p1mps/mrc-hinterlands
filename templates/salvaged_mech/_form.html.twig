@@ -1,4 +1,17 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+<div class="row justify-content-center">
+<div class="col-md-6">
+{{ form_start(form, {attr: {class: 'mb-3'}}) }}
+    {{ form_row(form.model) }}
+    {{ form_row(form.tonnage) }}
+    {{ form_row(form.bvCost) }}
+    {{ form_row(form.contract) }}
+    {{ form_row(form.damageState) }}
+    {{ form_row(form.techBase) }}
+    {{ form_row(form.salvageRightsPercent) }}
+    {{ form_row(form.scrapyard) }}
+    <div class="d-flex gap-2">
+        <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+    </div>
 {{ form_end(form) }}
+</div>
+</div>

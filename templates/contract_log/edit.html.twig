@@ -1,37 +1,38 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+<div class="row justify-content-center">
+<div class="col-md-6">
 <h2>Edit Log Entry</h2>
 <a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
+{{ form_start(form, {attr: {class: 'mb-3'}}) }}
+    {{ form_row(form.month) }}
+    {{ form_row(form.entryType) }}
 
-{{ form_start(form, {attr: {class: 'row g-3'}}) }}
-<div class="col-md-3">{{ form_row(form.month) }}</div>
-<div class="col-md-4">{{ form_row(form.entryType) }}</div>
+    {% if entry.entryType.value == 'track_setup' and entry.track %}
+        <div class="mb-3">
+            <label class="form-label">Mission Type</label>
+            <select name="missionType" class="form-select">
+                {% for mission in missionTypes %}
+                <option value="{{ mission }}" {% if mission == entry.track.missionType %}selected{% endif %}>{{ mission }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Terrain</label>
+            <select name="terrain" class="form-select">
+                {% for terrain in terrains %}
+                <option value="{{ terrain }}" {% if terrain == entry.track.terrain %}selected{% endif %}>{{ terrain }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {{ form_row(form.complication) }}
+    {% endif %}
 
-{% if entry.entryType.value == 'track_setup' and entry.track %}
-<div class="col-md-5">
-    <label class="form-label">Mission Type</label>
-    <select name="missionType" class="form-select">
-        {% for mission in missionTypes %}
-        <option value="{{ mission }}" {% if mission == entry.track.missionType %}selected{% endif %}>{{ mission }}</option>
-        {% endfor %}
-    </select>
-</div>
-<div class="col-md-5">
-    <label class="form-label">Terrain</label>
-    <select name="terrain" class="form-select">
-        {% for terrain in terrains %}
-        <option value="{{ terrain }}" {% if terrain == entry.track.terrain %}selected{% endif %}>{{ terrain }}</option>
-        {% endfor %}
-    </select>
-</div>
-    <div class="col-md-5">
-        <div class="col-12">{{ form_row(form.complication) }}</div>
+    {{ form_row(form.description) }}
+    <div class="d-flex gap-2">
+        <button class="btn btn-primary">Save</button>
     </div>
-{% endif %}
-
-<div class="col-12">{{ form_row(form.description) }}</div>
-<div class="col-12">
-    <button class="btn btn-primary">Save</button>
-</div>
 {{ form_end(form) }}
+</div>
+</div>
 {% endblock %}

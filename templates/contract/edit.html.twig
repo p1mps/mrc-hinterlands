@@ -1,31 +1,31 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <h2>Edit Contract — {{ contract.name }}</h2>
-    <a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
-
-    {{ form_start(form, {attr: {class: 'row g-3'}}) }}
-
-    <div class="col-md-6">{{ form_row(form.name) }}</div>
-    <div class="col-md-6">{{ form_row(form.company) }}</div>
-    <div class="col-md-6">{{ form_row(form.status) }}</div>
-    <div class="col-md-6">{{ form_row(form.type) }}</div>
-    <div class="col-md-6">{{ form_row(form.planet) }}</div>
-    <div class="col-md-6">{{ form_row(form.employer) }}</div>
-    <div class="col-md-6">{{ form_row(form.employerAffiliation) }}</div>
-    <div class="col-md-3">{{ form_row(form.scale) }}</div>
-    <div class="col-md-3">{{ form_row(form.durationMonths) }}</div>
-    <div class="col-md-3">{{ form_row(form.basePayPercent) }}</div>
-    <div class="col-md-3">{{ form_row(form.numberOfTracks) }}</div>
-    <div class="col-md-6">{{ form_row(form.intensity) }}</div>
-    <div class="col-md-6">{{ form_row(form.commandRights) }}</div>
-    <div class="col-md-6">{{ form_row(form.supportTerms) }}</div>
-    <div class="col-md-6">{{ form_row(form.salvageRights) }}</div>
-    <div class="col-md-6">{{ form_row(form.transportTerms) }}</div>
-    <div class="col-md-12">{{ form_row(form.description) }}</div>
-
-    <div class="col-12">
+<div class="row justify-content-center">
+<div class="col-md-8">
+<h2>Edit Contract — {{ contract.name }}</h2>
+<a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
+{{ form_start(form, {attr: {class: 'mb-3'}}) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.company) }}
+    {{ form_row(form.status) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.planet) }}
+    {{ form_row(form.employer) }}
+    {{ form_row(form.employerAffiliation) }}
+    {{ form_row(form.scale) }}
+    {{ form_row(form.durationMonths) }}
+    {{ form_row(form.basePayPercent) }}
+    {{ form_row(form.numberOfTracks) }}
+    {{ form_row(form.intensity) }}
+    {{ form_row(form.commandRights) }}
+    {{ form_row(form.supportTerms) }}
+    {{ form_row(form.salvageRights) }}
+    {{ form_row(form.transportTerms) }}
+    {{ form_row(form.description) }}
+    <div class="d-flex gap-2">
         <button class="btn btn-primary">Save Changes</button>
     </div>
-
-    {{ form_end(form) }}
+{{ form_end(form) }}
+</div>
+</div>
 {% endblock %}

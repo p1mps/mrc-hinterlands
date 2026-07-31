@@ -1,18 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block title %}New Dropship{% endblock %}
 {% block body %}
-    <h2>Create Dropship</h2>
-
-    <a href="{{ path('app_dropship_show') }}" class="btn btn-outline-secondary mb-3">Back to Dropship</a>
-
-    {{ form_start(form, {attr: {class: 'row g-3'}}) }}
-
-    <div class="col-md-6">{{ form_row(form.name) }}</div>
-    <div class="col-md-6">{{ form_row(form.maxCapacity) }}</div>
-
-    <div class="col-12 mt-3">
+<div class="row justify-content-center">
+<div class="col-md-6">
+<h2>Create Dropship</h2>
+<a href="{{ path('app_dropship_show') }}" class="btn btn-outline-secondary mb-3">Back to Dropship</a>
+{{ form_start(form, {attr: {class: 'mb-3'}}) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.maxCapacity) }}
+    <div class="d-flex gap-2">
         <button class="btn btn-primary">Save</button>
     </div>
-
-    {{ form_end(form) }}
+{{ form_end(form) }}
+</div>
+</div>
 {% endblock %}
