@@ -15,6 +15,10 @@ class SalvagedMech
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(inversedBy: 'salvagedMechs')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?Dropship $dropship = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $model = null;
 
@@ -200,6 +204,17 @@ class SalvagedMech
     public function setScrapyard(bool $scrapyard): static
     {
         $this->scrapyard = $scrapyard;
+        return $this;
+    }
+
+    public function getDropship(): ?Dropship
+    {
+        return $this->dropship;
+    }
+
+    public function setDropship(?Dropship $dropship): static
+    {
+        $this->dropship = $dropship;
         return $this;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Dropship;
 use App\Entity\MercenaryCompany;
 use App\Entity\SalvagedMech;
 use App\Entity\Unit;
@@ -74,6 +75,11 @@ class MechAcquisitionService
 
         // Mark Salvaged Mech as Acquired
         $salvagedMech->setAcquired(true);
+
+        // Unassign from dropship if assigned (frees up capacity)
+        if ($salvagedMech->getDropship() !== null) {
+            $salvagedMech->setDropship(null);
+        }
 
         // Persist Changes
         $this->em->persist($newUnit);

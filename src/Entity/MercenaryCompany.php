@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Entity\Dropship;
 use App\Repository\MercenaryCompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -39,6 +40,9 @@ class MercenaryCompany {
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Contract::class)]
     private Collection $contracts;
 
+    #[ORM\OneToOne(mappedBy: 'company', cascade: ['persist', 'remove'])]
+    private ?Dropship $dropship = null;
+
     public function __construct() {
         $this->units = new ArrayCollection();
         $this->pilots = new ArrayCollection();
@@ -64,6 +68,8 @@ class MercenaryCompany {
     public function getPilots(): Collection { return $this->pilots; }
     public function getSupportPointEntries(): Collection { return $this->supportPointEntries; }
     public function getContracts(): Collection { return $this->contracts; }
+
+    public function getDropship(): ?Dropship { return $this->dropship; }
 
     public function getSupportPointsBalance(): int {
         $total = 0;

@@ -50,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         $roles = ['ROLE_USER'];
 
         // Grant the impersonation role to specific emails
-        if ($this->username == 'Andrea') {
+        if ($this->username == 'Andrea'|| $this->username == 'Zidahya' || $this->username == 'MitchellWelsh') {
             $roles[] = 'ROLE_ALLOWED_TO_SWITCH';
         }
 
