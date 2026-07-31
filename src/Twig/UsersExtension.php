@@ -4,9 +4,9 @@ namespace App\Twig;
 
 use App\Repository\UserRepository;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig\Extension\GlobalsInterface;
 
-class UsersExtension extends AbstractExtension
+class UsersExtension extends AbstractExtension implements GlobalsInterface
 {
     public function __construct(private readonly UserRepository $userRepository) {}
 
