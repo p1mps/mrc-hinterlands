@@ -67,22 +67,7 @@
 
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">Step 1 — Maintenance</div>
-                <div class="card-body">
-                    <p>Deduct <strong>{{ 500 * contract.scale }} SP</strong> for maintenance this month (500 × scale {{ contract.scale }}).</p>
-                    <p class="text-muted small">Not reduced by support terms — maintenance is always paid in full.</p>
-                    <form method="post">
-                        <input type="hidden" name="month" value="{{ currentMonth }}">
-                        <input type="hidden" name="action" value="maintenance">
-                        <button class="btn btn-warning">Record Maintenance</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">Step 2 — Base Pay</div>
+                <div class="card-header">Step 1 — Base Pay</div>
                 <div class="card-body">
                     <p>Base pay rate: <strong>{{ contract.basePayPercent }}%</strong> × 500 SP × scale {{ contract.scale }}</p>
                     <p>Receive: <strong>+{{ contract.calculateMonthlyBasePay() }} SP</strong></p>
@@ -90,6 +75,21 @@
                         <input type="hidden" name="month" value="{{ currentMonth }}">
                         <input type="hidden" name="action" value="base_pay">
                         <button class="btn btn-success">Record Base Pay</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Step 2 — Maintenance</div>
+                <div class="card-body">
+                    <p>Deduct <strong>{{ 500 * contract.scale }} SP</strong> for maintenance this month (500 × scale {{ contract.scale }}).</p>
+                    <p class="text-muted small">Not reduced by support terms — maintenance is always paid in full.</p>
+                    <form method="post">
+                        <input type="hidden" name="month" value="{{ currentMonth }}">
+                        <input type="hidden" name="action" value="maintenance">
+                        <button class="btn btn-warning">Record Maintenance</button>
                     </form>
                 </div>
             </div>
