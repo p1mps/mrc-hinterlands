@@ -10,5 +10,6 @@ enum ContractLogEntryType: string
     case Downtime = 'downtime';
     case Salvage = 'salvage';
     case Transport = 'transport';
-    case Maintenance = 'maintenance';
+     case Maintenance = 'maintenance';
+     case Breach = 'breach';
 }

@@ -69,14 +69,14 @@ class MercenaryCompany {
         return $this;
     }
 
-    public function getScaleFromReputation(): int {
+    public function scaleFromReputation(): int {
         if ($this->reputation <= 2) return 1;
         if ($this->reputation <= 10) return 2;
         return 3;
     }
 
     public function getMaxNegotiationSteps(): int {
-        return 2 * $this->getScaleFromReputation();
+        return 2 * $this->scaleFromReputation();
     }
 
     public function getUnits(): Collection { return $this->units; }

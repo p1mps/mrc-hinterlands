@@ -123,6 +123,8 @@ class ContractService
             fn(TrackRecord $t) => $t->getStatus() === TrackStatus::Pending
         )->first() ?: null;
 
+        $this->adjustReputationForTrack($contract, $tier);
+
         $toftt = $pendingTrack?->isTakingOneForTeam() ?? false;
         if ($toftt) {
             $combatPay = (int) floor($combatPay / 2);
@@ -220,6 +222,34 @@ class ContractService
         if ($sp) {
             $log->setSupportPointEntry($sp);
         }
+
+        $this->em->persist($log);
+        $this->em->flush();
+    }
+
+    public function adjustReputationForTrack(Contract $contract, CombatPayTier $tier): void {
+        $company = $contract->getCompany();
+        if (!$company) return;
+
+        match ($tier) {
+            CombatPayTier::Full, CombatPayTier::HalfAgain => $company->adjustReputation(1),
+            CombatPayTier::Half => $company->adjustReputation(-1),
+            CombatPayTier::None => null,
+        };
+    }
+
+    public function breachContract(Contract $contract): void {
+        $company = $contract->getCompany();
+        if (!$company) return;
+
+        $company->adjustReputation(-3);
+
+        $contract->setStatus(ContractStatus::Broken);
+
+        $log = (new ContractLogEntry())
+            ->setContract($contract)
+            ->setEntryType(ContractLogEntryType::Breach)
+            ->setDescription('Contract breached. -3 Reputation.');
 
         $this->em->persist($log);
         $this->em->flush();

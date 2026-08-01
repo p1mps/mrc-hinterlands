@@ -32,11 +32,46 @@ class ContractController extends AbstractController
     public function generate(Request $request, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
     {
         $scale = $request->query->getInt('scale', 1);
-        $data = $generator->generate($scale);
+        $company = $this->getUser()->getCompany();
+        $reputation = $company->getReputation();
+
+        if ($request->query->getBoolean('negotiate', false)) {
+            $data = $generator->generateWithNegotiation($scale, $reputation);
+        } else {
+            $data = $generator->generate($scale);
+        }
 
         return $this->render('contract/generate.html.twig', [
-            'data'    => $data,
-            'scale'   => $scale,
+            'data'       => $data,
+            'scale'      => $scale,
+            'company'    => $company,
+            'reputation' => $reputation,
+        ]);
+    }
+
+    #[Route('/contract/generate/negotiate', name: 'app_contracts_negotiate', methods: ['POST'])]
+    public function negotiateGenerated(Request $request, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
+    {
+        $company = $this->getUser()->getCompany();
+        $reputation = $company->getReputation();
+        $scale = $request->request->getInt('scale', 1);
+
+        $negotiationChanges = [];
+        if ($request->request->has('negotiation')) {
+            $negotiationChanges = $request->request->all('negotiation');
+        }
+
+        $data = $generator->generateWithNegotiation($scale, $reputation, $negotiationChanges);
+
+        $data['scale'] = $scale;
+        $data['company'] = $company;
+        $data['reputation'] = $reputation;
+
+        return $this->render('contract/generate.html.twig', [
+            'data'       => $data,
+            'scale'      => $scale,
+            'company'    => $company,
+            'reputation' => $reputation,
         ]);
     }
 

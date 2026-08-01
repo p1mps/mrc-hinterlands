@@ -17,6 +17,7 @@ use App\DataTables\TerrainTable;
 use App\DataTables\TransportationTable;
 use App\Enum\CommandRights;
 use App\Enum\ContractType;
+use App\Entity\MercenaryCompany;
 
 class ContractGeneratorService {
     public function __construct(private readonly DiceRoller $dice) {}
@@ -94,6 +95,117 @@ class ContractGeneratorService {
         $result['isOpposing'] = true;
         $result['numberOfTracks'] = $numberOfTracks;
         return $result;
+    }
+
+    public function generateWithNegotiation(int $scale, int $reputation, array $negotiationChanges = []): array {
+        $base = $this->generate($scale);
+
+        $availableSteps = min($reputation, 2 * $scale);
+        $swaps = 0;
+        $maxSwaps = 2;
+
+        foreach ($negotiationChanges as $category => $targetStep) {
+            if ($category === 'swap_from' || $category === 'swap_to') continue;
+
+            $currentStep = match ($category) {
+                'basePayPercent' => $this->getStepForValue('basePayPercent', $base['basePayPercent']),
+                'commandRights' => $this->getStepForValue('commandRights', $base['commandRights']->value),
+                'salvageRights' => $this->getStepForValue('salvageRights', $base['salvageRights']),
+                'supportTerms' => $this->getStepForValue('supportTerms', $base['supportTerms']),
+                'transportTerms' => $this->getStepForValue('transportTerms', $base['transportTerms'] ?? '—'),
+                default => null,
+            };
+
+            if ($currentStep === null || $targetStep === null) continue;
+
+            $shift = $targetStep - $currentStep;
+            if ($shift <= 0) continue;
+
+            $shift = min($shift, $availableSteps);
+            $availableSteps -= $shift;
+
+            match ($category) {
+                'basePayPercent' => $base['basePayPercent'] = ContractStepsTable::getBasePayPercent($targetStep),
+                'commandRights' => $base['commandRights'] = ContractStepsTable::getCommandRights($targetStep) ?? CommandRights::Liaison,
+                'salvageRights' => $base['salvageRights'] = ContractStepsTable::getSalvageRights($targetStep),
+                'supportTerms' => $base['supportTerms'] = ContractStepsTable::getSupportTerms($targetStep),
+                'transportTerms' => $base['transportTerms'] = ContractStepsTable::getTransportTerms($targetStep) ?? '—',
+            };
+        }
+
+        if (isset($negotiationChanges['swap_from']) && isset($negotiationChanges['swap_to']) && $swaps < $maxSwaps) {
+            $fromCategory = $negotiationChanges['swap_from'];
+            $toCategory = $negotiationChanges['swap_to'];
+
+            $fromStep = match ($fromCategory) {
+                'basePayPercent' => $this->getStepForValue('basePayPercent', $base['basePayPercent']),
+                'commandRights' => $this->getStepForValue('commandRights', $base['commandRights']->value),
+                'salvageRights' => $this->getStepForValue('salvageRights', $base['salvageRights']),
+                'supportTerms' => $this->getStepForValue('supportTerms', $base['supportTerms']),
+                'transportTerms' => $this->getStepForValue('transportTerms', $base['transportTerms'] ?? '—'),
+                default => null,
+            };
+
+            $toStep = match ($toCategory) {
+                'basePayPercent' => $this->getStepForValue('basePayPercent', $base['basePayPercent']),
+                'commandRights' => $this->getStepForValue('commandRights', $base['commandRights']->value),
+                'salvageRights' => $this->getStepForValue('salvageRights', $base['salvageRights']),
+                'supportTerms' => $this->getStepForValue('supportTerms', $base['supportTerms']),
+                'transportTerms' => $this->getStepForValue('transportTerms', $base['transportTerms'] ?? '—'),
+                default => null,
+            };
+
+            if ($fromStep !== null && $toStep !== null) {
+                $canSacrifice = $fromStep - 1;
+                if ($canSacrifice >= 1) {
+                    $gain = min(2, $fromStep - 1);
+                    $newFromStep = $fromStep - $gain;
+                    $newToStep = min(13, $toStep + 1);
+
+                    match ($fromCategory) {
+                        'basePayPercent' => $base['basePayPercent'] = ContractStepsTable::getBasePayPercent($newFromStep),
+                        'commandRights' => $base['commandRights'] = ContractStepsTable::getCommandRights($newFromStep) ?? CommandRights::Liaison,
+                        'salvageRights' => $base['salvageRights'] = ContractStepsTable::getSalvageRights($newFromStep),
+                        'supportTerms' => $base['supportTerms'] = ContractStepsTable::getSupportTerms($newFromStep),
+                        'transportTerms' => $base['transportTerms'] = ContractStepsTable::getTransportTerms($newFromStep) ?? '—',
+                    };
+
+                    match ($toCategory) {
+                        'basePayPercent' => $base['basePayPercent'] = ContractStepsTable::getBasePayPercent($newToStep),
+                        'commandRights' => $base['commandRights'] = ContractStepsTable::getCommandRights($newToStep) ?? CommandRights::Liaison,
+                        'salvageRights' => $base['salvageRights'] = ContractStepsTable::getSalvageRights($newToStep),
+                        'supportTerms' => $base['supportTerms'] = ContractStepsTable::getSupportTerms($newToStep),
+                        'transportTerms' => $base['transportTerms'] = ContractStepsTable::getTransportTerms($newToStep) ?? '—',
+                    };
+
+                    $swaps++;
+                }
+            }
+        }
+
+        $base['negotiationSummary'] = [
+            'reputation' => $reputation,
+            'availableSteps' => $availableSteps,
+            'swapsUsed' => $swaps,
+        ];
+
+        return $base;
+    }
+
+    private function getStepForValue(string $category, mixed $value): ?int {
+        for ($i = 1; $i <= 13; $i++) {
+            $values = ContractStepsTable::getStepValues($i);
+            $match = match ($category) {
+                'basePayPercent' => $values[0] === $value,
+                'commandRights' => $values[1] instanceof CommandRights ? $values[1]->value === $value : $value === null,
+                'salvageRights' => $values[2] === $value,
+                'supportTerms' => $values[3] === $value,
+                'transportTerms' => $values[4] === $value,
+                default => false,
+            };
+            if ($match) return $i;
+        }
+        return null;
     }
 
     public function rollTrackSetup(ContractType $contractType, CommandRights $commandRights): array {

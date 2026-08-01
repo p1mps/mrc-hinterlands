@@ -12,6 +12,7 @@
             <th>Name</th>
             <th>Employer</th>
             <th>Scale</th>
+            <th>Reputation</th>
             <th>Status</th>
             <th>Tracks</th>
             <th>Claimed By</th>
@@ -25,6 +26,13 @@
         <td>{{ c.name ?? c.type.value | capitalize }}</td>
         <td>{{ c.employer }}</td>
         <td>{{ c.scale }}</td>
+        <td>
+            {% if c.company %}
+                <span class="badge bg-secondary">{{ c.company.reputation }}</span>
+            {% else %}
+                —
+            {% endif %}
+        </td>
         <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
         <td>{{ c.tracksCompleted }}/{{ c.numberOfTracks }}</td>
         <td>{{ c.company ? c.company.name : '—' }}</td>
