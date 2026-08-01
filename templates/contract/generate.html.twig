@@ -5,8 +5,100 @@
 {% if company %}
 <div class="alert alert-info d-flex justify-content-between align-items-center">
     <span>Company Reputation: <strong>{{ company.reputation }}</strong> (Scale {{ company.scaleFromReputation }})</span>
-    <a href="{{ path('app_contracts_generate', {scale: scale, negotiate: 1}) }}" class="btn btn-sm btn-outline-info">Negotiate Contract</a>
+    <a href="{{ path('app_contracts_generate', {scale: scale}) }}" class="btn btn-sm btn-outline-secondary">Standard Offer</a>
 </div>
+{% endif %}
+
+<!-- Negotiation UI (only shown when negotiate=1) -->
+{% if data.negotiationSummary is defined %}
+<div class="card mb-3">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">Contract Negotiation</h5>
+    </div>
+    <div class="card-body">
+        <p>
+            Reputation: <strong>{{ data.negotiationSummary.reputation }}</strong> |
+            Available shifts: <strong id="negotiation-budget"><strong>{{ data.negotiationSummary.availableSteps }}</strong></strong> |
+            Swaps used: <strong id="swaps-used">{{ data.negotiationSummary.swapsUsed }}</strong>/2
+        </p>
+        <p class="text-muted small">
+            Each point of reputation lets you shift one category up by 1 step (max {{ 2 * (data.scale ?? scale) }} for your scale).
+            You can also swap: sacrifice 2 steps from one category to gain 1 step in another (max 2 swaps).
+        </p>
+    </div>
+</div>
+
+<form id="negotiate-form" method="post" action="{{ path('app_contracts_negotiate') }}">
+    <input type="hidden" name="scale" value="{{ data.scale ?? scale }}">
+
+    <div class="table-responsive mb-3">
+        <table class="table table-sm table-bordered" id="negotiation-table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Base Step</th>
+                    <th>Current Step</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% set categories = [
+                { key: 'basePayPercent', label: 'Base Pay' },
+                { key: 'commandRights', label: 'Command Rights' },
+                { key: 'salvageRights', label: 'Salvage Rights' },
+                { key: 'supportTerms', label: 'Support Terms' },
+                { key: 'transportTerms', label: 'Transport Terms' }
+            ] %}
+
+            {% for cat in categories %}
+                {% set baseStep = data.rolls|filter(r => r.label == cat.label)[0].step ?? 1 %}
+                <tr data-key="{{ cat.key }}">
+                    <td>{{ cat.label }}</td>
+                    <td class="base-step">{{ baseStep }}</td>
+                    <td>
+                        <span class="current-step">{{ baseStep }}</span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-primary shift-up"
+                                data-key="{{ cat.key }}" data-target="{{ baseStep }}"
+                                data-base="{{ baseStep }}">
+                            +1 Step
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Swap Section -->
+    <div class="mb-3">
+        <h6>Swap (sacrifice 2 steps to gain 1 in another category, max 2 swaps)</h6>
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">From Category</label>
+                <select id="swap-from" class="form-select">
+                    {% for cat in categories %}
+                        <option value="{{ cat.key }}">{{ cat.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">To Category</label>
+                <select id="swap-to" class="form-select">
+                    {% for cat in categories %}
+                        <option value="{{ cat.key }}">{{ cat.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="button" id="perform-swap" class="btn btn-outline-warning w-100">Perform Swap</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-success">Accept Contract</button>
+</form>
 {% endif %}
 
 <div class="d-flex gap-4 align-items-start flex-wrap">
@@ -48,6 +140,7 @@
 </div>
 {% endif %}
 
+{% if data.negotiationSummary is not defined %}
 <form method="post" action="{{ path('app_contracts_accept') }}" class="d-inline">
     <input type="hidden" name="type"           value="{{ data.type.value }}">
     <input type="hidden" name="duration"       value="{{ data.duration }}">
@@ -65,4 +158,186 @@
 <form method="post" action="{{ path('app_contracts_discard') }}" class="d-inline ms-2">
     <button class="btn btn-secondary" onclick="return confirm('Discard this contract?')">Discard</button>
 </form>
+{% endif %}
+
+{% if data.negotiationSummary is defined %}
+<script>
+(function() {
+    const MAX_STEP = 13;
+    const MAX_SWAPS = 2;
+    const baseReputation = {{ data.negotiationSummary.reputation }};
+    const maxShifts = {{ data.negotiationSummary.availableSteps }};
+    const currentSwaps = {{ data.negotiationSummary.swapsUsed }};
+
+    // State
+    let availableShifts = maxShifts;
+    let swapsUsed = currentSwaps;
+    // Map of key -> current shifted step (starts at base step)
+    const state = {};
+
+    // Initialize state from the DOM (base steps)
+    const rows = document.querySelectorAll('#negotiation-table tbody tr');
+    rows.forEach(row => {
+        const key = row.dataset.key;
+        const baseStep = parseInt(row.querySelector('.base-step').textContent);
+        state[key] = baseStep;
+    });
+
+    const budgetEl = document.getElementById('negotiation-budget');
+    const swapsEl = document.getElementById('swaps-used');
+    const form = document.getElementById('negotiate-form');
+
+    function updateUI() {
+        budgetEl.textContent = availableShifts;
+        swapsEl.textContent = swapsUsed;
+
+        // Update all shift buttons
+        document.querySelectorAll('.shift-up').forEach(btn => {
+            const key = btn.dataset.key;
+            const baseStep = parseInt(btn.dataset.base);
+            const currentStep = state[key];
+
+            if (currentStep >= MAX_STEP) {
+                btn.disabled = true;
+                btn.textContent = 'Max';
+            } else if (availableShifts <= 0) {
+                btn.disabled = true;
+                btn.textContent = 'No budget';
+            } else {
+                btn.disabled = false;
+                btn.textContent = '+1 Step';
+            }
+
+            // Update the displayed current step
+            const stepSpan = btn.closest('tr').querySelector('.current-step');
+            stepSpan.textContent = currentStep;
+        });
+
+        // Enable/disable swap button
+        const swapBtn = document.getElementById('perform-swap');
+        updateSwapButton(swapBtn);
+    }
+
+    function updateSwapButton(swapBtn) {
+        if (swapsUsed >= MAX_SWAPS) {
+            swapBtn.disabled = true;
+            swapBtn.textContent = 'Max swaps';
+            return;
+        }
+
+        const fromKey = document.getElementById('swap-from').value;
+        const toKey = document.getElementById('swap-to').value;
+
+        if (fromKey === toKey) {
+            swapBtn.disabled = true;
+            swapBtn.textContent = 'Select different categories';
+            return;
+        }
+
+        const fromStep = state[fromKey];
+        const baseStep = parseInt(document.querySelector(`tr[data-key="${fromKey}"] .base-step`).textContent);
+        const toStep = state[toKey];
+
+        // Can sacrifice 2 steps if current > base (meaning it was shifted up)
+        const sacrificeable = fromStep - baseStep;
+        if (sacrificeable < 2) {
+            swapBtn.disabled = true;
+            swapBtn.textContent = 'Not enough to sacrifice';
+            return;
+        }
+
+        // Can't shift down to below base
+        const newFromStep = fromStep - 2;
+        if (newFromStep < baseStep) {
+            swapBtn.disabled = true;
+            swapBtn.textContent = 'Not enough to sacrifice';
+            return;
+        }
+
+        // Can't exceed max step on target
+        if (toStep >= MAX_STEP) {
+            swapBtn.disabled = true;
+            swapBtn.textContent = 'Target at max step';
+            return;
+        }
+
+        swapBtn.disabled = false;
+        swapBtn.textContent = 'Perform Swap';
+    }
+
+    // Shift a category up by 1
+    document.querySelectorAll('.shift-up').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const key = this.dataset.key;
+            const baseStep = parseInt(this.dataset.base);
+            const currentStep = state[key];
+
+            if (currentStep >= MAX_STEP) return;
+            if (availableShifts <= 0) return;
+
+            state[key] = currentStep + 1;
+            availableShifts--;
+            updateUI();
+        });
+    });
+
+    // Swap button
+    document.getElementById('perform-swap').addEventListener('click', function() {
+        const fromKey = document.getElementById('swap-from').value;
+        const toKey = document.getElementById('swap-to').value;
+
+        if (fromKey === toKey) return;
+        if (swapsUsed >= MAX_SWAPS) return;
+
+        const baseStep = parseInt(document.querySelector(`tr[data-key="${fromKey}"] .base-step`).textContent);
+        const fromStep = state[fromKey];
+        const toStep = state[toKey];
+
+        const sacrificeable = fromStep - baseStep;
+        if (sacrificeable < 2) return;
+        if (toStep >= MAX_STEP) return;
+
+        // Perform the swap: sacrifice 2 from source, gain 1 on target
+        state[fromKey] = fromStep - 2;
+        state[toKey] = toStep + 1;
+        swapsUsed++;
+
+        updateUI();
+    });
+
+    // Re-validate on dropdown change
+    document.getElementById('swap-from').addEventListener('change', () => updateSwapButton(document.getElementById('perform-swap')));
+    document.getElementById('swap-to').addEventListener('change', () => updateSwapButton(document.getElementById('perform-swap')));
+
+    // On form submit, build hidden fields for server-side validation
+    form.addEventListener('submit', function(e) {
+        // Build base steps from the DOM
+        const baseSteps = {};
+        document.querySelectorAll('#negotiation-table tbody tr').forEach(row => {
+            baseSteps[row.dataset.key] = parseInt(row.querySelector('.base-step').textContent);
+        });
+
+        let stateField = form.querySelector('input[name="negotiation_state"]');
+        if (!stateField) {
+            stateField = document.createElement('input');
+            stateField.name = 'negotiation_state';
+            stateField.type = 'hidden';
+            form.appendChild(stateField);
+        }
+        stateField.value = JSON.stringify(state);
+
+        let baseField = form.querySelector('input[name="base_steps"]');
+        if (!baseField) {
+            baseField = document.createElement('input');
+            baseField.name = 'base_steps';
+            baseField.type = 'hidden';
+            form.appendChild(baseField);
+        }
+        baseField.value = JSON.stringify(baseSteps);
+    });
+
+    updateUI();
+})();
+</script>
+{% endif %}
 {% endblock %}

@@ -61,6 +61,34 @@ class ContractController extends AbstractController
             $negotiationChanges = $request->request->all('negotiation');
         }
 
+        // Validate negotiation_state from JavaScript
+        $stateJson = $request->request->get('negotiation_state');
+        $baseStepsJson = $request->request->get('base_steps');
+        if ($stateJson) {
+            $baseSteps = json_decode($baseStepsJson, true) ?? [];
+            $validated = $this->validateNegotiationState(json_decode($stateJson, true), $baseSteps, $scale, $reputation);
+            if (!$validated['valid']) {
+                $this->addFlash('error', $validated['message']);
+
+                $data = $generator->generateWithNegotiation($scale, $reputation);
+                $data['scale'] = $scale;
+                $data['company'] = $company;
+                $data['reputation'] = $reputation;
+
+                return $this->render('contract/generate.html.twig', [
+                    'data'       => $data,
+                    'scale'      => $scale,
+                    'company'    => $company,
+                    'reputation' => $reputation,
+                ]);
+            }
+
+            // Build negotiation changes from validated state
+            foreach ($validated['state'] as $key => $finalStep) {
+                $negotiationChanges[$key] = $finalStep;
+            }
+        }
+
         $data = $generator->generateWithNegotiation($scale, $reputation, $negotiationChanges);
 
         $data['scale'] = $scale;
@@ -73,6 +101,38 @@ class ContractController extends AbstractController
             'company'    => $company,
             'reputation' => $reputation,
         ]);
+    }
+
+    private function validateNegotiationState(?array $state, ?array $baseSteps, int $scale, int $reputation): array {
+        if (!$state) return ['valid' => true];
+
+        $categories = ['basePayPercent', 'commandRights', 'salvageRights', 'supportTerms', 'transportTerms'];
+        $maxShifts = 2 * $scale;
+        $totalShifts = 0;
+
+        foreach ($categories as $key) {
+            if (!isset($state[$key])) continue;
+
+            $finalStep = $state[$key];
+            if ($finalStep < 1 || $finalStep > 13) {
+                return ['valid' => false, 'message' => "Invalid step for {$key}: must be between 1 and 13."];
+            }
+
+            $baseStep = $baseSteps[$key] ?? 1;
+            $shift = $finalStep - $baseStep;
+
+            if ($shift < 0) {
+                return ['valid' => false, 'message' => "{$key} cannot be shifted below its base step ({$baseStep})."];
+            }
+
+            $totalShifts += $shift;
+        }
+
+        if ($totalShifts > $maxShifts) {
+            return ['valid' => false, 'message' => "Too many shifts: {$totalShifts} requested, but only {$maxShifts} available for Scale {$scale}."];
+        }
+
+        return ['valid' => true, 'state' => $state];
     }
 
     #[Route('/contract/generate/accept', name: 'app_contracts_accept', methods: ['POST'])]
