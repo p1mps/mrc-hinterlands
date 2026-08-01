@@ -6,6 +6,7 @@ use App\Entity\Contract;
 use App\Entity\ContractLogEntry;
 use App\Entity\SupportPointEntry;
 use App\Entity\TrackRecord;
+use App\Enum\CombatPayTier;
 use App\Enum\ContractLogEntryType;
 use App\Enum\ContractStatus;
 use App\Enum\TrackStatus;

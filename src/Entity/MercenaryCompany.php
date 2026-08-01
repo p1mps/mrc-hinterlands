@@ -64,6 +64,21 @@ class MercenaryCompany {
     public function getReputation(): int { return $this->reputation; }
     public function setReputation(int $reputation): static { $this->reputation = $reputation; return $this; }
 
+    public function adjustReputation(int $delta): static {
+        $this->reputation = max(0, $this->reputation + $delta);
+        return $this;
+    }
+
+    public function getScaleFromReputation(): int {
+        if ($this->reputation <= 2) return 1;
+        if ($this->reputation <= 10) return 2;
+        return 3;
+    }
+
+    public function getMaxNegotiationSteps(): int {
+        return 2 * $this->getScaleFromReputation();
+    }
+
     public function getUnits(): Collection { return $this->units; }
     public function getPilots(): Collection { return $this->pilots; }
     public function getSupportPointEntries(): Collection { return $this->supportPointEntries; }
