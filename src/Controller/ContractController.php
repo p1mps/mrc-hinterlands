@@ -57,6 +57,7 @@ class ContractController extends AbstractController
         $company = $this->getUser()->getCompany();
         $reputation = $company->getReputation();
         $scale = $request->request->getInt('scale', 1);
+        $maxShifts = 2 * $scale;
 
         $negotiationChanges = [];
         if ($request->request->has('negotiation')) {
@@ -68,7 +69,8 @@ class ContractController extends AbstractController
         $baseStepsJson = $request->request->get('base_steps');
         if ($stateJson) {
             $baseSteps = json_decode($baseStepsJson, true) ?? [];
-            $validated = $this->validateNegotiationState(json_decode($stateJson, true), $baseSteps, $scale, $reputation);
+            $shiftsUsed = $request->request->getInt('shifts_used', 0);
+            $validated = $this->validateNegotiationState(json_decode($stateJson, true), $baseSteps, $scale, $reputation, $maxShifts, $shiftsUsed);
             if (!$validated['valid']) {
                 $this->addFlash('error', $validated['message']);
 
@@ -107,19 +109,42 @@ class ContractController extends AbstractController
         ]);
     }
 
-    private function validateNegotiationState(?array $state, ?array $baseSteps, int $scale, int $reputation): array {
+    private function validateNegotiationState(?array $state, ?array $baseSteps, int $scale, int $reputation, int $maxShifts, int $shiftsUsed): array {
         if (!$state) return ['valid' => true];
 
-        $categories = ['basePayPercent', 'commandRights', 'salvageRights', 'supportTerms', 'transportTerms'];
-        $maxShifts = 2 * $scale;
-        $totalShifts = 0;
+        $categories = ['basePayPercent', 'commandRights', 'salvageRights', 'supportTerms', 'transportTerms', 'numberOfTracks'];
+
+        if ($shiftsUsed > $maxShifts) {
+            return ['valid' => false, 'message' => "Too many reputation shifts: {$shiftsUsed} used, but only {$maxShifts} available for Scale {$scale}."];
+        }
 
         foreach ($categories as $key) {
             if (!isset($state[$key])) continue;
 
             $finalStep = $state[$key];
+
+            // Special case: Number of Tracks is 1-5, not on the 13-step table
+            if ($key === 'numberOfTracks') {
+                if ($finalStep < 1 || $finalStep > 5) {
+                    return ['valid' => false, 'message' => "Invalid number of tracks: must be between 1 and 5."];
+                }
+
+                $baseStep = $baseSteps[$key] ?? 2;
+                $shift = $finalStep - $baseStep;
+
+                if ($shift < 0) {
+                    return ['valid' => false, 'message' => "Number of Tracks cannot be shifted below its base step ({$baseStep})."];
+                }
+
+                continue;
+            }
+
             if ($finalStep < 1 || $finalStep > 13) {
                 return ['valid' => false, 'message' => "Invalid step for {$key}: must be between 1 and 13."];
+            }
+
+            if (!ContractStepsTable::isStepValidForCategory($finalStep, $key)) {
+                return ['valid' => false, 'message' => "{$key} step {$finalStep} has no value for this category."];
             }
 
             $baseStep = $baseSteps[$key] ?? 1;
@@ -128,12 +153,6 @@ class ContractController extends AbstractController
             if ($shift < 0) {
                 return ['valid' => false, 'message' => "{$key} cannot be shifted below its base step ({$baseStep})."];
             }
-
-            $totalShifts += $shift;
-        }
-
-        if ($totalShifts > $maxShifts) {
-            return ['valid' => false, 'message' => "Too many shifts: {$totalShifts} requested, but only {$maxShifts} available for Scale {$scale}."];
         }
 
         return ['valid' => true, 'state' => $state];
@@ -154,7 +173,7 @@ class ContractController extends AbstractController
     }
 
     #[Route('/contract/generate/accept', name: 'app_contracts_accept', methods: ['POST'])]
-    public function acceptGenerated(Request $request, EntityManagerInterface $em, ContractService $contractService,  ContractGeneratorService $generator): Response
+    public function acceptGenerated(Request $request, EntityManagerInterface $em, ContractService $contractService): Response
     {
         $data = [
             'type'             => ContractType::from($request->request->get('type')),
@@ -172,13 +191,7 @@ class ContractController extends AbstractController
 
         $contract = $contractService->createContract($data);
         $contract->setPlanet(PlanetTable::randomPlanet());
-        $opposingData = $generator->generateOpposing($data['type'], $data['scale'], $data['numberOfTracks']);
-        $opposing = $contractService->createContract($opposingData);
-        $opposing->setPlanet(PlanetTable::randomPlanet());
-        $opposing->setLinkedContract($contract);
-        $contract->setLinkedContract($opposing);
         $em->persist($contract);
-        $em->persist($opposing);
         $em->flush();
         $this->addFlash('success', 'Contract generated.');
 

@@ -76,4 +76,49 @@ class ContractStepsTableTest extends TestCase {
     public function testStep13SupportTermsIsBattle100Percent(): void {
         $this->assertEquals('Battle/100%', ContractStepsTable::getSupportTerms(13));
     }
+
+    public function testIsStepValidForCategoryBasePayPercent(): void {
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(1, 'basePayPercent'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(7, 'basePayPercent'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(13, 'basePayPercent'));
+    }
+
+    public function testIsStepValidForCategorySupportTerms(): void {
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(1, 'supportTerms'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(7, 'supportTerms'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(13, 'supportTerms'));
+    }
+
+    public function testIsStepValidForCategoryCommandRights(): void {
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(1, 'commandRights'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(2, 'commandRights'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(3, 'commandRights'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(4, 'commandRights'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(5, 'commandRights'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(6, 'commandRights'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(7, 'commandRights'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(8, 'commandRights'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(9, 'commandRights'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(10, 'commandRights'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(11, 'commandRights'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(12, 'commandRights'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(13, 'commandRights'));
+    }
+
+    public function testIsStepValidForCategorySalvageRights(): void {
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(1, 'salvageRights'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(2, 'salvageRights'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(3, 'salvageRights'));
+    }
+
+    public function testIsStepValidForCategoryTransportTerms(): void {
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(1, 'transportTerms'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(2, 'transportTerms'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(5, 'transportTerms'));
+        $this->assertTrue(ContractStepsTable::isStepValidForCategory(9, 'transportTerms'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(10, 'transportTerms'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(11, 'transportTerms'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(12, 'transportTerms'));
+        $this->assertFalse(ContractStepsTable::isStepValidForCategory(13, 'transportTerms'));
+    }
 }

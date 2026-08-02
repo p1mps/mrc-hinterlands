@@ -100,12 +100,14 @@ class ContractGeneratorService {
     public function generateWithNegotiation(int $scale, int $reputation, array $negotiationChanges = []): array {
         $base = $this->generate($scale);
 
-        $availableSteps = min($reputation, 2 * $scale);
-        $swaps = 0;
-        $maxSwaps = 2;
-
+        // Apply final state from negotiationChanges (already validated by controller)
         foreach ($negotiationChanges as $category => $targetStep) {
-            if ($category === 'swap_from' || $category === 'swap_to') continue;
+
+            // Special case: Number of Tracks is 1-5, not on the 13-step table
+            if ($category === 'numberOfTracks') {
+                $base['numberOfTracks'] = (int) $targetStep;
+                continue;
+            }
 
             $currentStep = match ($category) {
                 'basePayPercent' => $this->getStepForValue('basePayPercent', $base['basePayPercent']),
@@ -118,12 +120,6 @@ class ContractGeneratorService {
 
             if ($currentStep === null || $targetStep === null) continue;
 
-            $shift = $targetStep - $currentStep;
-            if ($shift <= 0) continue;
-
-            $shift = min($shift, $availableSteps);
-            $availableSteps -= $shift;
-
             match ($category) {
                 'basePayPercent' => $base['basePayPercent'] = ContractStepsTable::getBasePayPercent($targetStep),
                 'commandRights' => $base['commandRights'] = ContractStepsTable::getCommandRights($targetStep) ?? CommandRights::Liaison,
@@ -131,55 +127,6 @@ class ContractGeneratorService {
                 'supportTerms' => $base['supportTerms'] = ContractStepsTable::getSupportTerms($targetStep),
                 'transportTerms' => $base['transportTerms'] = ContractStepsTable::getTransportTerms($targetStep) ?? '—',
             };
-        }
-
-        if (isset($negotiationChanges['swap_from']) && isset($negotiationChanges['swap_to']) && $swaps < $maxSwaps) {
-            $fromCategory = $negotiationChanges['swap_from'];
-            $toCategory = $negotiationChanges['swap_to'];
-
-            $fromStep = match ($fromCategory) {
-                'basePayPercent' => $this->getStepForValue('basePayPercent', $base['basePayPercent']),
-                'commandRights' => $this->getStepForValue('commandRights', $base['commandRights']->value),
-                'salvageRights' => $this->getStepForValue('salvageRights', $base['salvageRights']),
-                'supportTerms' => $this->getStepForValue('supportTerms', $base['supportTerms']),
-                'transportTerms' => $this->getStepForValue('transportTerms', $base['transportTerms'] ?? '—'),
-                default => null,
-            };
-
-            $toStep = match ($toCategory) {
-                'basePayPercent' => $this->getStepForValue('basePayPercent', $base['basePayPercent']),
-                'commandRights' => $this->getStepForValue('commandRights', $base['commandRights']->value),
-                'salvageRights' => $this->getStepForValue('salvageRights', $base['salvageRights']),
-                'supportTerms' => $this->getStepForValue('supportTerms', $base['supportTerms']),
-                'transportTerms' => $this->getStepForValue('transportTerms', $base['transportTerms'] ?? '—'),
-                default => null,
-            };
-
-            if ($fromStep !== null && $toStep !== null) {
-                $canSacrifice = $fromStep - 1;
-                if ($canSacrifice >= 2) {
-                    $newFromStep = max(1, $fromStep - 2);
-                    $newToStep = min(13, $toStep + 1);
-
-                    match ($fromCategory) {
-                        'basePayPercent' => $base['basePayPercent'] = ContractStepsTable::getBasePayPercent($newFromStep),
-                        'commandRights' => $base['commandRights'] = ContractStepsTable::getCommandRights($newFromStep) ?? CommandRights::Liaison,
-                        'salvageRights' => $base['salvageRights'] = ContractStepsTable::getSalvageRights($newFromStep),
-                        'supportTerms' => $base['supportTerms'] = ContractStepsTable::getSupportTerms($newFromStep),
-                        'transportTerms' => $base['transportTerms'] = ContractStepsTable::getTransportTerms($newFromStep) ?? '—',
-                    };
-
-                    match ($toCategory) {
-                        'basePayPercent' => $base['basePayPercent'] = ContractStepsTable::getBasePayPercent($newToStep),
-                        'commandRights' => $base['commandRights'] = ContractStepsTable::getCommandRights($newToStep) ?? CommandRights::Liaison,
-                        'salvageRights' => $base['salvageRights'] = ContractStepsTable::getSalvageRights($newToStep),
-                        'supportTerms' => $base['supportTerms'] = ContractStepsTable::getSupportTerms($newToStep),
-                        'transportTerms' => $base['transportTerms'] = ContractStepsTable::getTransportTerms($newToStep) ?? '—',
-                    };
-
-                    $swaps++;
-                }
-            }
         }
 
         // Update the rolls array to reflect the negotiated step values
@@ -212,10 +159,18 @@ class ContractGeneratorService {
             unset($roll);
         }
 
+        // Update Number of Tracks roll
+        foreach ($base['rolls'] as &$roll) {
+            if ($roll['label'] === 'Number of Tracks') {
+                $roll['result'] = $base['numberOfTracks'];
+                break;
+            }
+        }
+        unset($roll);
+
         $base['negotiationSummary'] = [
             'reputation' => $reputation,
-            'availableSteps' => $availableSteps,
-            'swapsUsed' => $swaps,
+            'availableSteps' => $reputation,
         ];
 
         return $base;

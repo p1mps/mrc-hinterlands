@@ -21,6 +21,7 @@
             <th>Salvage Value</th>
             <th>Damage State</th>
             <th>Tech Base</th>
+            <th>Repair Cost</th>
             <th>Scrapyard</th>
             <th>Status</th>
             <th></th>
@@ -35,6 +36,7 @@
         <td>{{ salvaged_mech.salvageValue ?? '—' }}</td>
         <td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td>
             <td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td>
+            <td>{{ salvagedMechService.calculateRepairCost(salvaged_mech.tonnage, salvaged_mech.damageState ? salvaged_mech.damageState.value : null, salvaged_mech.techBase ? salvaged_mech.techBase.value : null) ?? '—' }}</td>
             <td>{{ salvaged_mech.scrapyard ? 'Yes' : 'No' }}</td>
             <td>
                 {% if salvaged_mech.isTrulyDestroyed %}
@@ -53,7 +55,7 @@
             </td>
         </tr>
         {% else %}
-        <tr><td colspan="9" class="text-muted">No records found.</td></tr>
+        <tr><td colspan="10" class="text-muted">No records found.</td></tr>
     {% endfor %}
     </tbody>
 </table>

@@ -21,12 +21,10 @@
     <div class="card-body">
         <p>
             Reputation: <strong>{{ data.negotiationSummary.reputation }}</strong> |
-            Available shifts: <strong id="negotiation-budget"><strong>{{ data.negotiationSummary.availableSteps }}</strong></strong> |
-            Swaps used: <strong id="swaps-used">{{ data.negotiationSummary.swapsUsed }}</strong>/2
+            Available shifts: <strong id="negotiation-budget"><strong>{{ data.negotiationSummary.availableSteps }}</strong></strong>
         </p>
         <p class="text-muted small">
             Each point of reputation lets you shift one category up by 1 step (max {{ 2 * (data.scale ?? scale) }} for your scale).
-            You can also swap: sacrifice 2 steps from one category to gain 1 step in another (max 2 swaps).
         </p>
     </div>
 </div>
@@ -41,6 +39,7 @@
                     <th>Category</th>
                     <th>Base Step</th>
                     <th>Current Step</th>
+                    <th>Current Value</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -67,42 +66,57 @@
                         <span class="current-step">{{ baseStep }}</span>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-outline-primary shift-up"
-                                data-key="{{ cat.key }}" data-target="{{ baseStep }}"
-                                data-base="{{ baseStep }}">
-                            +1 Step
-                        </button>
+                        <span class="current-value"></span>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-sm btn-outline-primary shift-up"
+                                    data-key="{{ cat.key }}" data-base="{{ baseStep }}">
+                                +1 Step
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary shift-down"
+                                    data-key="{{ cat.key }}" data-base="{{ baseStep }}"
+                                    disabled>
+                                -1 Step
+                            </button>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}
+
+            {% set tracksBase = 2 %}
+            {% for r in data.rolls %}
+                {% if r.label == 'Number of Tracks' and r.result is defined %}
+                    {% set tracksBase = r.result %}
+                {% endif %}
+            {% endfor %}
+            <tr data-key="numberOfTracks">
+                <td>Number of Tracks</td>
+                <td class="base-step">{{ tracksBase }}</td>
+                <td>
+                    <span class="current-step">{{ tracksBase }}</span>
+                </td>
+                <td>
+                    <span class="current-value"></span>
+                </td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-primary shift-up"
+                                data-key="numberOfTracks" data-base="{{ tracksBase }}"
+                                data-min="1" data-max="5">
+                            +1 Track
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary shift-down"
+                                data-key="numberOfTracks" data-base="{{ tracksBase }}"
+                                data-min="1" data-max="5"
+                                disabled>
+                            -1 Track
+                        </button>
+                    </div>
+                </td>
+            </tr>
             </tbody>
         </table>
-    </div>
-
-    <!-- Swap Section -->
-    <div class="mb-3">
-        <h6>Swap (sacrifice 2 steps to gain 1 in another category, max 2 swaps)</h6>
-        <div class="row g-2 align-items-end">
-            <div class="col-md-4">
-                <label class="form-label">From Category</label>
-                <select id="swap-from" class="form-select">
-                    {% for cat in categories %}
-                        <option value="{{ cat.key }}">{{ cat.label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">To Category</label>
-                <select id="swap-to" class="form-select">
-                    {% for cat in categories %}
-                        <option value="{{ cat.key }}">{{ cat.label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-4">
-                <button type="button" id="perform-swap" class="btn btn-outline-warning w-100">Perform Swap</button>
-            </div>
-        </div>
     </div>
 
     <button class="btn btn-success">Accept Contract</button>
@@ -144,7 +158,7 @@
 {% if data.negotiationSummary is defined %}
 <div class="mt-3 p-3 border rounded">
     <h5>Negotiation Summary</h5>
-    <p>Reputation: {{ data.negotiationSummary.reputation }} | Available shifts: {{ data.negotiationSummary.availableSteps }} | Swaps used: {{ data.negotiationSummary.swapsUsed }}</p>
+    <p>Reputation: {{ data.negotiationSummary.reputation }} | Available shifts: {{ data.negotiationSummary.availableSteps }}</p>
 </div>
 {% endif %}
 
@@ -172,18 +186,15 @@
 <script>
 (function() {
     const MAX_STEP = 13;
-    const MAX_SWAPS = 2;
     const baseReputation = {{ data.negotiationSummary.reputation }};
     const maxShifts = {{ data.negotiationSummary.availableSteps }};
-    const currentSwaps = {{ data.negotiationSummary.swapsUsed }};
 
     // 13-step contract steps table for JS lookup
     const STEPS_TABLE = {{ data.steptsTable|raw }};
 
     // State
     let availableShifts = maxShifts;
-    let swapsUsed = currentSwaps;
-    // Map of key -> current shifted step (starts at base step)
+    // Map of key -> current step (starts at base step)
     const state = {};
 
     // Initialize state from the DOM (base steps)
@@ -192,15 +203,56 @@
         const key = row.dataset.key;
         const baseStep = parseInt(row.querySelector('.base-step').textContent);
         state[key] = baseStep;
+        const valueSpan = row.querySelector('.current-value');
+        valueSpan.textContent = formatValue(key, baseStep);
     });
 
     const budgetEl = document.getElementById('negotiation-budget');
-    const swapsEl = document.getElementById('swaps-used');
     const form = document.getElementById('negotiate-form');
+
+    // Find next valid step >= current (for shift-up when already on valid step, find next ABOVE)
+    function getNextValidStepUp(currentStep, category) {
+        // Special case: Number of Tracks is 1-5, not on 13-step table
+        if (category === 'numberOfTracks') {
+            return Math.min(5, currentStep + 1);
+        }
+        for (let i = currentStep + 1; i <= 13; i++) {
+            const values = STEPS_TABLE[i];
+            if (!values) continue;
+            const isValid = category === 'basePayPercent' || category === 'supportTerms'
+                || values[1] !== null || values[2] !== null || values[4] !== null;
+            if (isValid) {
+                // Check the specific category's value
+                const catValue = values[category];
+                if (category === 'basePayPercent' || category === 'supportTerms') return i;
+                if (category === 'commandRights' && values[1] !== null) return i;
+                if (category === 'salvageRights' && values[2] !== null) return i;
+                if (category === 'transportTerms' && values[4] !== null) return i;
+            }
+        }
+        return null;
+    }
+
+    // Find previous valid step <= current (for shift-down when already on valid step, find prev BELOW)
+    function getPrevValidStepDown(currentStep, category) {
+        // Special case: Number of Tracks is 1-5, not on 13-step table
+        if (category === 'numberOfTracks') {
+            return Math.max(1, currentStep - 1);
+        }
+        for (let i = currentStep - 1; i >= 1; i--) {
+            const values = STEPS_TABLE[i];
+            if (!values) continue;
+            const catValue = values[category];
+            if (category === 'basePayPercent' || category === 'supportTerms') return i;
+            if (category === 'commandRights' && values[1] !== null) return i;
+            if (category === 'salvageRights' && values[2] !== null) return i;
+            if (category === 'transportTerms' && values[4] !== null) return i;
+        }
+        return null;
+    }
 
     function updateUI() {
         budgetEl.textContent = availableShifts;
-        swapsEl.textContent = swapsUsed;
 
         // Update all shift buttons
         document.querySelectorAll('.shift-up').forEach(btn => {
@@ -208,28 +260,53 @@
             const baseStep = parseInt(btn.dataset.base);
             const currentStep = state[key];
 
-            if (currentStep >= MAX_STEP) {
+            const nextValid = getNextValidStepUp(currentStep, key);
+            if (nextValid === null) {
                 btn.disabled = true;
                 btn.textContent = 'Max';
-            } else if (availableShifts <= 0) {
-                btn.disabled = true;
-                btn.textContent = 'No budget';
             } else {
-                btn.disabled = false;
-                btn.textContent = '+1 Step';
+                const cost = nextValid - currentStep;
+                if (cost > availableShifts) {
+                    btn.disabled = true;
+                    btn.textContent = 'No budget';
+                } else {
+                    btn.disabled = false;
+                    const label = key === 'numberOfTracks' ? '+1 Track' : '+1 Step';
+                    btn.textContent = cost > 1 ? label + ' (' + cost + ' pts)' : label;
+                }
             }
 
-            // Update the displayed current step
             const stepSpan = btn.closest('tr').querySelector('.current-step');
             stepSpan.textContent = currentStep;
+
+            const valueSpan = btn.closest('tr').querySelector('.current-value');
+            valueSpan.textContent = formatValue(key, currentStep);
+        });
+
+        // Update all shift-down buttons
+        document.querySelectorAll('.shift-down').forEach(btn => {
+            const key = btn.dataset.key;
+            const baseStep = parseInt(btn.dataset.base);
+            const currentStep = state[key];
+
+            const prevValid = getPrevValidStepDown(currentStep, key);
+            const minTrack = parseInt(btn.dataset.min || 1);
+            if (prevValid === null || prevValid < minTrack || prevValid >= baseStep) {
+                btn.disabled = true;
+                btn.textContent = key === 'numberOfTracks' ? '-1 Track' : '-1 Step';
+            } else {
+                const refund = currentStep - prevValid;
+                btn.disabled = false;
+                const label = key === 'numberOfTracks' ? '-1 Track' : '-1 Step';
+                btn.textContent = refund > 1 ? label + ' (' + refund + ' pts)' : label;
+            }
+
+            const valueSpan = btn.closest('tr').querySelector('.current-value');
+            valueSpan.textContent = formatValue(key, currentStep);
         });
 
         // Refresh contract terms display
         refreshContractTerms();
-
-        // Enable/disable swap button
-        const swapBtn = document.getElementById('perform-swap');
-        updateSwapButton(swapBtn);
     }
 
     function refreshContractTerms() {
@@ -259,96 +336,52 @@
         }
     }
 
-    function updateSwapButton(swapBtn) {
-        if (swapsUsed >= MAX_SWAPS) {
-            swapBtn.disabled = true;
-            swapBtn.textContent = 'Max swaps';
-            return;
+    function formatValue(key, step) {
+        if (key === 'numberOfTracks') {
+            return step.toString();
         }
-
-        const fromKey = document.getElementById('swap-from').value;
-        const toKey = document.getElementById('swap-to').value;
-
-        if (fromKey === toKey) {
-            swapBtn.disabled = true;
-            swapBtn.textContent = 'Select different categories';
-            return;
-        }
-
-        const fromStep = state[fromKey];
-        const baseStep = parseInt(document.querySelector(`tr[data-key="${fromKey}"] .base-step`).textContent);
-        const toStep = state[toKey];
-
-        // Can sacrifice 2 steps if current > base (meaning it was shifted up)
-        const sacrificeable = fromStep - baseStep;
-        if (sacrificeable < 2) {
-            swapBtn.disabled = true;
-            swapBtn.textContent = 'Not enough to sacrifice';
-            return;
-        }
-
-        // Can't shift down to below base
-        const newFromStep = fromStep - 2;
-        if (newFromStep < baseStep) {
-            swapBtn.disabled = true;
-            swapBtn.textContent = 'Not enough to sacrifice';
-            return;
-        }
-
-        // Can't exceed max step on target
-        if (toStep >= MAX_STEP) {
-            swapBtn.disabled = true;
-            swapBtn.textContent = 'Target at max step';
-            return;
-        }
-
-        swapBtn.disabled = false;
-        swapBtn.textContent = 'Perform Swap';
+        const stepData = STEPS_TABLE[step];
+        if (!stepData) return '';
+        const value = stepData[key];
+        if (value === null || value === undefined) return '—';
+        if (key === 'basePayPercent') return value + '%';
+        return value;
     }
 
-    // Shift a category up by 1
+    // Shift a category up by 1 valid step (costs reputation points for blank steps)
     document.querySelectorAll('.shift-up').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const key = this.dataset.key;
+            const currentStep = state[key];
+
+            const nextValid = getNextValidStepUp(currentStep, key);
+            if (nextValid === null) return;
+
+            const cost = nextValid - currentStep;
+            if (cost > availableShifts) return;
+
+            state[key] = nextValid;
+            availableShifts -= cost;
+            updateUI();
+        });
+    });
+
+    // Shift a category down by 1 valid step (returns reputation points for blank steps)
+    document.querySelectorAll('.shift-down').forEach(btn => {
         btn.addEventListener('click', function() {
             const key = this.dataset.key;
             const baseStep = parseInt(this.dataset.base);
             const currentStep = state[key];
 
-            if (currentStep >= MAX_STEP) return;
-            if (availableShifts <= 0) return;
+            const prevValid = getPrevValidStepDown(currentStep, key);
+            if (prevValid === null || prevValid >= baseStep) return;
 
-            state[key] = currentStep + 1;
-            availableShifts--;
+            const refund = currentStep - prevValid;
+            state[key] = prevValid;
+            availableShifts += refund;
             updateUI();
         });
     });
-
-    // Swap button
-    document.getElementById('perform-swap').addEventListener('click', function() {
-        const fromKey = document.getElementById('swap-from').value;
-        const toKey = document.getElementById('swap-to').value;
-
-        if (fromKey === toKey) return;
-        if (swapsUsed >= MAX_SWAPS) return;
-
-        const baseStep = parseInt(document.querySelector(`tr[data-key="${fromKey}"] .base-step`).textContent);
-        const fromStep = state[fromKey];
-        const toStep = state[toKey];
-
-        const sacrificeable = fromStep - baseStep;
-        if (sacrificeable < 2) return;
-        if (toStep >= MAX_STEP) return;
-
-        // Perform the swap: sacrifice 2 from source, gain 1 on target
-        state[fromKey] = fromStep - 2;
-        state[toKey] = toStep + 1;
-        swapsUsed++;
-
-        updateUI();
-    });
-
-    // Re-validate on dropdown change
-    document.getElementById('swap-from').addEventListener('change', () => updateSwapButton(document.getElementById('perform-swap')));
-    document.getElementById('swap-to').addEventListener('change', () => updateSwapButton(document.getElementById('perform-swap')));
 
     // On form submit, build hidden fields for server-side validation
     form.addEventListener('submit', function(e) {
@@ -375,6 +408,16 @@
             form.appendChild(baseField);
         }
         baseField.value = JSON.stringify(baseSteps);
+
+        // Send shifts used
+        let shiftsUsedField = form.querySelector('input[name="shifts_used"]');
+        if (!shiftsUsedField) {
+            shiftsUsedField = document.createElement('input');
+            shiftsUsedField.name = 'shifts_used';
+            shiftsUsedField.type = 'hidden';
+            form.appendChild(shiftsUsedField);
+        }
+        shiftsUsedField.value = maxShifts - availableShifts;
     });
 
     updateUI();

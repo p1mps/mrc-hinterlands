@@ -60,4 +60,34 @@ class ContractStepsTable {
     public static function isStepReachable(int $currentStep, int $targetStep): bool {
         return $targetStep >= $currentStep && $targetStep - $currentStep <= 13;
     }
+
+    public static function isStepValidForCategory(int $step, string $category): bool {
+        $values = self::getStepValues($step);
+        return match ($category) {
+            'basePayPercent' => true,
+            'commandRights'  => $values[1] !== null,
+            'salvageRights'  => $values[2] !== null,
+            'supportTerms'   => true,
+            'transportTerms' => $values[4] !== null,
+            default          => false,
+        };
+    }
+
+    public static function getNextValidStep(int $currentStep, string $category): int {
+        for ($i = $currentStep; $i <= 13; $i++) {
+            if (self::isStepValidForCategory($i, $category)) {
+                return $i;
+            }
+        }
+        return $currentStep;
+    }
+
+    public static function getPrevValidStep(int $currentStep, string $category): int {
+        for ($i = $currentStep; $i >= 1; $i--) {
+            if (self::isStepValidForCategory($i, $category)) {
+                return $i;
+            }
+        }
+        return $currentStep;
+    }
 }
