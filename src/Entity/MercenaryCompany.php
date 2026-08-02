@@ -135,6 +135,22 @@ class MercenaryCompany {
         $this->supportPointEntries->add($entry);
     }
 
+    /**
+     * Adds support points by creating a positive entry.
+     */
+    public function addSupportPoints(int $amount, string $reason = 'General Credit'): void {
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Added amount must be positive.');
+        }
+
+        $entry = new SupportPointEntry();
+        $entry->setAmount($amount);
+        $entry->setCompany($this);
+        $entry->setDescription($reason);
+
+        $this->supportPointEntries->add($entry);
+    }
+
     public function getNamedPilotsCount(): int {
         return $this->pilots->filter(fn(Pilot $p) => $p->isNamed())->count();
     }

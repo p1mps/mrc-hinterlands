@@ -157,9 +157,8 @@ class ContractGeneratorService {
 
             if ($fromStep !== null && $toStep !== null) {
                 $canSacrifice = $fromStep - 1;
-                if ($canSacrifice >= 1) {
-                    $gain = min(2, $fromStep - 1);
-                    $newFromStep = $fromStep - $gain;
+                if ($canSacrifice >= 2) {
+                    $newFromStep = max(1, $fromStep - 2);
                     $newToStep = min(13, $toStep + 1);
 
                     match ($fromCategory) {
@@ -181,6 +180,36 @@ class ContractGeneratorService {
                     $swaps++;
                 }
             }
+        }
+
+        // Update the rolls array to reflect the negotiated step values
+        $rollMap = [
+            'Pay Rate' => 'basePayPercent',
+            'Command Rights' => 'commandRights',
+            'Salvage Rights' => 'salvageRights',
+            'Support' => 'supportTerms',
+            'Transportation' => 'transportTerms',
+        ];
+
+        foreach ($rollMap as $rollLabel => $category) {
+            $step = match ($category) {
+                'basePayPercent' => $this->getStepForValue('basePayPercent', $base['basePayPercent']),
+                'commandRights' => $this->getStepForValue('commandRights', $base['commandRights']->value),
+                'salvageRights' => $this->getStepForValue('salvageRights', $base['salvageRights']),
+                'supportTerms' => $this->getStepForValue('supportTerms', $base['supportTerms']),
+                'transportTerms' => $this->getStepForValue('transportTerms', $base['transportTerms'] ?? '—'),
+                default => null,
+            };
+
+            if ($step === null) continue;
+
+            foreach ($base['rolls'] as &$roll) {
+                if ($roll['label'] === $rollLabel) {
+                    $roll['step'] = $step;
+                    break;
+                }
+            }
+            unset($roll);
         }
 
         $base['negotiationSummary'] = [

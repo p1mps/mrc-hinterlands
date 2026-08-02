@@ -8,6 +8,7 @@ use App\Form\SalvagedMechType;
 use App\Form\ScrapyardMechType;
 use App\Service\SalvageCalculationService;
 use App\Service\SalvagedMechService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/salvaged-mechs')]
 class SalvagedMechController extends AbstractController
 {
+    public function __construct(private readonly EntityManagerInterface $em) {}
     #[Route('/', name: 'app_salvaged_mech_index', methods: ['GET'])]
     public function index(SalvagedMechService $salvagedMechService): Response
     {
@@ -73,10 +75,11 @@ class SalvagedMechController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_salvaged_mech_show', methods: ['GET'])]
-    public function show(SalvagedMechService $salvagedMechService, SalvagedMech $salvagedMech): Response
+    public function show(SalvagedMechService $salvagedMechService, SalvageCalculationService $salvageCalc, SalvagedMech $salvagedMech): Response
     {
         return $this->render('salvaged_mech/show.html.twig', [
             'salvaged_mech' => $salvagedMech,
+            'salvageCalc' => $salvageCalc,
         ]);
     }
 
@@ -174,7 +177,9 @@ class SalvagedMechController extends AbstractController
         $company->addSupportPoints($spPayout, "Salvage SP payout for {$mechan->getModel()}");
         $mechan->setSpTaken($spPayout);
 
+        $this->em->persist($company);
         $salvagedMechService->updateMech($mechan);
+        $this->em->flush();
         $this->addFlash('success', "Received {$spPayout} SP from salvage payout.");
 
         return $this->redirectToRoute('app_salvaged_mech_index');

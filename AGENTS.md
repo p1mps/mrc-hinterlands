@@ -2,9 +2,10 @@
 
 ## Tech Stack
 
-- **PHP 8.2+** (runtime 8.5), **Symfony 7.4.x**, **Doctrine ORM 3.6**, **PostgreSQL 16**
+- **PHP 8.2+** (runtime 8.5), **Symfony 7.4.x**, **Doctrine ORM 3.6**, **MariaDB 10.11** (dev), **PostgreSQL 16** (local override)
 - **PHPUnit 13.2** (failOnDeprecation, failOnNotice, failOnWarning), **Twig**, **Docker Compose** (postgres in `compose.yaml`)
 - Namespace: `App\` → `src/`, tests: `App\Tests\` → `tests/`
+- Entry point: `src/Kernel.php`
 
 ## Commands
 
@@ -15,7 +16,7 @@ bin/phpunit tests/Unit/Service/SomeServiceTest.php  # single test file
 bin/phpunit tests/Unit/Service/SomeServiceTest.php --filter testSomeMethod  # single method
 ```
 
-Dev uses **PostgreSQL** on `127.0.0.1:5432` (`mrc_hinterlands`). Test uses **SQLite** (`.env.test`).
+Dev `.env` defaults to **MariaDB** on `127.0.0.1:3306` (`mrc_hinterlands`). Local override (`.env.local`) uses **PostgreSQL** on `127.0.0.1:5432`. Test uses **SQLite** (`.env.test`).
 
 ## .env Loading Order
 
@@ -26,13 +27,14 @@ Dev uses **PostgreSQL** on `127.0.0.1:5432` (`mrc_hinterlands`). Test uses **SQL
 
 | Layer | Count | Notes |
 |---|---|---|
-| Controllers (10) | `SalvagedMech`, `Contract`, `Roster`, `Pilot`, `SupportPoint`, `Dashboard`, `Security`, `ContractLog`, `Dropship`, `Rules` |
+| Controllers (10) | `SalvagedMech`, `Contract`, `ContractLog`, `Roster`, `Pilot`, `SupportPoint`, `Dashboard`, `Security`, `Dropship`, `Rules` |
 | Entities (10) | `User`, `MercenaryCompany`, `Unit`, `Pilot`, `Contract`, `TrackRecord`, `ContractLogEntry`, `SupportPointEntry`, `SalvagedMech`, `Dropship` |
-| Services (14) | `SalvageCalculationService`, `MechAcquisitionService`, `ContractService`, `DropshipService`, `RansomService`, `ContractGeneratorService`, `SalvageCheckService`, `ContractLogService`, `SalvagedMechService`, `SupportPointService`, `PilotService`, `DashboardService`, `SecurityService`, `RosterService` |
+| Services (15) | `SalvageCalculationService`, `MechAcquisitionService`, `ContractService`, `DropshipService`, `RansomService`, `ContractGeneratorService`, `SalvageCheckService`, `ContractLogService`, `SalvagedMechService`, `SupportPointService`, `PilotService`, `DashboardService`, `SecurityService`, `RosterService`, `DiceRoller` |
 | Repositories (10) | All extend `ServiceEntityRepository` |
 | Enums (9) | `ContractType`, `ContractStatus`, `DamageState`, `UnitType`, `TechBase`, `ContractLogEntryType`, `CombatPayTier`, `TrackStatus`, `CommandRights` |
-| Form Types (10) | Named `*Type.php` in `src/Form/` |
+| Form Types (11) | Named `*Type.php` in `src/Form/` |
 | DataTables (15) | Contract generation helpers + `XpThresholdsTable` |
+| Twig Extensions (1) | `UsersExtension` |
 
 ## Pilot — Skill & XP (critical)
 
@@ -83,6 +85,7 @@ Entity stores `?int $salvageRightsPercent`, but user-facing value is a string li
 ## Gotchas
 
 - Dropship has a **unique `company_id` constraint** — one dropship per company at DB level
+- `APP_SHARE_DIR` env var (set in `.env`) controls the shared directory path for file operations
 - `MercenaryCompany::getRoles()` returns `['ROLE_USER']` + `ROLE_ALLOWED_TO_SWITCH` if username is 'Andrea'
 - Flash messages for all user feedback (success/error)
 - Form types: `IntegerType::class` for numbers, `EnumType::class` for enums, `TextType::class` for strings, `CheckboxType::class` for booleans

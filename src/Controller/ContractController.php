@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DataTables\ContractStepsTable;
 use App\Entity\Contract;
 use App\Enum\CommandRights;
 use App\Enum\ContractStatus;
@@ -37,6 +38,7 @@ class ContractController extends AbstractController
 
         if ($request->query->getBoolean('negotiate', false)) {
             $data = $generator->generateWithNegotiation($scale, $reputation);
+            $data['steptsTable'] = json_encode($this->buildStepsTable());
         } else {
             $data = $generator->generate($scale);
         }
@@ -74,6 +76,7 @@ class ContractController extends AbstractController
                 $data['scale'] = $scale;
                 $data['company'] = $company;
                 $data['reputation'] = $reputation;
+                $data['steptsTable'] = json_encode($this->buildStepsTable());
 
                 return $this->render('contract/generate.html.twig', [
                     'data'       => $data,
@@ -94,6 +97,7 @@ class ContractController extends AbstractController
         $data['scale'] = $scale;
         $data['company'] = $company;
         $data['reputation'] = $reputation;
+        $data['steptsTable'] = json_encode($this->buildStepsTable());
 
         return $this->render('contract/generate.html.twig', [
             'data'       => $data,
@@ -133,6 +137,20 @@ class ContractController extends AbstractController
         }
 
         return ['valid' => true, 'state' => $state];
+    }
+
+    private function buildStepsTable(): array {
+        $result = [];
+        foreach (range(1, 13) as $step) {
+            $result[$step] = [
+                'basePayPercent' => ContractStepsTable::getBasePayPercent($step),
+                'commandRights' => ContractStepsTable::getCommandRights($step)?->value ?? null,
+                'salvageRights' => ContractStepsTable::getSalvageRights($step),
+                'supportTerms' => ContractStepsTable::getSupportTerms($step),
+                'transportTerms' => ContractStepsTable::getTransportTerms($step),
+            ];
+        }
+        return $result;
     }
 
     #[Route('/contract/generate/accept', name: 'app_contracts_accept', methods: ['POST'])]
@@ -185,7 +203,7 @@ class ContractController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Contract created.');
-            return $this->redirectToRoute('app_contract');
+            return $this->redirectToRoute('app_contracts');
         }
 
         return $this->render('contract/new.html.twig', [
@@ -211,7 +229,7 @@ class ContractController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Contract updated.');
 
-            return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
+            return $this->redirectToRoute('app_contracts');
         }
 
         return $this->render('contract/edit.html.twig', [
@@ -284,7 +302,7 @@ class ContractController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Track setup rolled and recorded.');
 
-        return $this->redirectToRoute('app_contract');
+        return $this->redirectToRoute('app_contracts');
     }
 
     #[Route('/contract/{id}/post-track', name: 'app_contract_post_track')]
@@ -294,7 +312,7 @@ class ContractController extends AbstractController
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-            return $this->redirectToRoute('app_contract');
+return $this->redirectToRoute('app_contracts');
         }
 
         $month = $request->request->getInt('month') ?? 1;
@@ -302,7 +320,7 @@ class ContractController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Post-track results recorded.');
 
-        return $this->redirectToRoute('app_contract');
+        return $this->redirectToRoute('app_contracts');
     }
 
     #[Route('/contract/{id}/downtime', name: 'app_contract_downtime')]
@@ -315,7 +333,7 @@ class ContractController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Downtime note added.');
 
-        return $this->redirectToRoute('app_contract');
+        return $this->redirectToRoute('app_contracts');
     }
 
     #[Route('/contract/{id}/salvage', name: 'app_contract_salvage')]
@@ -328,6 +346,6 @@ class ContractController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Salvage recorded.');
 
-        return $this->redirectToRoute('app_contract');
+        return $this->redirectToRoute('app_contracts');
     }
 }

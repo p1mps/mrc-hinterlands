@@ -45,7 +45,7 @@ class ContractLogController extends AbstractController
             $this->em->flush();
             $this->addFlash('success', 'Log entry updated.');
 
-            return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
+            return $this->redirectToRoute('app_contracts');
         }
 
         return $this->render('contract_log/edit.html.twig', [
@@ -67,7 +67,7 @@ class ContractLogController extends AbstractController
             $this->addFlash('success', 'Log entry deleted.');
         }
 
-        return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
+        return $this->redirectToRoute('app_contracts');
     }
 
     #[Route('/add', name: 'app_contracts_log_add', methods: ['GET', 'POST'])]
@@ -91,7 +91,7 @@ class ContractLogController extends AbstractController
             };
 
             if ($action !== 'post_track') {
-                return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
+                return $this->redirectToRoute('app_contracts');
             }
         }
 
