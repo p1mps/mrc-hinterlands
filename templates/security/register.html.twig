@@ -10,7 +10,7 @@
     {{ form_row(form.companyName, {label: 'Company Name'}) }}
     {{ form_row(form.faction, {label: 'Starting Faction (IlClan MUL)'}) }}
     <div class="d-flex gap-2">
-        <button class="btn btn-primary w-100">Register</button>
+        <button type="submit" class="btn btn-primary w-100">Register</button>
     </div>
 {{ form_end(form) }}
 <p class="mt-2"><a href="{{ path('app_login') }}">Already have an account?</a></p>

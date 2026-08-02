@@ -5,7 +5,10 @@
 {% if company %}
 <div class="alert alert-info d-flex justify-content-between align-items-center">
     <span>Company Reputation: <strong>{{ company.reputation }}</strong> (Scale {{ company.scaleFromReputation }})</span>
-    <a href="{{ path('app_contracts_generate', {scale: scale}) }}" class="btn btn-sm btn-outline-secondary">Standard Offer</a>
+    <div>
+        <a href="{{ path('app_contracts_generate', {scale: scale}) }}" class="btn btn-sm btn-outline-secondary me-2">Standard Offer</a>
+        <a href="{{ path('app_contracts_generate', {scale: scale, negotiate: true}) }}" class="btn btn-sm btn-outline-info">Negotiate Offer</a>
+    </div>
 </div>
 {% endif %}
 
@@ -43,15 +46,20 @@
             </thead>
             <tbody>
             {% set categories = [
-                { key: 'basePayPercent', label: 'Base Pay' },
+                { key: 'basePayPercent', label: 'Pay Rate' },
                 { key: 'commandRights', label: 'Command Rights' },
                 { key: 'salvageRights', label: 'Salvage Rights' },
-                { key: 'supportTerms', label: 'Support Terms' },
-                { key: 'transportTerms', label: 'Transport Terms' }
+                { key: 'supportTerms', label: 'Support' },
+                { key: 'transportTerms', label: 'Transportation' }
             ] %}
 
             {% for cat in categories %}
-                {% set baseStep = data.rolls|filter(r => r.label == cat.label)[0].step ?? 1 %}
+                {% set baseStep = 1 %}
+                {% for r in data.rolls %}
+                    {% if r.label == cat.label and r.step is defined %}
+                        {% set baseStep = r.step %}
+                    {% endif %}
+                {% endfor %}
                 <tr data-key="{{ cat.key }}">
                     <td>{{ cat.label }}</td>
                     <td class="base-step">{{ baseStep }}</td>
@@ -107,11 +115,11 @@
         <tr><th>Duration</th><td>{{ data.duration }} months</td></tr>
         <tr><th>Employer</th><td>{{ data.employer }}</td></tr>
         <tr><th>Affiliation</th><td>{{ data.affiliation }}</td></tr>
-        <tr><th>Base Pay</th><td>{{ data.basePayPercent is not null ? data.basePayPercent ~ '%' : 'None' }}</td></tr>
-        <tr><th>Command Rights</th><td>{{ data.commandRights.value }}</td></tr>
-        <tr><th>Support Terms</th><td>{{ data.supportTerms }}</td></tr>
-        <tr><th>Salvage Rights</th><td>{{ data.salvageRights }}</td></tr>
-        <tr><th>Transport Terms</th><td>{{ data.transportTerms }}</td></tr>
+        <tr><th>Base Pay</th><td data-term="basePayPercent">{{ data.basePayPercent is not null ? data.basePayPercent ~ '%' : 'None' }}</td></tr>
+        <tr><th>Command Rights</th><td data-term="commandRights">{{ data.commandRights.value }}</td></tr>
+        <tr><th>Support Terms</th><td data-term="supportTerms">{{ data.supportTerms }}</td></tr>
+        <tr><th>Salvage Rights</th><td data-term="salvageRights">{{ data.salvageRights }}</td></tr>
+        <tr><th>Transport Terms</th><td data-term="transportTerms">{{ data.transportTerms }}</td></tr>
         <tr><th>Number of Tracks</th><td>{{ data.numberOfTracks }}</td></tr>
     </table>
 
@@ -169,6 +177,9 @@
     const maxShifts = {{ data.negotiationSummary.availableSteps }};
     const currentSwaps = {{ data.negotiationSummary.swapsUsed }};
 
+    // 13-step contract steps table for JS lookup
+    const STEPS_TABLE = {{ data.steptsTable|raw }};
+
     // State
     let availableShifts = maxShifts;
     let swapsUsed = currentSwaps;
@@ -213,9 +224,39 @@
             stepSpan.textContent = currentStep;
         });
 
+        // Refresh contract terms display
+        refreshContractTerms();
+
         // Enable/disable swap button
         const swapBtn = document.getElementById('perform-swap');
         updateSwapButton(swapBtn);
+    }
+
+    function refreshContractTerms() {
+        const categoryMap = {
+            basePayPercent: 'basePayPercent',
+            commandRights: 'commandRights',
+            salvageRights: 'salvageRights',
+            supportTerms: 'supportTerms',
+            transportTerms: 'transportTerms',
+        };
+
+        for (const [key, fieldName] of Object.entries(categoryMap)) {
+            const step = state[key];
+            if (!step) continue;
+            const cell = document.querySelector(`td[data-term="${fieldName}"]`);
+            if (!cell) continue;
+            const stepData = STEPS_TABLE[step];
+            if (!stepData) continue;
+            const value = stepData[fieldName];
+            if (value === null || value === undefined) {
+                cell.textContent = 'None';
+            } else if (fieldName === 'basePayPercent') {
+                cell.textContent = value + '%';
+            } else {
+                cell.textContent = value;
+            }
+        }
     }
 
     function updateSwapButton(swapBtn) {
