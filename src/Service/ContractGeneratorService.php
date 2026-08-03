@@ -102,13 +102,6 @@ class ContractGeneratorService {
 
         // Apply final state from negotiationChanges (already validated by controller)
         foreach ($negotiationChanges as $category => $targetStep) {
-
-            // Special case: Number of Tracks is 1-5, not on the 13-step table
-            if ($category === 'numberOfTracks') {
-                $base['numberOfTracks'] = (int) $targetStep;
-                continue;
-            }
-
             $currentStep = match ($category) {
                 'basePayPercent' => $this->getStepForValue('basePayPercent', $base['basePayPercent']),
                 'commandRights' => $this->getStepForValue('commandRights', $base['commandRights']->value),
