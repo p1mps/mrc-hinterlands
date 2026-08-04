@@ -104,7 +104,7 @@ class ContractGeneratorService {
         foreach ($negotiationChanges as $category => $targetStep) {
             $currentStep = match ($category) {
                 'basePayPercent' => $this->getStepForValue('basePayPercent', $base['basePayPercent']),
-                'commandRights' => $this->getStepForValue('commandRights', $base['commandRights']->value),
+                'commandRights' => $this->getStepForValue('commandRights', $base['commandRights']),
                 'salvageRights' => $this->getStepForValue('salvageRights', $base['salvageRights']),
                 'supportTerms' => $this->getStepForValue('supportTerms', $base['supportTerms']),
                 'transportTerms' => $this->getStepForValue('transportTerms', $base['transportTerms'] ?? '—'),

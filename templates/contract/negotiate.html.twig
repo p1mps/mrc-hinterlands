@@ -12,6 +12,7 @@
 <div class="card mb-3">
     <div class="card-header bg-info text-white">
         <h5 class="mb-0">Contract Negotiation</h5>
+        <h6>First add steps and then lower them to gain boost</h6>
     </div>
     <div class="card-body">
         <!-- Dynamic counters -->
@@ -193,9 +194,6 @@ function initNegotiation() {
       const prevValidStep = findNextValidStep(currentStep, 'down', cat.key);
 
       const costToGoUp = nextValidStep !== null ? Math.abs(nextValidStep - currentStep) : Infinity;
-      const costToGoDown = prevValidStep !== null ? Math.abs(prevValidStep - currentStep) : Infinity;
-
-      const repRemaining = maxReputationSpend - state.repSpent;
 
       const canGoUp = costToGoUp <= totalBudget && nextValidStep !== null;
       const canGoDown = prevValidStep !== null;
