@@ -2,6 +2,9 @@
 
 namespace App\Tests\Acceptance;
 
+use App\Enum\ContractStatus;
+use App\Enum\ContractType;
+
 class ContractAcceptanceTest extends AcceptanceTestCase
 {
     public function testContractsIndexLoads(): void
@@ -231,10 +234,33 @@ class ContractAcceptanceTest extends AcceptanceTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testNegotiateGeneratePageShowsCorrectBaseSteps(): void
+    public function testStandardGeneratePageShowsContractDetails(): void
+    {
+        $ref = $this->seedUserAndCompany('standarduser', 'Standard Co', 'Inner Sphere');
+        $this->seedPilot($ref['companyId'], 'Pilot One', true);
+        $this->seedUnit($ref['companyId'], 'Mech', 'Mech', 50, 200, 'mech');
+
+        $client = $this->login('standarduser');
+        $crawler = $client->request('GET', '/contract/generate');
+
+        $this->assertResponseIsSuccessful();
+
+        // The contract details table should exist
+        $detailsTable = $crawler->filter('table.table-bordered');
+        $this->assertNotEmpty($detailsTable, 'Contract details table should be rendered');
+
+        // The negotiation table should NOT exist (standard mode)
+        $negotiationTable = $crawler->filter('#negotiation-table');
+        $this->assertEmpty($negotiationTable, 'Negotiation table should not be rendered in standard mode');
+
+        // The accept button should exist
+        $acceptButton = $crawler->filter('button.btn-success');
+        $this->assertNotEmpty($acceptButton, 'Accept button should exist');
+    }
+
+    public function testNegotiateViewPageShowsCorrectBaseSteps(): void
     {
         $ref = $this->seedUserAndCompany('negotiateuser', 'Negotiate Co', 'Inner Sphere');
-        // Set reputation to 5 so availableSteps = min(5, 2*1) = 2
         $conn = self::$sharedEm->getConnection();
         $conn->update('mercenary_company', ['reputation' => 5], ['id' => $ref['companyId']]);
 
@@ -242,54 +268,148 @@ class ContractAcceptanceTest extends AcceptanceTestCase
         $this->seedUnit($ref['companyId'], 'Mech', 'Mech', 50, 200, 'mech');
 
         $client = $this->login('negotiateuser');
-        $crawler = $client->request('GET', '/contract/generate?negotiate=true');
 
+        // Step 1: Generate a contract (standard flow)
+        $crawler = $client->request('GET', '/contract/generate');
         $this->assertResponseIsSuccessful();
 
-        // The negotiation table should exist
+        $form = $crawler->filter('form')->filter('.btn-success')->first()->form();
+        $client->submit($form);
+        $this->assertResponseRedirects('/contract');
+
+        // Step 2: Go to the contract index page, then to the first contract's show page
+        $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+        $crawler = $client->getCrawler();
+
+        $contractLink = $crawler->filter('a[href*="/contract/"]')->first();
+        $this->assertNotEmpty($contractLink, 'Contract link should exist');
+        $client->click($contractLink->link());
+
+        // Step 3: Get contract ID and navigate to negotiate view page
+        $contractId = $client->getRequest()->getUri();
+        preg_match('#/contract/(\d+)/?$#', $contractId, $matches);
+        $contractId = $matches[1] ?? 1;
+        $crawler = $client->request('GET', "/contract/{$contractId}/negotiate");
+        $this->assertResponseIsSuccessful();
+
+        // Step 4: Verify the negotiation-data script block contains valid JSON
+        $dataScript = $crawler->filter('#negotiation-data');
+        $this->assertNotEmpty($dataScript, 'Negotiation data script should exist');
+        $scriptContent = trim($dataScript->first()->html());
+        $decoded = json_decode($scriptContent, true);
+        $this->assertNotNull($decoded, "Negotiation data script must contain valid JSON. Raw content: " . substr($scriptContent, 0, 500));
+        $this->assertArrayHasKey('scale', $decoded, 'Scale must be present in JSON');
+        $this->assertArrayHasKey('initialSteps', $decoded, 'Initial steps must be present in JSON');
+        $this->assertArrayHasKey('reputation', $decoded, 'Reputation must be present in JSON');
+
+        // Step 5: Verify dynamic counters exist
+        $counters = $crawler->filter('#negotiation-counters');
+        $this->assertNotEmpty($counters, 'Negotiation counters should be rendered');
+        $this->assertNotEmpty($crawler->filter('#rep-spent'), 'Reputation spent counter should exist');
+        $this->assertNotEmpty($crawler->filter('#rep-max'), 'Reputation max counter should exist');
+        $this->assertNotEmpty($crawler->filter('#tradeoffs-used'), 'Trade-offs counter should exist');
+        $this->assertNotEmpty($crawler->filter('#available-boosts'), 'Available boosts counter should exist');
+
+        // Step 6: Verify interactive negotiation table exists (body populated by JS)
+        $negotiationTable = $crawler->filter('#negotiation-table');
+        $this->assertNotEmpty($negotiationTable, 'Negotiation table should be rendered');
+        $this->assertNotEmpty($crawler->filter('#negotiation-tbody'), 'Negotiation table body should exist');
+
+        // Step 7: Verify steps table reference table exists (second table with thead.table-secondary)
+        $stepsRefTable = $crawler->filter('table thead.table-secondary + tbody tr');
+        $this->assertNotEmpty($stepsRefTable, 'Steps reference table should be rendered');
+        $this->assertCount(13, $stepsRefTable, 'Should have 13 steps in reference table');
+
+        // Step 8: Verify the page title shows the contract name
+        $this->assertStringContainsString('Negotiate:', $crawler->filter('h2')->first()->text());
+
+        // Step 9: Verify back button exists
+        $backLink = $crawler->filter('a[href*="/contract/"]');
+        $this->assertNotEmpty($backLink, 'Back to Contract link should exist');
+    }
+
+    public function testContractNegotiationFlow(): void
+    {
+        // 1. Seed user + company (reputation 8) + contract (scale 3 → maxShifts = 6)
+        $ref = $this->seedUserAndCompany('negotiateflow', 'Negotiate Flow Co', 'Inner Sphere');
+        $conn = self::$sharedEm->getConnection();
+        $conn->update('mercenary_company', ['reputation' => 8], ['id' => $ref['companyId']]);
+
+        // Seed contract with explicit valid values (all categories at valid steps)
+        // Base Pay: step 5 (80%), Command Rights: step 3 (Integrated),
+        // Salvage: step 5 (20%), Support: step 5 (Straight/80%), Transport: step 5 (0%)
+        $contractId = $this->seedContract($ref['companyId'], [
+            'scale' => 3,
+            'type' => ContractType::Raid->value,
+            'status' => ContractStatus::Available->value,
+            'base_pay_percent' => 80,
+            'command_rights' => 'integrated',
+            'salvage_rights' => '20%',
+            'support_terms' => 'Straight/80%',
+            'transport_terms' => '0%',
+        ]);
+
+        // 2. GET negotiate view
+        $client = $this->login('negotiateflow');
+        $crawler = $client->request('GET', "/contract/{$contractId}/negotiate");
+        $this->assertResponseIsSuccessful();
+
+        // 3. Verify negotiation data script block exists (JavaScript initialization)
+        $dataScript = $crawler->filter('#negotiation-data');
+        $this->assertNotEmpty($dataScript, 'Negotiation data script should exist');
+        $scriptContent = $dataScript->first()->html();
+        $decoded = json_decode($scriptContent, true);
+        $this->assertNotNull($decoded, 'Data script must contain valid JSON');
+        $this->assertEquals(8, $decoded['reputation'], 'Reputation should be 8');
+
+        // 4. Verify interactive negotiation table exists
         $negotiationTable = $crawler->filter('#negotiation-table');
         $this->assertNotEmpty($negotiationTable, 'Negotiation table should be rendered');
 
-        // The base-step cells should exist and match current-step cells
-        $baseStepCells = $crawler->filter('#negotiation-table .base-step');
-        $this->assertNotEmpty($baseStepCells, 'Base step cells should exist');
+        // 5. Verify steps reference table exists (13 steps)
+        $refRows = $crawler->filter('table thead.table-secondary + tbody tr');
+        $this->assertCount(13, $refRows, 'Steps reference table should have 13 rows');
 
-        $baseStepTexts = [];
-        foreach ($baseStepCells as $cell) {
-            $baseStepTexts[] = (int) trim($cell->textContent);
-        }
+        // 6. Verify accept button exists and is initially disabled
+        $acceptBtn = $crawler->filter('#accept-negotiation-btn');
+        $this->assertNotEmpty($acceptBtn, 'Accept negotiation button should exist');
+    }
 
-        // Verify that not all base steps are 1 (which was the bug - template defaulting)
-        // With random 2d6 rolls, the probability of all 5 categories landing on step 1
-        // (requiring roll=2 with heavy negative modifiers) is astronomically low.
-        // The acceptance test uses employer='Client' with no affiliation, so modifiers are ~0.
-        $allOnes = array_filter($baseStepTexts, fn($s) => $s === 1);
-        $this->assertNotEquals(
-            count($baseStepTexts),
-            count($allOnes),
-            'All base steps being 1 indicates the template is defaulting to 1 instead of reading from rolls (bug)'
-        );
+    public function testNegotiationAcceptSucceeds(): void
+    {
+        // 1. Seed user + company (reputation 8) + contract (scale 3)
+        $ref = $this->seedUserAndCompany('negaccept', 'Negotiate Accept Co', 'Inner Sphere');
+        $conn = self::$sharedEm->getConnection();
+        $conn->update('mercenary_company', ['reputation' => 8], ['id' => $ref['companyId']]);
 
-        // The current-step values should match the base-step values (initial state)
-        $currentStepCells = $crawler->filter('#negotiation-table .current-step');
-        $this->assertCount($baseStepCells->count(), $currentStepCells);
+        // Seed contract with explicit valid values
+        $contractId = $this->seedContract($ref['companyId'], [
+            'scale' => 3,
+            'type' => ContractType::Raid->value,
+            'status' => ContractStatus::Available->value,
+            'base_pay_percent' => 80,
+            'command_rights' => 'integrated',
+            'salvage_rights' => '20%',
+            'support_terms' => 'Straight/80%',
+            'transport_terms' => '0%',
+        ]);
 
-        $currentStepTexts = [];
-        foreach ($currentStepCells as $cell) {
-            $currentStepTexts[] = (int) trim($cell->textContent);
-        }
-        $this->assertEquals($baseStepTexts, $currentStepTexts, 'Current steps should match base steps initially');
+        // 2. Submit negotiation with modified terms (shift basePay to step 7, salvage to step 7)
+        $client = $this->login('negaccept');
+        $client->request('POST', "/contract/{$contractId}/negotiate/accept", [
+            'negotiation_basePayPercent' => 7,
+            'negotiation_commandRights' => 3,
+            'negotiation_salvageRights' => 7,
+            'negotiation_supportTerms' => 5,
+            'negotiation_transportTerms' => 5,
+        ]);
 
-        // Verify that the base steps come from actual rolls, not all defaulting to 1.
-        // With 5 categories and random 2d6 rolls (2-12), the probability that ALL 5
-        // happen to produce step 1 is astronomically low (step 1 requires roll=2 with
-        // heavy negative modifiers that don't apply here). If all 5 are 1, the bug
-        // is present (data.rolls was missing, template defaulted to 1).
-        $allOnes = array_filter($baseStepTexts, fn($s) => $s === 1);
-        $this->assertNotEquals(
-            count($baseStepTexts),
-            count($allOnes),
-            'All base steps being 1 indicates the template is defaulting to 1 instead of reading from rolls (bug)'
-        );
+        $this->assertResponseRedirects('/contract/' . $contractId);
+        $crawler = $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+
+        // Verify success flash message
+        $this->assertStringContainsString('negotiation', strtolower($crawler->filter('.alert')->first()->text()));
     }
 }

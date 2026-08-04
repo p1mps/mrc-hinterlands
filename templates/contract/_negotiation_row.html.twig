@@ -1,0 +1,20 @@
+{% set categoryLabels = {
+    'basePayPercent': 'Base Pay',
+    'commandRights': 'Command Rights',
+    'salvageRights': 'Salvage Rights',
+    'supportTerms': 'Support',
+    'transportTerms': 'Transportation',
+} %}
+
+<tr data-key="{{ category }}">
+    <td>{{ categoryLabels[category] ?? category }}</td>
+    <td class="base-step">{{ baseStep }}</td>
+    <td><span class="current-step">{{ step }}</span></td>
+    <td><span class="current-value">{{ formattedValue }}</span></td>
+    <td>
+        <div class="btn-group btn-group-sm" role="group">
+            <button type="button" class="btn btn-sm btn-outline-primary shift-up" data-key="{{ category }}">+1 Step</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary shift-down" data-key="{{ category }}" disabled>-1 Step</button>
+        </div>
+    </td>
+</tr>

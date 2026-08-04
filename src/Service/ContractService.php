@@ -238,6 +238,24 @@ class ContractService
         };
     }
 
+    public function applyNegotiatedTerms(Contract $contract, array $data): void
+    {
+        $contract
+            ->setType($data['type'])
+            ->setEmployer($data['employer'])
+            ->setEmployerAffiliation($data['employerAffiliation'] ?? '')
+            ->setScale($data['scale'])
+            ->setDurationMonths($data['durationMonths'] ?? 0)
+            ->setBasePayPercent($data['basePayPercent'])
+            ->setCommandRights($data['commandRights'])
+            ->setSupportTerms($data['supportTerms'])
+            ->setSalvageRights($data['salvageRights'])
+            ->setTransportTerms($data['transportTerms'])
+            ->setNumberOfTracks($data['numberOfTracks']);
+
+        $this->em->flush();
+    }
+
     public function breachContract(Contract $contract): void {
         $company = $contract->getCompany();
         if (!$company) return;

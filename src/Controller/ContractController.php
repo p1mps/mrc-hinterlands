@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\DataTables\ContractStepsTable;
+use App\DataTables\PlanetTable;
 use App\Entity\Contract;
 use App\Enum\CommandRights;
 use App\Enum\ContractStatus;
@@ -16,7 +16,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\DataTables\PlanetTable;
 
 class ContractController extends AbstractController
 {
@@ -33,133 +32,17 @@ class ContractController extends AbstractController
     public function generate(Request $request, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
     {
         $scale = $request->query->getInt('scale', 1);
-        $company = $this->getUser()->getCompany();
-        $reputation = $company->getReputation();
-        $mode = $request->query->get('mode', 'standard');
-
         $data = $generator->generate($scale);
-        $data['mode'] = $mode;
-        $data['negotiationSummary'] = [
-            'reputation' => $reputation,
-            'availableSteps' => min($reputation, 2 * $scale),
-        ];
-        $data['steptsTable'] = json_encode($this->buildStepsTable());
 
         return $this->render('contract/generate.html.twig', [
-            'data'       => $data,
-            'scale'      => $scale,
-            'company'    => $company,
-            'reputation' => $reputation,
+            'data'  => $data,
+            'scale' => $scale,
         ]);
     }
 
-    private function validateNegotiationState(?array $state, ?array $baseSteps, int $scale, int $reputation, int $maxShifts, int $shiftsUsed): array {
-        if (!$state) return ['valid' => true];
-
-        $categories = ['basePayPercent', 'commandRights', 'salvageRights', 'supportTerms', 'transportTerms'];
-
-        if ($shiftsUsed > $maxShifts) {
-            return ['valid' => false, 'message' => "Too many reputation shifts: {$shiftsUsed} used, but only {$maxShifts} available for Scale {$scale}."];
-        }
-
-        foreach ($categories as $key) {
-            if (!isset($state[$key])) continue;
-
-            $finalStep = $state[$key];
-
-            if ($finalStep < 1 || $finalStep > 13) {
-                return ['valid' => false, 'message' => "Invalid step for {$key}: must be between 1 and 13."];
-            }
-
-            if (!ContractStepsTable::isStepValidForCategory($finalStep, $key)) {
-                return ['valid' => false, 'message' => "{$key} step {$finalStep} has no value for this category."];
-            }
-
-        }
-
-        return ['valid' => true, 'state' => $state];
-    }
-
-    private function buildStepsTable(): array {
-        $result = [];
-        foreach (range(1, 13) as $step) {
-            $result[$step] = [
-                'basePayPercent' => ContractStepsTable::getBasePayPercent($step),
-                'commandRights' => ContractStepsTable::getCommandRights($step)?->value ?? null,
-                'salvageRights' => ContractStepsTable::getSalvageRights($step),
-                'supportTerms' => ContractStepsTable::getSupportTerms($step),
-                'transportTerms' => ContractStepsTable::getTransportTerms($step),
-            ];
-        }
-        return $result;
-    }
-
     #[Route('/contract/generate/accept', name: 'app_contracts_accept', methods: ['POST'])]
-    public function acceptGenerated(Request $request, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
+    public function acceptGenerated(Request $request, EntityManagerInterface $em, ContractService $contractService): Response
     {
-        $mode = $request->request->get('mode', 'standard');
-        $scale = $request->request->getInt('scale', 1);
-        $company = $this->getUser()->getCompany();
-        $reputation = $company->getReputation();
-        $maxShifts = 2 * $scale;
-
-        if ($mode === 'negotiate') {
-            $stateJson = $request->request->get('negotiation_state');
-            $baseStepsJson = $request->request->get('base_steps');
-            if ($stateJson) {
-                $baseSteps = json_decode($baseStepsJson, true) ?? [];
-                $shiftsUsed = $request->request->getInt('shifts_used', 0);
-                $validated = $this->validateNegotiationState(json_decode($stateJson, true), $baseSteps, $scale, $reputation, $maxShifts, $shiftsUsed);
-                if (!$validated['valid']) {
-                    $this->addFlash('error', $validated['message']);
-
-                    $data = $generator->generate($scale);
-                    $data['mode'] = 'negotiate';
-                    $data['negotiationSummary'] = [
-                        'reputation' => $reputation,
-                        'availableSteps' => min($reputation, 2 * $scale),
-                    ];
-                    $data['steptsTable'] = json_encode($this->buildStepsTable());
-
-                    return $this->render('contract/generate.html.twig', [
-                        'data'       => $data,
-                        'scale'      => $scale,
-                        'company'    => $company,
-                        'reputation' => $reputation,
-                    ]);
-                }
-
-                $negotiationChanges = [];
-                foreach ($validated['state'] as $key => $finalStep) {
-                    $negotiationChanges[$key] = $finalStep;
-                }
-
-                $negotiated = $generator->generateWithNegotiation($scale, $reputation, $negotiationChanges);
-
-                $contractData = [
-                    'type'             => $negotiated['type'],
-                    'employer'         => $negotiated['employer'],
-                    'employerAffiliation' => $negotiated['affiliation'],
-                    'scale'            => $negotiated['scale'],
-                    'durationMonths'   => $negotiated['duration'],
-                    'basePayPercent'   => $negotiated['basePayPercent'],
-                    'commandRights'    => $negotiated['commandRights'],
-                    'supportTerms'     => $negotiated['supportTerms'],
-                    'salvageRights'    => $negotiated['salvageRights'],
-                    'transportTerms'   => $negotiated['transportTerms'],
-                    'numberOfTracks'   => $negotiated['numberOfTracks'],
-                ];
-
-                $contract = $contractService->createContract($contractData);
-                $contract->setPlanet(PlanetTable::randomPlanet());
-                $em->persist($contract);
-                $em->flush();
-                $this->addFlash('success', 'Contract generated.');
-
-                return $this->redirectToRoute('app_contracts');
-            }
-        }
-
         $data = [
             'type'             => ContractType::from($request->request->get('type')),
             'employer'         => $request->request->get('employer'),
@@ -215,6 +98,103 @@ class ContractController extends AbstractController
         return $this->render('contract/show.html.twig', [
             'contract' => $contract,
         ]);
+    }
+
+    #[Route('/contract/{id}/negotiate', name: 'app_contracts_negotiate_view', methods: ['GET'])]
+    public function negotiateView(Contract $contract, ContractService $contractService, ContractGeneratorService $generator): Response
+    {
+        $company = $this->getUser()->getCompany();
+        $data = $generator->generateWithNegotiation($contract->getScale(), $company->getReputation());
+
+        $initialSteps = $this->getInitialSteps($data);
+
+        $stepsTable = $data['stepsTable'] ?? [];
+        foreach ($stepsTable as $stepKey => &$stepData) {
+            if (isset($stepData['commandRights']) && $stepData['commandRights'] instanceof \App\Enum\CommandRights) {
+                $stepData['commandRights'] = $stepData['commandRights']->value;
+            }
+        }
+        unset($stepData);
+
+        $negotiationData = json_encode([
+            'scale'        => $contract->getScale(),
+            'reputation'   => $company->getReputation(),
+            'initialSteps' => $initialSteps,
+            'stepsTable'   => $stepsTable,
+        ]);
+
+        return $this->render('contract/negotiate.html.twig', [
+            'data'              => $data,
+            'scale'             => $contract->getScale(),
+            'contract'          => $contract,
+            'company'           => $company,
+            'initialSteps'      => $initialSteps,
+            'negotiationData'   => $negotiationData,
+        ]);
+    }
+
+    #[Route('/contract/{id}/negotiate/accept', name: 'app_contracts_negotiate_accept', methods: ['POST'])]
+    public function acceptNegotiation(Contract $contract, Request $request, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
+    {
+        $company = $this->getUser()->getCompany();
+
+        $negotiationChanges = [];
+        $categories = ['basePayPercent', 'commandRights', 'salvageRights', 'supportTerms', 'transportTerms'];
+        foreach ($categories as $cat) {
+            $stepStr = $request->request->get('negotiation_' . $cat);
+            if ($stepStr !== null) {
+                $negotiationChanges[$cat] = (int) $stepStr;
+            }
+        }
+
+        $data = $generator->generateWithNegotiation($contract->getScale(), $company->getReputation(), $negotiationChanges);
+
+        $contractData = [
+            'type'             => $data['type'],
+            'employer'         => $data['employer'],
+            'employerAffiliation' => $data['affiliation'],
+            'scale'            => $data['scale'],
+            'durationMonths'   => $data['duration'],
+            'basePayPercent'   => $data['basePayPercent'],
+            'commandRights'    => $data['commandRights'],
+            'supportTerms'     => $data['supportTerms'],
+            'salvageRights'    => $data['salvageRights'],
+            'transportTerms'   => $data['transportTerms'],
+            'numberOfTracks'   => $data['numberOfTracks'],
+        ];
+
+        $contractService->applyNegotiatedTerms($contract, $contractData);
+        $em->persist($contract);
+        $em->flush();
+        $this->addFlash('success', 'Contract terms updated via negotiation.');
+
+        return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
+    }
+
+    private function getInitialSteps(array $data): array {
+        return [
+            'basePayPercent' => $this->getStepForValue('basePayPercent', $data['basePayPercent']),
+            'commandRights'  => $this->getStepForValue('commandRights', $data['commandRights']->value),
+            'salvageRights'  => $this->getStepForValue('salvageRights', $data['salvageRights']),
+            'supportTerms'   => $this->getStepForValue('supportTerms', $data['supportTerms']),
+            'transportTerms' => $this->getStepForValue('transportTerms', $data['transportTerms'] ?? '—'),
+        ];
+    }
+
+    private function getStepForValue(string $category, mixed $value): ?int {
+        for ($i = 1; $i <= 13; $i++) {
+            $values = \App\DataTables\ContractStepsTable::getStepValues($i);
+            $match = match ($category) {
+                'basePayPercent' => $values[0] === $value,
+                'commandRights'  => $values[1] instanceof \App\Enum\CommandRights ? $values[1]->value === $value : $value === null,
+                'salvageRights'  => $values[2] === $value,
+                'supportTerms'   => $values[3] === $value,
+                'transportTerms' => $values[4] === $value,
+                default          => false,
+            };
+            if ($match) return $i;
+        }
+        return null;
     }
 
     #[Route('/contract/{id}/edit', name: 'app_contracts_edit')]

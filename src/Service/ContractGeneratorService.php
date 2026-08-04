@@ -166,6 +166,18 @@ class ContractGeneratorService {
             'availableSteps' => $reputation,
         ];
 
+        $stepsTable = [];
+        foreach (range(1, 13) as $step) {
+            $stepsTable[$step] = [
+                'basePayPercent' => ContractStepsTable::getBasePayPercent($step),
+                'commandRights' => ContractStepsTable::getCommandRights($step)?->value ?? null,
+                'salvageRights' => ContractStepsTable::getSalvageRights($step),
+                'supportTerms' => ContractStepsTable::getSupportTerms($step),
+                'transportTerms' => ContractStepsTable::getTransportTerms($step),
+            ];
+        }
+        $base['stepsTable'] = $stepsTable;
+
         return $base;
     }
 

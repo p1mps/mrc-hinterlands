@@ -90,4 +90,22 @@ class ContractStepsTable {
         }
         return $currentStep;
     }
+
+    public static function getNextValidStepAbove(int $currentStep, string $category): int {
+        for ($i = $currentStep + 1; $i <= 13; $i++) {
+            if (self::isStepValidForCategory($i, $category)) {
+                return $i;
+            }
+        }
+        return $currentStep;
+    }
+
+    public static function getPrevValidStepBelow(int $currentStep, string $category): int {
+        for ($i = $currentStep - 1; $i >= 1; $i--) {
+            if (self::isStepValidForCategory($i, $category)) {
+                return $i;
+            }
+        }
+        return $currentStep;
+    }
 }

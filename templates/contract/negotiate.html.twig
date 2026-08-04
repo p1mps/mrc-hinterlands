@@ -1,0 +1,295 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Negotiate: {{ contract.name }}</h2>
+    <a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary">Back to Contract</a>
+</div>
+
+<script id="negotiation-data" type="application/json">
+{{ negotiationData|raw }}
+</script>
+
+<div class="card mb-3">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">Contract Negotiation</h5>
+    </div>
+    <div class="card-body">
+        <!-- Dynamic counters -->
+        <div class="d-flex flex-wrap gap-4 mb-3" id="negotiation-counters">
+            <div class="counter-item">
+                <strong>Reputation Spent:</strong>
+                <span id="rep-spent">0</span> / <span id="rep-max">0</span>
+            </div>
+            <div class="counter-item">
+                <strong>Max Steps Available:</strong>
+                <span id="steps-available">0</span>
+            </div>
+            <div class="counter-item">
+                <strong>Trade-Offs Used:</strong>
+                <span id="tradeoffs-used">0</span> / 2
+            </div>
+            <div class="counter-item">
+                <strong>Available Boosts:</strong>
+                <span id="available-boosts">0</span>
+            </div>
+        </div>
+
+        <!-- Interactive negotiation table -->
+        <div class="table-responsive mb-3">
+            <form id="negotiation-form" method="post" action="{{ path('app_contracts_negotiate_accept', {id: contract.id}) }}">
+                <table class="table table-sm table-bordered negotiation-table" id="negotiation-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current Step</th>
+                            <th>Value</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="negotiation-tbody">
+                    </tbody>
+                </table>
+
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary btn-lg" id="accept-negotiation-btn" disabled>
+                        Accept Negotiated Contract
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Reference table (static) -->
+        <div class="table-responsive mb-4">
+            <table class="table table-sm table-bordered">
+                <thead class="table-secondary">
+                <tr>
+                    <th style="width:60px">Step</th>
+                    <th>Base Pay</th>
+                    <th>Command Rights</th>
+                    <th>Salvage Rights</th>
+                    <th>Support Rights</th>
+                    <th>Transportation Terms</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td><strong>1</strong></td><td>50%</td><td>—</td><td>None</td><td>None</td><td>—</td></tr>
+                <tr><td><strong>2</strong></td><td>55%</td><td>—</td><td>—</td><td>Straight/20%</td><td>—</td></tr>
+                <tr><td><strong>3</strong></td><td>60%</td><td>Integrated</td><td>Exchange</td><td>Straight/40%</td><td>—</td></tr>
+                <tr><td><strong>4</strong></td><td>70%</td><td>—</td><td>10%</td><td>Straight/60%</td><td>—</td></tr>
+                <tr><td><strong>5</strong></td><td>80%</td><td>—</td><td>20%</td><td>Straight/80%</td><td>0%</td></tr>
+                <tr><td><strong>6</strong></td><td>90%</td><td>—</td><td>30%</td><td>Straight/100%</td><td>25%</td></tr>
+                <tr><td><strong>7</strong></td><td>100%</td><td>House</td><td>40%</td><td>Battle/10%</td><td>50%</td></tr>
+                <tr><td><strong>8</strong></td><td>110%</td><td>Liaison</td><td>50%</td><td>Battle/20%</td><td>75%</td></tr>
+                <tr><td><strong>9</strong></td><td>120%</td><td>—</td><td>60%</td><td>Battle/30%</td><td>100%</td></tr>
+                <tr><td><strong>10</strong></td><td>130%</td><td>—</td><td>70%</td><td>Battle/40%</td><td>—</td></tr>
+                <tr><td><strong>11</strong></td><td>150%</td><td>Independent</td><td>80%</td><td>Battle/50%</td><td>—</td></tr>
+                <tr><td><strong>12</strong></td><td>175%</td><td>—</td><td>90%</td><td>Battle/75%</td><td>—</td></tr>
+                <tr><td><strong>13</strong></td><td>200%</td><td>—</td><td>100%</td><td>Battle/100%</td><td>—</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+const contractTable = [
+  { step: 1, basePay: "50%", commandRights: null, salvage: "None", support: "None", transport: null },
+  { step: 2, basePay: "55%", commandRights: null, salvage: null, support: "Straight/20%", transport: null },
+  { step: 3, basePay: "60%", commandRights: "Integrated", salvage: "Exchange", support: "Straight/40%", transport: null },
+  { step: 4, basePay: "70%", commandRights: null, salvage: "10%", support: "Straight/60%", transport: null },
+  { step: 5, basePay: "80%", commandRights: null, salvage: "20%", support: "Straight/80%", transport: "0%" },
+  { step: 6, basePay: "90%", commandRights: null, salvage: "30%", support: "Straight/100%", transport: "25%" },
+  { step: 7, basePay: "100%", commandRights: "House", salvage: "40%", support: "Battle/10%", transport: "50%" },
+  { step: 8, basePay: "110%", commandRights: "Liaison", salvage: "50%", support: "Battle/20%", transport: "75%" },
+  { step: 9, basePay: "120%", commandRights: null, salvage: "60%", support: "Battle/30%", transport: "100%" },
+  { step: 10, basePay: "130%", commandRights: null, salvage: "70%", support: "Battle/40%", transport: null },
+  { step: 11, basePay: "140%", commandRights: "Independent", salvage: "80%", support: "Battle/50%", transport: null },
+  { step: 12, basePay: "150%", commandRights: null, salvage: "90%", support: "Battle/75%", transport: null },
+  { step: 13, basePay: "160%", commandRights: null, salvage: "100%", support: "Battle/100%", transport: null },
+  { step: 14, basePay: "170%", commandRights: null, salvage: null, support: "Battle/75%", transport: null },
+  { step: 15, basePay: "180%", commandRights: null, salvage: null, support: "Battle/100%", transport: null },
+  { step: 16, basePay: "190%", commandRights: null, salvage: null, support: null, transport: null },
+  { step: 17, basePay: "200%", commandRights: null, salvage: null, support: null, transport: null },
+];
+
+function findNextValidStep(step, direction, category) {
+  const start = direction === 'up' ? step + 1 : step - 1;
+  for (let i = start; direction === 'up' ? i <= 17 : i >= 1; direction === 'up' ? i++ : i--) {
+    const row = contractTable.find(r => r.step === i);
+    if (row && row[category] !== null) {
+      return i;
+    }
+  }
+  return null;
+}
+
+function getDisplayValue(step, category) {
+  const row = contractTable.find(r => r.step === step);
+  const val = row ? row[category] : null;
+  return val !== null ? val : '—';
+}
+
+function initNegotiation() {
+  const dataScript = document.getElementById('negotiation-data');
+  if (!dataScript) return;
+
+  const initData = JSON.parse(dataScript.textContent);
+  const scale = initData.scale;
+  const reputation = initData.reputation;
+  const initialSteps = initData.initialSteps;
+
+  const maxReputationSpend = scale * 2;
+
+  const keyMap = {
+    basePay: 'basePayPercent',
+    salvage: 'salvageRights',
+    support: 'supportTerms',
+    transport: 'transportTerms',
+  };
+
+  let state = {
+    steps: {
+      basePay: initialSteps.basePay || initialSteps.basePayPercent || 3,
+      commandRights: initialSteps.commandRights || 3,
+      salvage: initialSteps.salvage || initialSteps.salvageRights || 3,
+      support: initialSteps.support || initialSteps.supportTerms || 3,
+      transport: initialSteps.transport || initialSteps.transportTerms || 5,
+    },
+    repSpent: 0,
+    tradeOffsUsed: 0,
+    sacrificedSteps: 0,
+  };
+
+  const tbody = document.getElementById('negotiation-tbody');
+  const repSpentEl = document.getElementById('rep-spent');
+  const repMaxEl = document.getElementById('rep-max');
+  const stepsAvailableEl = document.getElementById('steps-available');
+  const tradeoffsUsedEl = document.getElementById('tradeoffs-used');
+  const availableBoostsEl = document.getElementById('available-boosts');
+  const acceptBtn = document.getElementById('accept-negotiation-btn');
+
+  repMaxEl.textContent = maxReputationSpend;
+
+  function render() {
+    tbody.innerHTML = '';
+
+    const categories = [
+      { key: 'basePay', label: 'Base Pay' },
+      { key: 'commandRights', label: 'Command Rights' },
+      { key: 'salvage', label: 'Salvage Rights' },
+      { key: 'support', label: 'Support' },
+      { key: 'transport', label: 'Transportation' },
+    ];
+
+    const earned = Math.floor(state.sacrificedSteps / 2);
+    const availableToUse = Math.max(0, earned - state.tradeOffsUsed);
+    const totalBudget = (maxReputationSpend - state.repSpent) + availableToUse;
+
+    for (const cat of categories) {
+      const currentStep = state.steps[cat.key];
+      const value = getDisplayValue(currentStep, cat.key);
+
+      const nextValidStep = findNextValidStep(currentStep, 'up', cat.key);
+      const prevValidStep = findNextValidStep(currentStep, 'down', cat.key);
+
+      const costToGoUp = nextValidStep !== null ? Math.abs(nextValidStep - currentStep) : Infinity;
+      const costToGoDown = prevValidStep !== null ? Math.abs(prevValidStep - currentStep) : Infinity;
+
+      const repRemaining = maxReputationSpend - state.repSpent;
+
+      const canGoUp = costToGoUp <= totalBudget && nextValidStep !== null;
+      const canGoDown = prevValidStep !== null;
+
+      const tr = document.createElement('tr');
+      tr.dataset.key = cat.key;
+
+      tr.innerHTML = `
+        <td>${cat.label}</td>
+        <td><span class="current-step">${currentStep}</span></td>
+        <td><span class="current-value">${value}</span></td>
+        <td>
+          <div class="btn-group btn-group-sm" role="group">
+            <button type="button" class="btn btn-sm btn-outline-primary shift-up" data-key="${cat.key}" ${canGoUp ? '' : 'disabled'}>+1 Step</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary shift-down" data-key="${cat.key}" ${canGoDown ? '' : 'disabled'}>-1 Step</button>
+          </div>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    }
+
+    repSpentEl.textContent = state.repSpent;
+    stepsAvailableEl.textContent = maxReputationSpend - state.repSpent;
+    tradeoffsUsedEl.textContent = state.tradeOffsUsed;
+
+    const repRemaining = maxReputationSpend - state.repSpent;
+    availableBoostsEl.textContent = repRemaining + availableToUse;
+
+    acceptBtn.disabled = false;
+  }
+
+  function updateHiddenInputs() {
+    const existingInputs = document.querySelectorAll('input[name^="negotiation_"]');
+    existingInputs.forEach(input => input.remove());
+
+    const form = document.getElementById('negotiation-form');
+    const backendKeys = {
+      basePay: 'basePayPercent',
+      salvage: 'salvageRights',
+      support: 'supportTerms',
+      transport: 'transportTerms',
+    };
+
+    for (const [jsKey, step] of Object.entries(state.steps)) {
+      const backendKey = backendKeys[jsKey] || jsKey;
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = `negotiation_${backendKey}`;
+      input.value = step;
+      form.appendChild(input);
+    }
+  }
+
+  tbody.addEventListener('click', (e) => {
+    const btn = e.target.closest('.shift-up, .shift-down');
+    if (!btn) return;
+
+    const category = btn.dataset.key;
+    const isUp = btn.classList.contains('shift-up');
+    const currentStep = state.steps[category];
+
+    if (isUp) {
+      const nextValid = findNextValidStep(currentStep, 'up', category);
+      if (nextValid === null) return;
+
+      const cost = Math.abs(nextValid - currentStep);
+      const earned = Math.floor(state.sacrificedSteps / 2);
+      const availableToUse = Math.max(0, earned - state.tradeOffsUsed);
+      const totalBudget = (maxReputationSpend - state.repSpent) + availableToUse;
+
+      if (cost > totalBudget) return;
+
+      const repRemaining = maxReputationSpend - state.repSpent;
+      state.repSpent += Math.min(cost, repRemaining);
+      state.tradeOffsUsed = Math.min(2, state.tradeOffsUsed + Math.max(0, cost - repRemaining));
+      state.steps[category] = nextValid;
+    } else {
+      const prevValid = findNextValidStep(currentStep, 'down', category);
+      if (prevValid === null) return;
+
+      const cost = Math.abs(prevValid - currentStep);
+
+      state.sacrificedSteps += cost;
+      state.steps[category] = prevValid;
+    }
+
+    render();
+    updateHiddenInputs();
+  });
+
+  render();
+}
+
+document.addEventListener('DOMContentLoaded', initNegotiation);
+</script>
+{% endblock %}
