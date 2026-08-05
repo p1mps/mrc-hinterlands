@@ -7,7 +7,7 @@
 <p><strong>Total BV:</strong> {{ totalBv }}</p>
 <div class="table-responsive">
 <table class="table table-striped align-middle">
-<thead><tr><th>Name</th><th>Chassis</th><th>Tonnage</th><th>BV</th><th>Type</th><th>Damage</th><th>Active</th><th>Pilot</th><th></th></tr></thead>
+<thead><tr><th>Name</th><th>Chassis</th><th>Tonnage</th><th>BV</th><th>Type</th><th>Damage</th><th>Active</th><th>Pilot</th><th>Dropship</th><th></th></tr></thead>
 <tbody>
 {% for unit in units %}
 <tr>
@@ -35,6 +35,13 @@
         </form>
     </td>
     <td class="text-nowrap">
+        {% set dropship = dropshipService.getDropshipByCompany(company) %}
+        {% if dropship and unit.isActive and unit.dropship is null %}
+            <form method="post" action="{{ path('app_dropship_assign_unit', {id: unit.id, dropship: dropship.id}) }}" onsubmit="return confirm('Board {{ unit.name }} on {{ dropship.name }}? This will take {{ unit.tonnage }} tons of capacity.');">
+                <input type="hidden" name="_token" value="csrf_board_{{ unit.id }}">
+                <button class="btn btn-sm btn-info">Board</button>
+            </form>
+        {% endif %}
         <a href="{{ path('app_roster_edit', {id: unit.id}) }}" class="btn btn-sm btn-secondary">Edit</a>
         {% if unit.damageState.value != 'None' %}
             <form method="post" action="{{ path('app_roster_repair', {id: unit.id}) }}" class="d-inline"

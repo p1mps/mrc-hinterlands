@@ -7,4 +7,14 @@ class UnitRepository extends ServiceEntityRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Unit::class);
     }
+
+    public function countTonnageOnDropship(int $dropshipId): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COALESCE(SUM(u.tonnage), 0)')
+            ->where('u.dropship = :id')
+            ->setParameter('id', $dropshipId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

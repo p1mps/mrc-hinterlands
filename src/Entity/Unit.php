@@ -3,6 +3,7 @@ namespace App\Entity;
 
 use App\Enum\DamageState;
 use App\Enum\UnitType;
+use App\Entity\Dropship;
 use App\Repository\UnitRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,6 +21,10 @@ class Unit {
     #[ORM\OneToOne(inversedBy: 'unit')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Pilot $pilot = null;
+
+    #[ORM\ManyToOne(inversedBy: 'unitsOnDropship')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?Dropship $dropship = null;
 
     #[ORM\Column(length: 255)]
     private string $name;
@@ -46,6 +51,9 @@ class Unit {
 
     public function getCompany(): MercenaryCompany { return $this->company; }
     public function setCompany(MercenaryCompany $company): static { $this->company = $company; return $this; }
+
+    public function getDropship(): ?Dropship { return $this->dropship; }
+    public function setDropship(?Dropship $dropship): static { $this->dropship = $dropship; return $this; }
 
     public function getPilot(): ?Pilot { return $this->pilot; }
     public function setPilot(?Pilot $pilot): static { $this->pilot = $pilot; return $this; }

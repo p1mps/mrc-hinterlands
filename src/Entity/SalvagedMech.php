@@ -7,6 +7,8 @@ use App\Enum\TechBase;
 use App\Repository\SalvagedMechRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use App\Entity\MercenaryCompany;
+
 #[ORM\Entity(repositoryClass: SalvagedMechRepository::class)]
 class SalvagedMech
 {
@@ -19,11 +21,15 @@ class SalvagedMech
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Dropship $dropship = null;
 
+    #[ORM\ManyToOne(inversedBy: 'salvagedMechs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private MercenaryCompany $company;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $model = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $tonnage = null;
+    #[ORM\Column]
+    private int $tonnage;
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $bvCost = null;
@@ -64,6 +70,17 @@ class SalvagedMech
         return $this->id;
     }
 
+    public function getCompany(): MercenaryCompany
+    {
+        return $this->company;
+    }
+
+    public function setCompany(MercenaryCompany $company): static
+    {
+        $this->company = $company;
+        return $this;
+    }
+
     public function getModel(): ?string
     {
         return $this->model;
@@ -75,12 +92,12 @@ class SalvagedMech
         return $this;
     }
 
-    public function getTonnage(): ?int
+    public function getTonnage(): int
     {
         return $this->tonnage;
     }
 
-    public function setTonnage(?int $tonnage): static
+    public function setTonnage(int $tonnage): static
     {
         $this->tonnage = $tonnage;
         return $this;

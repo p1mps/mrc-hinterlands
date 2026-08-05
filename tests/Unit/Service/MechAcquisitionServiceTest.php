@@ -271,9 +271,9 @@ class MechAcquisitionServiceTest extends TestCase
         $this->assertEquals('Unknown Chassis', $captured[0]->getChassis());
     }
 
-    public function testAcquireMechHandlesNullTonnage(): void
+    public function testAcquireMechHandlesZeroTonnage(): void
     {
-        $mechan = $this->makeSalvagedMech(['tonnage' => null, 'bvCost' => 200]);
+        $mechan = $this->makeSalvagedMech(['tonnage' => 0, 'bvCost' => 200]);
         $company = $this->makeCompany();
 
         $captured = [];
@@ -290,7 +290,7 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->service->acquireMech($mechan, $company);
 
-        // When tonnage is null, the ?? 0 fallback should apply
+        // When tonnage is 0, the ?? 0 fallback applies
         $this->assertCount(1, $captured);
         $this->assertEquals(0, $captured[0]->getTonnage());
     }

@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Dropship;
 use App\Form\DropshipType;
 use App\Service\DropshipService;
+use App\Service\SalvagedMechService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +23,7 @@ class DropshipController extends AbstractController
 
         return $this->render('dropship/show.html.twig', [
             'dropship' => $dropship,
+            'dropshipService' => $dropshipService,
         ]);
     }
 
@@ -102,6 +105,102 @@ class DropshipController extends AbstractController
             } catch (\Exception $e) {
                 $this->addFlash('error', 'Failed to delete dropship: ' . $e->getMessage());
             }
+        }
+
+        return $this->redirectToRoute('app_dropship_show');
+    }
+
+    #[Route('/assign-mech/{id}', name: 'app_dropship_assign_mech', methods: ['POST'])]
+    public function assignMech(Request $request, Dropship $dropship, int $id, DropshipService $dropshipService): Response
+    {
+        $company = $this->getUser()->getCompany();
+
+        if ($dropship->getCompany() !== $company) {
+            $this->addFlash('error', 'You do not have permission to manage this dropship.');
+            return $this->redirectToRoute('app_dropship_show');
+        }
+
+        $mechan = $this->salvagedMechService->getMech($id);
+
+        if (!$mechan) {
+            $this->addFlash('error', 'Mech not found.');
+            return $this->redirectToRoute('app_dropship_show');
+        }
+
+        try {
+            $dropshipService->assignMechToDropship($mechan, $dropship);
+            $this->addFlash('success', 'Mech assigned to dropship.');
+        } catch (\LogicException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_salvaged_mech_index');
+    }
+
+    #[Route('/assign-unit/{id}', name: 'app_dropship_assign_unit', methods: ['POST'])]
+    public function assignUnit(Request $request, Dropship $dropship, int $id, DropshipService $dropshipService): Response
+    {
+        $company = $this->getUser()->getCompany();
+
+        if ($dropship->getCompany() !== $company) {
+            $this->addFlash('error', 'You do not have permission to manage this dropship.');
+            return $this->redirectToRoute('app_dropship_show');
+        }
+
+        $unit = $this->em->getRepository(\App\Entity\Unit::class)->find($id);
+
+        if (!$unit) {
+            $this->addFlash('error', 'Unit not found.');
+            return $this->redirectToRoute('app_dropship_show');
+        }
+
+        try {
+            $dropshipService->assignUnitToDropship($unit, $dropship);
+            $this->addFlash('success', 'Unit assigned to dropship.');
+        } catch (\LogicException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_roster');
+    }
+
+    #[Route('/unassign-mech/{dropshipId}/{mechanId}', name: 'app_dropship_unassign_mech', methods: ['POST'])]
+    public function unassignMech(Dropship $dropship, int $mechanId): Response
+    {
+        $company = $this->getUser()->getCompany();
+
+        if ($dropship->getCompany() !== $company) {
+            $this->addFlash('error', 'Permission denied.');
+            return $this->redirectToRoute('app_dropship_show');
+        }
+
+        $mechan = $this->salvagedMechService->getMech($mechanId);
+
+        if ($mechan && $mechan->getDropship() === $dropship) {
+            $mechan->setDropship(null);
+            $this->em->flush();
+            $this->addFlash('success', 'Mech removed from dropship.');
+        }
+
+        return $this->redirectToRoute('app_dropship_show');
+    }
+
+    #[Route('/unassign-unit/{dropshipId}/{unitId}', name: 'app_dropship_unassign_unit', methods: ['POST'])]
+    public function unassignUnit(Dropship $dropship, int $unitId): Response
+    {
+        $company = $this->getUser()->getCompany();
+
+        if ($dropship->getCompany() !== $company) {
+            $this->addFlash('error', 'Permission denied.');
+            return $this->redirectToRoute('app_dropship_show');
+        }
+
+        $unit = $this->em->getRepository(\App\Entity\Unit::class)->find($unitId);
+
+        if ($unit && $unit->getDropship() === $dropship) {
+            $unit->setDropship(null);
+            $this->em->flush();
+            $this->addFlash('success', 'Unit removed from dropship.');
         }
 
         return $this->redirectToRoute('app_dropship_show');

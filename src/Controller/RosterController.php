@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Unit;
 use App\Form\UnitFormType;
+use App\Service\DropshipService;
 use App\Service\RosterService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class RosterController extends AbstractController
 {
     #[Route('', name: 'app_roster')]
-    public function index(RosterService $rosterService): Response
+    public function index(RosterService $rosterService, DropshipService $dropshipService): Response
     {
         $company = $this->getUser()->getCompany();
 
@@ -23,6 +24,7 @@ class RosterController extends AbstractController
             'units'   => $rosterService->getUnits($company),
             'pilots'  => $rosterService->getPilots($company),
             'totalBv' => $company->getTotalBv(),
+            'dropshipService' => $dropshipService,
         ]);
     }
 

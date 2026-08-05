@@ -198,6 +198,7 @@ class DropshipIntegrationTest extends WebTestCase
         $this->em->flush();
 
         $mechan = new SalvagedMech();
+        $mechan->setCompany($company);
         $mechan->setModel('Catapult CAT-PU1');
         $mechan->setTonnage(80);
         $mechan->setBvCost(300);
@@ -234,6 +235,7 @@ class DropshipIntegrationTest extends WebTestCase
         // Create 3 mechs (at capacity)
         for ($i = 1; $i <= 3; $i++) {
             $mechan = new SalvagedMech();
+            $mechan->setCompany($company);
             $mechan->setModel("Mech {$i}");
             $mechan->setTonnage(60);
             $mechan->setBvCost(200);
@@ -272,6 +274,7 @@ class DropshipIntegrationTest extends WebTestCase
         // Create 2 mechs on dropship
         for ($i = 1; $i <= 2; $i++) {
             $mechan = new SalvagedMech();
+            $mechan->setCompany($company);
             $mechan->setModel("Unassign Mech {$i}");
             $mechan->setTonnage(60);
             $mechan->setBvCost(200);
@@ -320,6 +323,7 @@ class DropshipIntegrationTest extends WebTestCase
         $this->em->flush();
 
         $mechan = new SalvagedMech();
+        $mechan->setCompany($company);
         $mechan->setModel('Acquire Mech');
         $mechan->setTonnage(60);
         $mechan->setBvCost(200);

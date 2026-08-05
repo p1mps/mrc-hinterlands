@@ -23,6 +23,9 @@ class Dropship
     #[ORM\OneToMany(mappedBy: 'dropship', targetEntity: SalvagedMech::class)]
     private Collection $salvagedMechs;
 
+    #[ORM\OneToMany(mappedBy: 'dropship', targetEntity: Unit::class)]
+    private Collection $unitsOnDropship;
+
     #[ORM\Column(type: 'integer')]
     private int $maxCapacity;
 
@@ -32,6 +35,7 @@ class Dropship
     public function __construct()
     {
         $this->salvagedMechs = new ArrayCollection();
+        $this->unitsOnDropship = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,6 +74,11 @@ class Dropship
     public function getSalvagedMechs(): Collection
     {
         return $this->salvagedMechs;
+    }
+
+    public function getUnitsOnDropship(): Collection
+    {
+        return $this->unitsOnDropship;
     }
 
     public function getName(): ?string

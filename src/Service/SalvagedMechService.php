@@ -25,8 +25,9 @@ class SalvagedMechService
         return $this->em->getRepository(SalvagedMech::class)->find($id);
     }
 
-    public function createMech(SalvagedMech $mechan): void
+    public function createMech(SalvagedMech $mechan, MercenaryCompany $company): void
     {
+        $mechan->setCompany($company);
         $this->em->persist($mechan);
         $this->em->flush();
     }

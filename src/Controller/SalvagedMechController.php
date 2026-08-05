@@ -6,6 +6,7 @@ use App\Entity\SalvagedMech;
 use App\Form\BattlefieldSalvageMechType;
 use App\Form\SalvagedMechType;
 use App\Form\ScrapyardMechType;
+use App\Service\DropshipService;
 use App\Service\SalvageCalculationService;
 use App\Service\SalvagedMechService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,10 +20,14 @@ class SalvagedMechController extends AbstractController
 {
     public function __construct(private readonly EntityManagerInterface $em) {}
     #[Route('/', name: 'app_salvaged_mech_index', methods: ['GET'])]
-    public function index(SalvagedMechService $salvagedMechService): Response
+    public function index(SalvagedMechService $salvagedMechService, DropshipService $dropshipService): Response
     {
+        $company = $this->getUser()->getCompany();
+
         return $this->render('salvaged_mech/index.html.twig', [
             'salvaged_mechs' => $salvagedMechService->getAllMechs(),
+            'company' => $company,
+            'dropshipService' => $dropshipService,
         ]);
     }
 
@@ -35,7 +40,8 @@ class SalvagedMechController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $salvagedMechService->createMech($mechan);
+            $company = $this->getUser()->getCompany();
+            $salvagedMechService->createMech($mechan, $company);
             return $this->redirectToRoute('app_salvaged_mech_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -60,7 +66,8 @@ class SalvagedMechController extends AbstractController
             $salvageValue = $salvageCalc->calculateSalvageValue($mechan->getBvCost());
             $mechan->setSalvageValue($salvageValue);
 
-            $salvagedMechService->createMech($mechan);
+            $company = $this->getUser()->getCompany();
+            $salvagedMechService->createMech($mechan, $company);
             
             return $this->render('salvaged_mech/new_with_check_result.html.twig', [
                 'salvaged_mech' => $mechan,

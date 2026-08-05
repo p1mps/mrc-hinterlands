@@ -544,8 +544,10 @@ class FullStackIntegrationTest extends WebTestCase
     public function testSalvageMechPersistedToDatabase(): void
     {
         $userRef = $this->createUserAndCompany('salvage_owner', 'Salvage Company', 'Inner Sphere');
+        $company = $this->em->getRepository(\App\Entity\MercenaryCompany::class)->find($userRef['companyId']);
 
         $mechan = new \App\Entity\SalvagedMech();
+        $mechan->setCompany($company);
         $mechan->setModel('Catapult CAT-PU1');
         $mechan->setTonnage(80);
         $mechan->setBvCost(300);
@@ -566,7 +568,11 @@ class FullStackIntegrationTest extends WebTestCase
 
     public function testEditSalvageMechUpdatesData(): void
     {
+        $userRef = $this->createUserAndCompany('salvage_editor', 'Salvage Editor Company', 'Inner Sphere');
+        $company = $this->em->getRepository(\App\Entity\MercenaryCompany::class)->find($userRef['companyId']);
+
         $mechan = new \App\Entity\SalvagedMech();
+        $mechan->setCompany($company);
         $mechan->setModel('Old Mech');
         $mechan->setTonnage(80);
         $mechan->setBvCost(300);
@@ -597,7 +603,11 @@ class FullStackIntegrationTest extends WebTestCase
 
     public function testDeleteSalvageMechRemovesFromDatabase(): void
     {
+        $userRef = $this->createUserAndCompany('salvage_deleter', 'Salvage Deleter Company', 'Inner Sphere');
+        $company = $this->em->getRepository(\App\Entity\MercenaryCompany::class)->find($userRef['companyId']);
+
         $mechan = new \App\Entity\SalvagedMech();
+        $mechan->setCompany($company);
         $mechan->setModel('ToDelete');
         $mechan->setTonnage(80);
         $mechan->setBvCost(300);

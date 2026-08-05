@@ -24,6 +24,7 @@
             <th>Repair Cost</th>
             <th>Scrapyard</th>
             <th>Status</th>
+            <th>Dropship</th>
             <th></th>
         </tr>
     </thead>
@@ -50,12 +51,19 @@
                 {% endif %}
             </td>
             <td class="text-nowrap">
+                {% set dropship = dropshipService.getDropshipByCompany(company) %}
+                {% if dropship and not salvaged_mech.dropship and not salvaged_mech.isAcquired and salvaged_mech.spTaken is null and not salvaged_mech.isTrulyDestroyed %}
+                    <form method="post" action="{{ path('app_dropship_assign_mech', {id: salvaged_mech.id, dropship: dropship.id}) }}" onsubmit="return confirm('Board {{ salvaged_mech.model }} on {{ dropship.name }}? This will take {{ salvaged_mech.tonnage }} tons of capacity.');">
+                        <input type="hidden" name="_token" value="csrf_board_{{ salvaged_mech.id }}">
+                        <button class="btn btn-sm btn-info">Board</button>
+                    </form>
+                {% endif %}
                 <a href="{{ path('app_salvaged_mech_show', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
                 <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
             </td>
         </tr>
         {% else %}
-        <tr><td colspan="10" class="text-muted">No records found.</td></tr>
+        <tr><td colspan="11" class="text-muted">No records found.</td></tr>
     {% endfor %}
     </tbody>
 </table>

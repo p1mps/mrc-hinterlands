@@ -85,10 +85,11 @@ class SalvagedMechServiceTest extends TestCase
     public function testCreateMechPersistsEntity(): void
     {
         $mechan = $this->makeMech();
+        $company = $this->makeCompany();
         $this->em->expects($this->once())->method('persist');
         $this->em->expects($this->once())->method('flush');
 
-        $this->service->createMech($mechan);
+        $this->service->createMech($mechan, $company);
     }
 
     public function testUpdateMechFlushesChanges(): void

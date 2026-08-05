@@ -198,6 +198,7 @@ abstract class AcceptanceTestCase extends WebTestCase
             'is_truly_destroyed' => 0,
             'acquired' => 0,
             'sp_taken' => 0,
+            'company_id' => $companyId,
         ], $data);
         $conn->insert('salvaged_mech', array_filter($row, fn ($v) => null !== $v, ARRAY_FILTER_USE_BOTH));
         return (int) $conn->lastInsertId();
