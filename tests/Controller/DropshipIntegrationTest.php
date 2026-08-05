@@ -317,6 +317,7 @@ class DropshipIntegrationTest extends WebTestCase
         $dropship = new Dropship();
         $dropship->setCompany($company);
         $dropship->setMaxCapacity(5);
+        $dropship->setMekbayCapacity(2);
         $dropship->setName('Acquire Dropship');
 
         $this->em->persist($dropship);
@@ -354,5 +355,106 @@ class DropshipIntegrationTest extends WebTestCase
             [$dropship->getId()]
         );
         $this->assertEquals(0, $count);
+    }
+
+    // ── Mekbay Tests ────────────────────────────────────────────────────────
+
+    public function testDropshipRejectsUnitWhenMekbaysExhausted(): void
+    {
+        $userRef = $this->createUserAndCompany('dropship_mekbay', 'Mekbay Company', 'Inner Sphere');
+        $companyId = $userRef['companyId'];
+
+        $company = $this->em->getRepository(MercenaryCompany::class)->find($companyId);
+
+        $dropship = new Dropship();
+        $dropship->setCompany($company);
+        $dropship->setMaxCapacity(100);
+        $dropship->setMekbayCapacity(1);
+        $dropship->setName('Mekbay Dropship');
+
+        $this->em->persist($dropship);
+        $this->em->flush();
+
+        // Create 1 unit on dropship (fills the single mekbay)
+        $unit1 = new \App\Entity\Unit();
+        $unit1->setCompany($company);
+        $unit1->setName('Mech One');
+        $unit1->setChassis('Atlas');
+        $unit1->setTonnage(50);
+        $unit1->setBv(300);
+        $unit1->setUnitType(\App\Enum\UnitType::Mech);
+        $unit1->setDropship($dropship);
+
+        $this->em->persist($unit1);
+        $this->em->flush();
+
+        // Verify first unit is on dropship
+        $count = (int) $this->em->getConnection()->fetchOne(
+            'SELECT COUNT(*) FROM unit WHERE dropship_id = ?',
+            [$dropship->getId()]
+        );
+        $this->assertEquals(1, $count);
+
+        // Verify mekbay capacity is stored
+        $storedDropship = $this->em->getRepository(Dropship::class)->find($dropship->getId());
+        $this->assertEquals(1, $storedDropship->getMekbayCapacity());
+    }
+
+    public function testSalvagedMechAssignmentIgnoresMekbayLimit(): void
+    {
+        $userRef = $this->createUserAndCompany('dropship_salvage_mekbay', 'Salvage Mekbay Company', 'Inner Sphere');
+        $companyId = $userRef['companyId'];
+
+        $company = $this->em->getRepository(MercenaryCompany::class)->find($companyId);
+
+        $dropship = new Dropship();
+        $dropship->setCompany($company);
+        $dropship->setMaxCapacity(200);
+        $dropship->setMekbayCapacity(0);
+        $dropship->setName('Zero Mekbay Dropship');
+
+        $this->em->persist($dropship);
+        $this->em->flush();
+
+        // Create a salvaged mech on a dropship with 0 mekbays
+        $mechan = new SalvagedMech();
+        $mechan->setCompany($company);
+        $mechan->setModel('Salvaged Mech');
+        $mechan->setTonnage(100);
+        $mechan->setBvCost(300);
+        $mechan->setAcquired(false);
+        $mechan->setScrapyard(false);
+        $mechan->setDropship($dropship);
+
+        $this->em->persist($mechan);
+        $this->em->flush();
+
+        // Verify salvaged mech is on dropship despite 0 mekbays
+        $count = (int) $this->em->getConnection()->fetchOne(
+            'SELECT COUNT(*) FROM salvaged_mech WHERE dropship_id = ?',
+            [$dropship->getId()]
+        );
+        $this->assertEquals(1, $count);
+    }
+
+    public function testDropshipStoresMekbayCapacity(): void
+    {
+        $userRef = $this->createUserAndCompany('dropship_mekbay_store', 'Store Company', 'Inner Sphere');
+        $companyId = $userRef['companyId'];
+
+        $company = $this->em->getRepository(MercenaryCompany::class)->find($companyId);
+
+        $dropship = new Dropship();
+        $dropship->setCompany($company);
+        $dropship->setMaxCapacity(5);
+        $dropship->setMekbayCapacity(3);
+        $dropship->setName('Store Dropship');
+
+        $this->em->persist($dropship);
+        $this->em->flush();
+
+        $created = $this->em->getRepository(Dropship::class)->findOneBy(['company' => $company]);
+        $this->assertNotNull($created);
+        $this->assertEquals(3, $created->getMekbayCapacity());
     }
 }

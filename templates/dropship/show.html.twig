@@ -7,6 +7,7 @@
 <table class="table table-bordered table-sm">
 <tr><th>Name</th><td>{{ dropship.name ?? '—' }}</td></tr>
 <tr><th>Max Capacity</th><td>{{ dropship.maxCapacity }} tons</td></tr>
+<tr><th>Mekbays</th><td>{{ dropshipService.getUsedMekbays(dropship) }} / {{ dropship.mekbayCapacity }}</td></tr>
 <tr><th>Mechs On Board</th><td>{{ dropshipService.getTonnageOnDropship(dropship) }} / {{ dropship.maxCapacity }} tons</td></tr>
 </table>
 </div>
@@ -15,6 +16,8 @@
 
 {% set currentTonnage = dropshipService.getTonnageOnDropship(dropship) %}
 {% set remainingCapacity = dropship.maxCapacity - currentTonnage %}
+{% set usedMekbays = dropshipService.getUsedMekbays(dropship) %}
+{% set remainingMekbays = dropship.mekbayCapacity - usedMekbays %}
 {% if (dropship.salvagedMechs|length + dropship.unitsOnDropship|length) > 0 %}
 <h3 class="mt-3">Mechs on Dropship ({{ currentTonnage }} / {{ dropship.maxCapacity }} tons)</h3>
 <div class="table-responsive mb-3">
@@ -44,7 +47,7 @@
     <td>{{ mech.damageState ? mech.damageState.value : 'No' }}</td>
     <td>{{ mech.isAcquired ? 'Yes' : 'No' }}</td>
     <td>
-        <form method="post" action="{{ path('app_dropship_unassign_mech', {dropshipId: dropship.id, mechanicalId: mech.id}) }}" onsubmit="return confirm('Remove {{ mech.model }} from dropship?');">
+        <form method="post" action="{{ path('app_dropship_unassign_mech', {dropshipId: dropship.id, mechanId: mech.id}) }}" onsubmit="return confirm('Remove {{ mech.model }} from dropship?');">
             <input type="hidden" name="_token" value="csrf_unassign_mech_{{ mech.id }}">
             <button class="btn btn-sm btn-outline-danger">Unassign</button>
         </form>
@@ -60,21 +63,26 @@
 {% set unassignedUnits = dropship.company.units|filter(u => u.dropship is null and u.isActive) %}
 {% set unassignedSalvaged = dropshipService.getUnassignedMechs(dropship.company) %}
 {% if (unassignedUnits|length + unassignedSalvaged|length) > 0 %}
-<h4 class="mt-3">Available to Board ({{ remainingCapacity }} tons left)</h4>
+<h4 class="mt-3">Available to Board ({{ remainingCapacity }} tons left{% if remainingMekbays > 0 %}, {{ remainingMekbays }} mekbays left{% endif %})</h4>
 <div class="table-responsive mb-3">
 <table class="table table-bordered table-sm">
-<thead><tr><th>Type</th><th>Name / Model</th><th>Tonnage</th><th>Actions</th></tr></thead>
+<thead><tr><th>Type</th><th>Name / Model</th><th>Tonnage</th><th>Mekbay</th><th>Actions</th></tr></thead>
 <tbody>
 {% for unit in unassignedUnits %}
 <tr>
     <td><span class="badge bg-info">Roster</span></td>
     <td>{{ unit.name }}</td>
     <td>{{ unit.tonnage }}</td>
+    <td>1</td>
     <td>
-        <form method="post" action="{{ path('app_dropship_assign_unit', {id: unit.id, dropship: dropship.id}) }}" onsubmit="return confirm('Board {{ unit.name }} on {{ dropship.name }}? This will take {{ unit.tonnage }} tons of capacity.');">
+        {% if remainingMekbays > 0 %}
+        <form method="post" action="{{ path('app_dropship_assign_unit', {id: unit.id, dropship: dropship.id}) }}" onsubmit="return confirm('Board {{ unit.name }} on {{ dropship.name }}? This will take {{ unit.tonnage }} tons of capacity and 1 mekbay.');">
             <input type="hidden" name="_token" value="csrf_board_unit_{{ unit.id }}">
             <button class="btn btn-sm btn-info">Board</button>
         </form>
+        {% else %}
+        <span class="text-muted">No mekbays</span>
+        {% endif %}
     </td>
 </tr>
 {% endfor %}

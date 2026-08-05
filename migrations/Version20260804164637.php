@@ -28,11 +28,13 @@ final class Version20260804164637 extends AbstractMigration
         $this->addSql('ALTER TABLE unit ADD dropship_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE unit ADD CONSTRAINT FK_DCBB0C539863015 FOREIGN KEY (dropship_id) REFERENCES dropship (id) ON DELETE SET NULL NOT DEFERRABLE');
         $this->addSql('CREATE INDEX IDX_DCBB0C539863015 ON unit (dropship_id)');
+        $this->addSql('ALTER TABLE dropship ADD mekbay_capacity INT NOT NULL DEFAULT 0');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE dropship DROP mekbay_capacity');
         $this->addSql('ALTER TABLE pilot ALTER piloting_xp SET DEFAULT 0');
         $this->addSql('ALTER TABLE salvaged_mech DROP CONSTRAINT FK_F1533AC5979B1AD6');
         $this->addSql('DROP INDEX IDX_F1533AC5979B1AD6');

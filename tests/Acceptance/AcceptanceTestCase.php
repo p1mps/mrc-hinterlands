@@ -172,13 +172,14 @@ abstract class AcceptanceTestCase extends WebTestCase
         return $contractId;
     }
 
-    protected function seedDropship(int $companyId, string $name = 'Test Dropship', int $maxCapacity = 5): int
+    protected function seedDropship(int $companyId, string $name = 'Test Dropship', int $maxCapacity = 5, int $mekbayCapacity = 0): int
     {
         $conn = self::$sharedEm->getConnection();
         $conn->insert('dropship', [
             'company_id' => $companyId,
             'name' => $name,
             'max_capacity' => $maxCapacity,
+            'mekbay_capacity' => $mekbayCapacity,
         ]);
         return (int) $conn->lastInsertId();
     }

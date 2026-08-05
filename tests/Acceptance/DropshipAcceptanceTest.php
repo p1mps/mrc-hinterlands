@@ -26,6 +26,27 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
         $this->assertResponseIsSuccessful();
     }
 
+    public function testCreateDropshipWithMekbaysSucceeds(): void
+    {
+        $ref = $this->seedUserAndCompany('mekbaynew', 'Mekbay New Co', 'Inner Sphere');
+
+        $client = $this->login('mekbaynew');
+
+        $crawler = $client->request('GET', '/dropship/new');
+        $form = $crawler->selectButton('Save')->form([
+            'dropship[name]' => 'Valkyrie VLK-KNT',
+            'dropship[maxCapacity]' => 5,
+            'dropship[mekbayCapacity]' => 3,
+        ]);
+
+        $client->submit($form);
+        $this->assertResponseRedirects('/dropship/');
+
+        $crawler = $client->followRedirect();
+        $this->assertContainsText($crawler, 'Valkyrie VLK-KNT');
+        $this->assertContainsText($crawler, '3');
+    }
+
     public function testEditDropshipSucceeds(): void
     {
         $ref = $this->seedUserAndCompany('editdrop', 'Edit Drop Co', 'Inner Sphere');
@@ -36,6 +57,28 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
         $crawler = $client->request('GET', '/dropship/' . $dropshipId . '/edit');
 
         $this->assertResponseIsSuccessful();
+    }
+
+    public function testEditDropshipUpdatesMekbayCapacity(): void
+    {
+        $ref = $this->seedUserAndCompany('editmekbay', 'Edit Mekbay Co', 'Inner Sphere');
+        $dropshipId = $this->seedDropship($ref['companyId'], 'Mekbay Dropship', 5, 2);
+
+        $client = $this->login('editmekbay');
+
+        $crawler = $client->request('GET', '/dropship/' . $dropshipId . '/edit');
+        $form = $crawler->selectButton('Save Changes')->form([
+            'dropship[name]' => 'Valkyrie VLK-KNT',
+            'dropship[maxCapacity]' => 8,
+            'dropship[mekbayCapacity]' => 4,
+        ]);
+
+        $client->submit($form);
+        $this->assertResponseRedirects('/dropship/');
+
+        $crawler = $client->followRedirect();
+        $this->assertContainsText($crawler, 'Valkyrie VLK-KNT');
+        $this->assertContainsText($crawler, '4');
     }
 
     public function testDeleteDropshipSucceeds(): void
@@ -49,5 +92,57 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
         $this->assertResponseRedirects('/dropship/');
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
+    }
+
+    public function testDropshipShowDisplaysMekbayInfo(): void
+    {
+        $ref = $this->seedUserAndCompany('showmekbay', 'Show Mekbay Co', 'Inner Sphere');
+        $this->seedDropship($ref['companyId'], 'Valkyrie', 5, 3);
+
+        $client = $this->login('showmekbay');
+        $crawler = $client->request('GET', '/dropship/');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertContainsText($crawler, 'Mekbays');
+        $this->assertContainsText($crawler, '0 / 3');
+    }
+
+    public function testDropshipShowDisplaysNoMekbaysLabelWhenZeroCapacity(): void
+    {
+        $ref = $this->seedUserAndCompany('nomekbays', 'No Mekbay Co', 'Inner Sphere');
+        $this->seedDropship($ref['companyId'], 'Valkyrie', 5, 0);
+        $this->seedUnit($ref['companyId'], 'Thunderbird THB-XQ', 'Thunderbird THB-XQ', 60, 200, 'mech');
+
+        $client = $this->login('nomekbays');
+        $crawler = $client->request('GET', '/dropship/');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertContainsText($crawler, 'No mekbays');
+    }
+
+    public function testDropshipShowWithZeroMekbaysAndUnitsOnBoard(): void
+    {
+        $ref = $this->seedUserAndCompany('zeromkbyunits', 'Zero Mekbay Units Co', 'Inner Sphere');
+        $this->seedDropship($ref['companyId'], 'Valkyrie', 5, 0);
+        $this->seedUnit($ref['companyId'], 'Gravino GRV-NI1', 'Gravino GRV-NI1', 35, 150, 'mech');
+
+        $client = $this->login('zeromkbyunits');
+        $crawler = $client->request('GET', '/dropship/');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertContainsText($crawler, '0 / 0');
+    }
+
+    public function testDropshipShowWithNonZeroMekbays(): void
+    {
+        $ref = $this->seedUserAndCompany('nonzeromkby', 'Non Zero Mekbay Co', 'Inner Sphere');
+        $this->seedDropship($ref['companyId'], 'Valkyrie', 5, 2);
+        $this->seedUnit($ref['companyId'], 'Gravino GRV-NI1', 'Gravino GRV-NI1', 35, 150, 'mech');
+
+        $client = $this->login('nonzeromkby');
+        $crawler = $client->request('GET', '/dropship/');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertContainsText($crawler, '0 / 2');
     }
 }

@@ -20,3 +20,9 @@
 ###< symfony/asset-mapper ###
 .aider*
 .env
+
+# Accidentally committed files (kept locally)
+.DS_Store
+.agents/AGENTS.md
+MISSING_FEATURES.md
+hinterlands.md

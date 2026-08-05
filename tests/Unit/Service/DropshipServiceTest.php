@@ -27,11 +27,12 @@ class DropshipServiceTest extends TestCase
         return $company;
     }
 
-    private function makeDropship(int $id = 1, int $maxCapacity = 5, ?MercenaryCompany $company = null, ?string $name = null): Dropship
+    private function makeDropship(int $id = 1, int $maxCapacity = 5, ?MercenaryCompany $company = null, ?string $name = null, int $mekbayCapacity = 0): Dropship
     {
         $dropship = new Dropship();
         $dropship->setId($id);
         $dropship->setMaxCapacity($maxCapacity);
+        $dropship->setMekbayCapacity($mekbayCapacity);
         if ($name !== null) {
             $dropship->setName($name);
         }
@@ -273,5 +274,148 @@ class DropshipServiceTest extends TestCase
 
         $result = $this->service->getDropshipByCompany($company);
         $this->assertNull($result);
+    }
+
+    // ── Mekbay Tests ───────────────────────────────────────────────────────
+
+    public function testGetUsedMekbaysReturnsCorrectCount(): void
+    {
+        $company = $this->makeCompany();
+        $dropship = $this->makeDropship(1, 5, $company, 'Test', 3);
+
+        $unitRepo = $this->createStub(\App\Repository\UnitRepository::class);
+        $unitRepo->method('countTonnageOnDropship')->willReturn(0);
+
+        $salvagedMechRepo = $this->createStub(\App\Repository\SalvagedMechRepository::class);
+
+        $queryBuilder = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder->method('select')->willReturn($queryBuilder);
+        $queryBuilder->method('from')->willReturn($queryBuilder);
+        $queryBuilder->method('where')->willReturn($queryBuilder);
+        $queryBuilder->method('setParameter')->willReturn($queryBuilder);
+
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
+        $query->method('getSingleScalarResult')->willReturn(2);
+        $queryBuilder->method('getQuery')->willReturn($query);
+
+        $queryBuilder2 = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder2->method('select')->willReturn($queryBuilder2);
+        $queryBuilder2->method('from')->willReturn($queryBuilder2);
+        $queryBuilder2->method('where')->willReturn($queryBuilder2);
+        $queryBuilder2->method('setParameter')->willReturn($queryBuilder2);
+        $queryBuilder2->method('getQuery')->willReturn($query);
+
+        $this->em
+            ->method('getRepository')
+            ->willReturnCallback(function ($class) use ($unitRepo, $salvagedMechRepo) {
+                if (is_subclass_of($class, \App\Entity\Unit::class)) {
+                    return $unitRepo;
+                }
+                return $salvagedMechRepo;
+            });
+
+        $this->em
+            ->method('createQueryBuilder')
+            ->willReturnOnConsecutiveCalls($queryBuilder, $queryBuilder2);
+
+        $result = $this->service->getUsedMekbays($dropship);
+        $this->assertEquals(2, $result);
+    }
+
+    public function testAssignUnitToDropshipFailsWhenNoMekbaysAvailable(): void
+    {
+        $company = $this->makeCompany();
+        $dropship = $this->makeDropship(1, 100, $company, 'Test', 1);
+
+        $unit = $this->createStub(\App\Entity\Unit::class);
+        $unit->method('getTonnage')->willReturn(50);
+
+        $unitRepo = $this->createStub(\App\Repository\UnitRepository::class);
+        $unitRepo->method('countTonnageOnDropship')->willReturn(0);
+
+        $salvagedMechRepo = $this->createStub(\App\Repository\SalvagedMechRepository::class);
+
+        $queryBuilder = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder->method('select')->willReturn($queryBuilder);
+        $queryBuilder->method('from')->willReturn($queryBuilder);
+        $queryBuilder->method('where')->willReturn($queryBuilder);
+        $queryBuilder->method('setParameter')->willReturn($queryBuilder);
+
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
+        $query->method('getSingleScalarResult')->willReturnOnConsecutiveCalls(0, 1);
+        $queryBuilder->method('getQuery')->willReturn($query);
+
+        $queryBuilder2 = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder2->method('select')->willReturn($queryBuilder2);
+        $queryBuilder2->method('from')->willReturn($queryBuilder2);
+        $queryBuilder2->method('where')->willReturn($queryBuilder2);
+        $queryBuilder2->method('setParameter')->willReturn($queryBuilder2);
+        $queryBuilder2->method('getQuery')->willReturn($query);
+
+        $this->em
+            ->method('getRepository')
+            ->willReturnCallback(function ($class) use ($unitRepo, $salvagedMechRepo) {
+                if (is_subclass_of($class, \App\Entity\Unit::class)) {
+                    return $unitRepo;
+                }
+                return $salvagedMechRepo;
+            });
+
+        $this->em
+            ->method('createQueryBuilder')
+            ->willReturnOnConsecutiveCalls($queryBuilder, $queryBuilder2);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('No mekbays available. Current mekbays: 1, max: 1.');
+
+        $this->service->assignUnitToDropship($unit, $dropship);
+    }
+
+    public function testAssignMechToDropshipIgnoresMekbays(): void
+    {
+        $company = $this->makeCompany();
+        $dropship = $this->makeDropship(1, 200, $company, 'Test', 0);
+
+        $mechan = $this->makeSalvagedMech($dropship);
+
+        $unitRepo = $this->createStub(\App\Repository\UnitRepository::class);
+        $unitRepo->method('countTonnageOnDropship')->willReturn(0);
+
+        $salvagedMechRepo = $this->createStub(\App\Repository\SalvagedMechRepository::class);
+
+        $queryBuilder = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder->method('select')->willReturn($queryBuilder);
+        $queryBuilder->method('from')->willReturn($queryBuilder);
+        $queryBuilder->method('where')->willReturn($queryBuilder);
+        $queryBuilder->method('setParameter')->willReturn($queryBuilder);
+
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
+        $query->method('getSingleScalarResult')->willReturnOnConsecutiveCalls(0, 0);
+        $queryBuilder->method('getQuery')->willReturn($query);
+
+        $queryBuilder2 = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder2->method('select')->willReturn($queryBuilder2);
+        $queryBuilder2->method('from')->willReturn($queryBuilder2);
+        $queryBuilder2->method('where')->willReturn($queryBuilder2);
+        $queryBuilder2->method('setParameter')->willReturn($queryBuilder2);
+        $queryBuilder2->method('getQuery')->willReturn($query);
+
+        $this->em
+            ->method('getRepository')
+            ->willReturnCallback(function ($class) use ($unitRepo, $salvagedMechRepo) {
+                if (is_subclass_of($class, \App\Entity\Unit::class)) {
+                    return $unitRepo;
+                }
+                return $salvagedMechRepo;
+            });
+
+        $this->em
+            ->method('createQueryBuilder')
+            ->willReturnOnConsecutiveCalls($queryBuilder, $queryBuilder2);
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->assignMechToDropship($mechan, $dropship);
     }
 }

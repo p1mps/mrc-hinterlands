@@ -32,6 +32,9 @@ class Dropship
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $name = null;
 
+    #[ORM\Column(type: 'integer')]
+    private int $mekbayCapacity = 0;
+
     public function __construct()
     {
         $this->salvagedMechs = new ArrayCollection();
@@ -89,6 +92,17 @@ class Dropship
     public function setName(?string $name): static
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getMekbayCapacity(): int
+    {
+        return $this->mekbayCapacity;
+    }
+
+    public function setMekbayCapacity(int $mekbayCapacity): static
+    {
+        $this->mekbayCapacity = $mekbayCapacity;
         return $this;
     }
 }

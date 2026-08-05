@@ -44,7 +44,7 @@ class DropshipController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $dropshipService->createDropship($company, $dropship->getMaxCapacity(), $dropship->getName());
+                $dropshipService->createDropship($company, $dropship->getMaxCapacity(), $dropship->getName(), $dropship->getMekbayCapacity());
                 $this->addFlash('success', 'Dropship created successfully.');
                 return $this->redirectToRoute('app_dropship_show');
             } catch (\LogicException $e) {
@@ -74,7 +74,7 @@ class DropshipController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $dropshipService->updateDropship($dropship, $dropship->getMaxCapacity());
+                $dropshipService->updateDropship($dropship, $dropship->getMaxCapacity(), $dropship->getMekbayCapacity());
                 $this->addFlash('success', 'Dropship updated successfully.');
                 return $this->redirectToRoute('app_dropship_show');
             } catch (\InvalidArgumentException $e) {

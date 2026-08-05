@@ -24,7 +24,7 @@ class DropshipService
         return $this->em->getRepository(Dropship::class)->findOneBy(['company' => $company]);
     }
 
-    public function createDropship(MercenaryCompany $company, int $maxCapacity, ?string $name = null): Dropship
+    public function createDropship(MercenaryCompany $company, int $maxCapacity, ?string $name = null, int $mekbayCapacity = 0): Dropship
     {
         $existing = $this->getDropshipByCompany($company);
         if ($existing !== null) {
@@ -39,6 +39,7 @@ class DropshipService
         $dropship->setCompany($company);
         $dropship->setMaxCapacity($maxCapacity);
         $dropship->setName($name);
+        $dropship->setMekbayCapacity($mekbayCapacity);
 
         $this->em->persist($dropship);
         $this->em->flush();
@@ -46,13 +47,14 @@ class DropshipService
         return $dropship;
     }
 
-    public function updateDropship(Dropship $dropship, int $newMaxCapacity): void
+    public function updateDropship(Dropship $dropship, int $newMaxCapacity, int $newMekbayCapacity = 0): void
     {
         if ($newMaxCapacity <= 0) {
             throw new \InvalidArgumentException('Dropship maxCapacity must be a positive integer.');
         }
 
         $dropship->setMaxCapacity($newMaxCapacity);
+        $dropship->setMekbayCapacity($newMekbayCapacity);
         $this->em->flush();
     }
 
@@ -82,6 +84,17 @@ class DropshipService
         return $unitTonnage + $salvagedTonnage;
     }
 
+    public function getUsedMekbays(Dropship $dropship): int
+    {
+        return (int) $this->em->createQueryBuilder()
+            ->select('COUNT(u.id)')
+            ->from(Unit::class, 'u')
+            ->where('u.dropship = :id')
+            ->setParameter('id', $dropship->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function assignMechToDropship(SalvagedMech $mechan, Dropship $dropship): void
     {
         $currentTonnage = $this->getTonnageOnDropship($dropship);
@@ -103,6 +116,14 @@ class DropshipService
                 "Dropship capacity exceeded. Current tonnage: {$currentTonnage}, unit tonnage: {$unit->getTonnage()}, max: {$dropship->getMaxCapacity()}."
             );
         }
+
+        $usedMekbays = $this->getUsedMekbays($dropship);
+        if ($usedMekbays >= $dropship->getMekbayCapacity()) {
+            throw new \LogicException(
+                "No mekbays available. Current mekbays: {$usedMekbays}, max: {$dropship->getMekbayCapacity()}."
+            );
+        }
+
         $unit->setDropship($dropship);
         $this->em->flush();
     }
