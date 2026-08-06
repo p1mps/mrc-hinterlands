@@ -20,14 +20,20 @@ class SalvagedMechController extends AbstractController
 {
     public function __construct(private readonly EntityManagerInterface $em, private readonly SalvageCalculationService $salvageCalc) {}
     #[Route('/', name: 'app_salvaged_mech_index', methods: ['GET'])]
-    public function index(SalvagedMechService $salvagedMechService, DropshipService $dropshipService): Response
+    public function index(SalvagedMechService $salvagedMechService, DropshipService $dropshipService, SalvageCalculationService $salvageCalc): Response
     {
         $company = $this->getUser()->getCompany();
+        $mechanList = $salvagedMechService->getAllMechs();
+        $acquisitionPrice = [];
+        foreach ($mechanList as $mechan) {
+            $acquisitionPrice[$mechan->getId()] = $salvageCalc->calculateAcquisitionCost($mechan->getSalvageValue(), $mechan->getSalvageRightsPercent());
+        }
 
         return $this->render('salvaged_mech/index.html.twig', [
-            'salvaged_mechs' => $salvagedMechService->getAllMechs(),
+            'salvaged_mechs' => $mechanList,
             'company' => $company,
             'dropshipService' => $dropshipService,
+            'acquisitionPrice' => $acquisitionPrice,
         ]);
     }
 

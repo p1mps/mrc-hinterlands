@@ -131,4 +131,105 @@ class SalvagedMechAcceptanceTest extends AcceptanceTestCase
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
+
+    public function testAcquireMechFromIndexShowsCostAndRedirects(): void
+    {
+        $ref = $this->seedUserAndCompany('acquireindex', 'Acquire Index Co', 'Inner Sphere');
+        $this->seedSupportPoints($ref['companyId'], 1000, 'Funding');
+        $mechanId = $this->seedSalvagedMech($ref['companyId'], [
+            'model' => 'Thunderbolt THG-11d',
+            'tonnage' => 100,
+            'bv_cost' => 200,
+            'scrapyard' => 0,
+            'salvage_rights_percent' => 50,
+            'sp_taken' => null,
+        ]);
+
+        $client = $this->login('acquireindex');
+        $crawler = $client->request('GET', '/salvaged-mechs/');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertContainsText($crawler, 'Thunderbolt THG-11d');
+
+        $submitButton = $crawler->selectButton('Acquire Mech');
+        $this->assertCount(1, $submitButton, 'Expected exactly one Acquire Mech button');
+
+        $form = $submitButton->form();
+        $client->submit($form);
+
+        $this->assertResponseRedirects('/salvaged-mechs/');
+        $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testAcquireMechFromIndexNotShownWhenAlreadyAcquired(): void
+    {
+        $ref = $this->seedUserAndCompany('acquireindex', 'Acquire Index Co', 'Inner Sphere');
+        $this->seedSalvagedMech($ref['companyId'], [
+            'model' => 'Thunderbolt THG-11d',
+            'tonnage' => 100,
+            'bv_cost' => 200,
+            'scrapyard' => 0,
+            'salvage_rights_percent' => 50,
+            'acquired' => 1,
+            'sp_taken' => null,
+        ]);
+
+        $client = $this->login('acquireindex');
+        $crawler = $client->request('GET', '/salvaged-mechs/');
+
+        $this->assertResponseIsSuccessful();
+
+        $submitButtons = $crawler->selectButton('Acquire Mech');
+        $this->assertCount(0, $submitButtons, 'Expected no Acquire Mech buttons for acquired mech');
+    }
+
+    public function testAcquireMechFromIndexNotShownWhenTrulyDestroyed(): void
+    {
+        $ref = $this->seedUserAndCompany('acquireindex', 'Acquire Index Co', 'Inner Sphere');
+        $this->seedSalvagedMech($ref['companyId'], [
+            'model' => 'Thunderbolt THG-11d',
+            'tonnage' => 100,
+            'bv_cost' => 200,
+            'scrapyard' => 0,
+            'salvage_rights_percent' => 50,
+            'is_truly_destroyed' => 1,
+            'sp_taken' => null,
+        ]);
+
+        $client = $this->login('acquireindex');
+        $crawler = $client->request('GET', '/salvaged-mechs/');
+
+        $this->assertResponseIsSuccessful();
+
+        $submitButtons = $crawler->selectButton('Acquire Mech');
+        $this->assertCount(0, $submitButtons, 'Expected no Acquire Mech buttons for destroyed mech');
+    }
+
+    public function testDeleteMechFromIndexRedirectsToIndex(): void
+    {
+        $ref = $this->seedUserAndCompany('deleteindex', 'Delete Index Co', 'Inner Sphere');
+        $this->seedSalvagedMech($ref['companyId'], [
+            'model' => 'Thunderbolt THG-11d',
+            'tonnage' => 100,
+            'bv_cost' => 200,
+            'scrapyard' => 0,
+            'salvage_rights_percent' => 50,
+        ]);
+
+        $client = $this->login('deleteindex');
+        $crawler = $client->request('GET', '/salvaged-mechs/');
+
+        $this->assertResponseIsSuccessful();
+
+        $submitButtons = $crawler->selectButton('Delete');
+        $this->assertGreaterThan(0, $submitButtons->count(), 'Expected at least one Delete button');
+
+        $form = $submitButtons->first()->form();
+        $client->submit($form);
+
+        $this->assertResponseRedirects('/salvaged-mechs/');
+        $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+    }
 }

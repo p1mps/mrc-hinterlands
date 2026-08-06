@@ -46,16 +46,6 @@
     </td>
     <td class="text-nowrap">
         <div class="d-flex gap-1 w-100">
-            {% set dropship = dropshipService.getDropshipByCompany(company) %}
-            {% if dropship and unit.dropship is null %}
-                <form method="post" action="{{ path('app_dropship_assign_unit', {unitId: unit.id, id: dropship.id}) }}"
-                      onsubmit="return confirm('Board {{ unit.name }} on {{ dropship.name }}? This will take {{ unit.tonnage }} tons of capacity.');"
-                      class="flex-fill">
-                    <input type="hidden" name="_token" value="csrf_board_{{ unit.id }}">
-                    <button class="btn btn-sm btn-info w-100">Board</button>
-                </form>
-            {% endif %}
-
             <a href="{{ path('app_roster_edit', {id: unit.id}) }}" class="btn btn-sm btn-secondary flex-fill text-center">Edit</a>
 
             {% if unit.damageState.value != 'none' %}

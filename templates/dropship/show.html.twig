@@ -66,14 +66,13 @@
 <h4 class="mt-3">Available to Board ({{ remainingCapacity }} tons left{% if remainingMekbays > 0 %}, {{ remainingMekbays }} mekbays left{% endif %})</h4>
 <div class="table-responsive mb-3">
 <table class="table table-bordered table-sm">
-<thead><tr><th>Type</th><th>Name / Model</th><th>Tonnage</th><th>Mekbay</th><th>Actions</th></tr></thead>
+<thead><tr><th>Type</th><th>Name / Model</th><th>Tonnage</th><th>Actions</th></tr></thead>
 <tbody>
 {% for unit in unassignedUnits %}
 <tr>
     <td><span class="badge bg-info">Roster</span></td>
     <td>{{ unit.name }}</td>
     <td>{{ unit.tonnage }}</td>
-    <td>1</td>
     <td>
         {% if remainingMekbays > 0 %}
         <form method="post" action="{{ path('app_dropship_assign_unit', {unitId: unit.id, id: dropship.id}) }}" onsubmit="return confirm('Board {{ unit.name }} on {{ dropship.name }}? This will take {{ unit.tonnage }} tons of capacity and 1 mekbay.');">

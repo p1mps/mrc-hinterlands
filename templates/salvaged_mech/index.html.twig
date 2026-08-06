@@ -17,24 +17,21 @@
         <tr>
             <th>Model</th>
             <th>Tonnage</th>
-            <th>BV Cost</th>
-            <th>Salvage Value</th>
+            <th>Acquisition Price</th>
             <th>Damage State</th>
             <th>Tech Base</th>
             <th>Repair Cost</th>
             <th>Scrapyard</th>
             <th>Status</th>
-            <th>Dropship</th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
     {% for salvaged_mech in salvaged_mechs %}
-    <tr{% if salvaged_mech.isTrulyDestroyed %} class="table-danger"{% endif %}{% if salvaged_mech.isAcquired %} class="table-success"{% endif %}>
+    <tr>
         <td>{{ salvaged_mech.model }}</td>
         <td>{{ salvaged_mech.tonnage }}</td>
-        <td>{{ salvaged_mech.bvCost ?? '—' }}</td>
-        <td>{{ salvaged_mech.salvageValue ?? '—' }}</td>
+        <td>{{ acquisitionPrice[salvaged_mech.id] ?? salvaged_mech.salvageValue ?? salvaged_mech.bvCost ?? '—' }}</td>
         <td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td>
             <td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td>
             <td>{{ salvagedMechService.calculateRepairCost(salvaged_mech.tonnage, salvaged_mech.damageState ? salvaged_mech.damageState.value : null, salvaged_mech.techBase ? salvaged_mech.techBase.value : null) ?? '—' }}</td>
@@ -52,18 +49,21 @@
             </td>
             <td class="text-nowrap">
                 {% set dropship = dropshipService.getDropshipByCompany(company) %}
-                {% if dropship and not salvaged_mech.dropship and not salvaged_mech.isAcquired and salvaged_mech.spTaken is null and not salvaged_mech.isTrulyDestroyed %}
-                    <form method="post" action="{{ path('app_dropship_assign_mech', {id: salvaged_mech.id, dropship: dropship.id}) }}" onsubmit="return confirm('Board {{ salvaged_mech.model }} on {{ dropship.name }}? This will take {{ salvaged_mech.tonnage }} tons of capacity.');">
-                        <input type="hidden" name="_token" value="csrf_board_{{ salvaged_mech.id }}">
-                        <button class="btn btn-sm btn-info">Board</button>
+                <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                {% if not salvaged_mech.isAcquired and not salvaged_mech.isTrulyDestroyed and salvaged_mech.spTaken is null %}
+                    <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech? This will cost {{ acquisitionPrice[salvaged_mech.id] ?? salvaged_mech.salvageValue ?? salvaged_mech.bvCost }} support points.');" class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('acquire' ~ salvaged_mech.id) }}">
+                        <button class="btn btn-sm btn-success">Acquire Mech</button>
                     </form>
                 {% endif %}
-                <a href="{{ path('app_salvaged_mech_show', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
-                <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                <form method="post" action="{{ path('app_salvaged_mech_delete', {'id': salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to delete this mech?');" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ salvaged_mech.id) }}">
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
             </td>
         </tr>
         {% else %}
-        <tr><td colspan="11" class="text-muted">No records found.</td></tr>
+        <tr><td colspan="9" class="text-muted">No records found.</td></tr>
     {% endfor %}
     </tbody>
 </table>
