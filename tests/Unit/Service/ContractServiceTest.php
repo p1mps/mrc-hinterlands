@@ -361,4 +361,69 @@ class ContractServiceTest extends TestCase
         $this->service->breachContract($contract);
         $this->assertTrue(true); // no exception = pass
     }
+
+    // ── applyNegotiatedTerms ───────────────────────────────────────────────
+
+    public function testApplyNegotiatedTermsUpdatesContractAndFlushes(): void
+    {
+        $contract = $this->createMock(Contract::class);
+        $contract->method('setType')->willReturn($contract);
+        $contract->method('setEmployer')->willReturn($contract);
+        $contract->method('setEmployerAffiliation')->willReturn($contract);
+        $contract->method('setScale')->willReturn($contract);
+        $contract->method('setDurationMonths')->willReturn($contract);
+        $contract->method('setBasePayPercent')->willReturn($contract);
+        $contract->method('setCommandRights')->willReturn($contract);
+        $contract->method('setSupportTerms')->willReturn($contract);
+        $contract->method('setSalvageRights')->willReturn($contract);
+        $contract->method('setTransportTerms')->willReturn($contract);
+        $contract->method('setNumberOfTracks')->willReturn($contract);
+
+        $this->em->expects($this->once())->method('flush');
+
+        $this->service->applyNegotiatedTerms($contract, [
+            'type' => \App\Enum\ContractType::Raid,
+            'employer' => 'New Client',
+            'employerAffiliation' => 'House Liao',
+            'scale' => 2,
+            'durationMonths' => 6,
+            'basePayPercent' => 80,
+            'commandRights' => \App\Enum\CommandRights::House,
+            'supportTerms' => 'Battle 75%',
+            'salvageRights' => '4',
+            'transportTerms' => '15%',
+            'numberOfTracks' => 3,
+        ]);
+    }
+
+    public function testApplyNegotiatedTermsWithOptionalEmployerAffiliation(): void
+    {
+        $contract = $this->createMock(Contract::class);
+        $contract->method('setType')->willReturn($contract);
+        $contract->method('setEmployer')->willReturn($contract);
+        $contract->method('setEmployerAffiliation')->willReturn($contract);
+        $contract->method('setScale')->willReturn($contract);
+        $contract->method('setDurationMonths')->willReturn($contract);
+        $contract->method('setBasePayPercent')->willReturn($contract);
+        $contract->method('setCommandRights')->willReturn($contract);
+        $contract->method('setSupportTerms')->willReturn($contract);
+        $contract->method('setSalvageRights')->willReturn($contract);
+        $contract->method('setTransportTerms')->willReturn($contract);
+        $contract->method('setNumberOfTracks')->willReturn($contract);
+
+        $this->em->expects($this->once())->method('flush');
+
+        $this->service->applyNegotiatedTerms($contract, [
+            'type' => \App\Enum\ContractType::Expedition,
+            'employer' => 'Client',
+            'scale' => 1,
+            'durationMonths' => 12,
+            'basePayPercent' => 100,
+            'commandRights' => \App\Enum\CommandRights::Integrated,
+            'supportTerms' => 'None',
+            'salvageRights' => '3',
+            'transportTerms' => '—',
+            'numberOfTracks' => 1,
+        ]);
+    }
 }

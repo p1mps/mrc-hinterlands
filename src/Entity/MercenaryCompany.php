@@ -158,7 +158,7 @@ class MercenaryCompany {
     public function getTotalBv(): int {
         $total = 0;
         foreach ($this->units as $unit) {
-            if ($unit->isActive()) {
+            if ($unit->getDropship() !== null) {
                 $total += $unit->getBv();
             }
         }

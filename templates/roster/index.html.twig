@@ -7,7 +7,18 @@
 <p><strong>Total BV:</strong> {{ totalBv }}</p>
 <div class="table-responsive">
 <table class="table table-striped align-middle">
-<thead><tr><th>Name</th><th>Chassis</th><th>Tonnage</th><th>BV</th><th>Type</th><th>Damage</th><th>Active</th><th>Pilot</th><th>Dropship</th><th></th></tr></thead>
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Chassis</th>
+    <th>Tonnage</th>
+    <th>BV</th>
+    <th>Type</th>
+    <th>Damage</th>
+    <th>Pilot</th>
+    <!-- Set the min-width here for the button column -->
+    <th style="min-width: 250px;">Actions</th>
+</tr>
 <tbody>
 {% for unit in units %}
 <tr>
@@ -17,8 +28,7 @@
     <td>{{ unit.bv }}</td>
     <td>{{ unit.unitType.value }}</td>
     <td>{{ unit.damageState.value }}</td>
-    <td>{{ unit.isActive ? 'Yes' : 'No' }}</td>
-    <td style="min-width: 180px;">
+    <td>
         <form method="post" action="{{ path('app_roster_assign_pilot', {id: unit.id}) }}" class="d-flex gap-1">
             <select name="pilot_id" class="form-select form-select-sm">
                 <option value="">— none —</option>
@@ -35,28 +45,38 @@
         </form>
     </td>
     <td class="text-nowrap">
-        {% set dropship = dropshipService.getDropshipByCompany(company) %}
-        {% if dropship and unit.isActive and unit.dropship is null %}
-            <form method="post" action="{{ path('app_dropship_assign_unit', {id: unit.id, dropship: dropship.id}) }}" onsubmit="return confirm('Board {{ unit.name }} on {{ dropship.name }}? This will take {{ unit.tonnage }} tons of capacity.');">
-                <input type="hidden" name="_token" value="csrf_board_{{ unit.id }}">
-                <button class="btn btn-sm btn-info">Board</button>
+        <div class="d-flex gap-1 w-100">
+            {% set dropship = dropshipService.getDropshipByCompany(company) %}
+            {% if dropship and unit.dropship is null %}
+                <form method="post" action="{{ path('app_dropship_assign_unit', {unitId: unit.id, id: dropship.id}) }}"
+                      onsubmit="return confirm('Board {{ unit.name }} on {{ dropship.name }}? This will take {{ unit.tonnage }} tons of capacity.');"
+                      class="flex-fill">
+                    <input type="hidden" name="_token" value="csrf_board_{{ unit.id }}">
+                    <button class="btn btn-sm btn-info w-100">Board</button>
+                </form>
+            {% endif %}
+
+            <a href="{{ path('app_roster_edit', {id: unit.id}) }}" class="btn btn-sm btn-secondary flex-fill text-center">Edit</a>
+
+            {% if unit.damageState.value != 'none' %}
+                <form method="post" action="{{ path('app_roster_repair', {id: unit.id}) }}"
+                      onsubmit="return confirm('Repair this unit? This will deduct SP based on tonnage and damage state.');"
+                      class="flex-fill">
+                    <button class="btn btn-sm btn-info w-100">Repair</button>
+                </form>
+            {% endif %}
+
+            <form method="post" action="{{ path('app_roster_delete', {id: unit.id}) }}"
+                  onsubmit="return confirm('Delete this unit?')"
+                  class="flex-fill">
+                <button class="btn btn-sm btn-danger w-100">Del</button>
             </form>
-        {% endif %}
-        <a href="{{ path('app_roster_edit', {id: unit.id}) }}" class="btn btn-sm btn-secondary">Edit</a>
-        {% if unit.damageState.value != 'None' %}
-            <form method="post" action="{{ path('app_roster_repair', {id: unit.id}) }}" class="d-inline"
-                  onsubmit="return confirm('Repair this unit? This will deduct SP based on tonnage and damage state.');">
-                <button class="btn btn-sm btn-info">Repair</button>
-            </form>
-        {% endif %}
-        <form method="post" action="{{ path('app_roster_delete', {id: unit.id}) }}" class="d-inline"
-              onsubmit="return confirm('Delete this unit?')">
-            <button class="btn btn-sm btn-danger">Del</button>
-        </form>
+        </div>
     </td>
+
 </tr>
 {% else %}
-<tr><td colspan="10" class="text-muted">No units yet.</td></tr>
+<tr><td colspan="9" class="text-muted">No units yet.</td></tr>
 {% endfor %}
 </tbody>
 </table>

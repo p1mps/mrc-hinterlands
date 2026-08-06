@@ -44,9 +44,6 @@ class Unit {
     #[ORM\Column(length: 50)]
     private DamageState $damageState = DamageState::None;
 
-    #[ORM\Column]
-    private bool $isActive = true;
-
     public function getId(): ?int { return $this->id; }
 
     public function getCompany(): MercenaryCompany { return $this->company; }
@@ -75,7 +72,4 @@ class Unit {
 
     public function getDamageState(): DamageState { return $this->damageState; }
     public function setDamageState(DamageState $damageState): static { $this->damageState = $damageState; return $this; }
-
-    public function isActive(): bool { return $this->isActive; }
-    public function setIsActive(bool $isActive): static { $this->isActive = $isActive; return $this; }
 }

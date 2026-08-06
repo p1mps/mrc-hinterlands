@@ -174,7 +174,7 @@ class ContractLogService
         $this->em->flush();
     }
 
-    public function handlePostTrack(Contract $contract, $company, object $form, array $formData, int $month): void
+    public function handlePostTrack(Contract $contract, $company, array $formData, int $month): void
     {
         $pendingTrack = $contract->getTrackRecords()->filter(
             fn(TrackRecord $t) => $t->getStatus() === TrackStatus::Pending

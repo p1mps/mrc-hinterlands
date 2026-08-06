@@ -23,10 +23,7 @@
 </div>
 
 {% set isScrapyard = salvaged_mech.isScrapyard %}
-{% set acquisitionCost = isScrapyard
-    ? salvageCalc.calculateSalvageValue(salvaged_mech.bvCost)
-    : (salvaged_mech.salvageValue ?? salvaged_mech.bvCost) %}
-{% set scrapyardNote = isScrapyard ? ' (Scrapyard: half BV, stays Crippled)' : '' %}
+{% set scrapyardNote = scrapyardNote ?? (isScrapyard ? ' (Scrapyard: half BV, stays Crippled)' : '') %}
 
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
     <a href="{{ path('app_salvaged_mech_index') }}" class="btn btn-outline-secondary">Back to list</a>

@@ -20,10 +20,15 @@ class SupportPointAcceptanceTest extends AcceptanceTestCase
         $ref = $this->seedUserAndCompany('delsp', 'Del SP Co', 'Clan');
         $this->seedSupportPoints($ref['companyId'], 500, 'ToDelete');
 
+        $conn = self::$sharedEm->getConnection();
+        $entryId = (int) $conn->lastInsertId();
+        $this->assertGreaterThan(0, $entryId, 'Support point entry should have been created');
+
         $client = $this->login('delsp');
 
-        // Get the entry ID from the page
-        $crawler = $client->request('GET', '/support-points');
+        $client->request('POST', '/support-points/' . $entryId . '/delete');
+        $this->assertResponseRedirects('/support-points');
+        $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
 }

@@ -61,7 +61,7 @@ class RosterServiceTest extends TestCase
 
         $result = $this->service->getUnits($company);
 
-        $this->assertSame($units, $result);
+        $this->assertEquals($units, $result);
     }
 
     // ── getPilots ─────────────────────────────────────────────────────────

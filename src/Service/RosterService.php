@@ -19,7 +19,13 @@ class RosterService
     /** @return \Doctrine\Common\Collections\Collection<Unit> */
     public function getUnits(MercenaryCompany $company): \Doctrine\Common\Collections\Collection
     {
-        return $company->getUnits();
+        $units = $company->getUnits()->toArray();
+        usort($units, fn(Unit $a, Unit $b) => match(true) {
+            $a->getDropship() !== null && $b->getDropship() === null => -1,
+            $a->getDropship() === null && $b->getDropship() !== null => 1,
+            default => 0,
+        });
+        return new \Doctrine\Common\Collections\ArrayCollection($units);
     }
 
     /** @return \Doctrine\Common\Collections\Collection<Pilot> */

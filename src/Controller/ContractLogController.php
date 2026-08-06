@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Contract;
 use App\Entity\ContractLogEntry;
 use App\Service\ContractLogService;
-use App\DataTables\ContractTrackTable;
 use App\DataTables\TerrainTable;
 use App\Form\ContractLogEntryEditFormType;
 use App\Form\PostTrackFormType;
@@ -105,7 +104,7 @@ class ContractLogController extends AbstractController
     private function handlePostTrackAction(Contract $contract, $company, object $form, int $month): void
     {
         try {
-            $this->logService->handlePostTrack($contract, $company, $form, $form->getData() ?? [], $month);
+            $this->logService->handlePostTrack($contract, $company, $form->getData() ?? [], $month);
         } catch (\RuntimeException $e) {
             $this->addFlash('error', $e->getMessage());
         }

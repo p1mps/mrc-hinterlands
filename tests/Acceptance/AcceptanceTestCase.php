@@ -110,7 +110,7 @@ abstract class AcceptanceTestCase extends WebTestCase
         return (int) $conn->lastInsertId();
     }
 
-    protected function seedUnit(int $companyId, string $name, string $chassis, int $tonnage, int $bv, string $unitType, string $damageState = 'none', bool $isActive = true, ?int $pilotId = null): int
+    protected function seedUnit(int $companyId, string $name, string $chassis, int $tonnage, int $bv, string $unitType, string $damageState = 'none', ?int $pilotId = null): int
     {
         $conn = self::$sharedEm->getConnection();
         $conn->insert('unit', [
@@ -122,7 +122,6 @@ abstract class AcceptanceTestCase extends WebTestCase
             'bv' => $bv,
             'unit_type' => $unitType,
             'damage_state' => $damageState,
-            'is_active' => $isActive ? 1 : 0,
         ]);
         return (int) $conn->lastInsertId();
     }
@@ -172,7 +171,7 @@ abstract class AcceptanceTestCase extends WebTestCase
         return $contractId;
     }
 
-    protected function seedDropship(int $companyId, string $name = 'Test Dropship', int $maxCapacity = 5, int $mekbayCapacity = 0): int
+    protected function seedDropship(int $companyId, string $name = 'Test Dropship', int $maxCapacity = 40, int $mekbayCapacity = 0): int
     {
         $conn = self::$sharedEm->getConnection();
         $conn->insert('dropship', [

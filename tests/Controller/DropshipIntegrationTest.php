@@ -81,7 +81,7 @@ class DropshipIntegrationTest extends WebTestCase
         $dropship = new Dropship();
         $company = $this->em->getRepository(MercenaryCompany::class)->find($companyId);
         $dropship->setCompany($company);
-        $dropship->setMaxCapacity(5);
+        $dropship->setMaxCapacity(40);
         $dropship->setName('Test Dropship');
 
         $this->em->persist($dropship);
@@ -89,7 +89,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $created = $this->em->getRepository(Dropship::class)->findOneBy(['company' => $company]);
         $this->assertNotNull($created);
-        $this->assertEquals(5, $created->getMaxCapacity());
+        $this->assertEquals(40, $created->getMaxCapacity());
         $this->assertEquals('Test Dropship', $created->getName());
         $this->assertEquals($company, $created->getCompany());
     }
@@ -103,7 +103,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $dropship1 = new Dropship();
         $dropship1->setCompany($company);
-        $dropship1->setMaxCapacity(3);
+        $dropship1->setMaxCapacity(40);
         $dropship1->setName('Dropship One');
 
         $this->em->persist($dropship1);
@@ -113,7 +113,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $dropship2 = new Dropship();
         $dropship2->setCompany($company);
-        $dropship2->setMaxCapacity(7);
+        $dropship2->setMaxCapacity(40);
         $dropship2->setName('Dropship Two');
 
         $this->em->persist($dropship2);
@@ -128,7 +128,7 @@ class DropshipIntegrationTest extends WebTestCase
         // First dropship still exists
         $existing = $this->em->getRepository(Dropship::class)->find($dropshipId);
         $this->assertNotNull($existing);
-        $this->assertEquals(3, $existing->getMaxCapacity());
+        $this->assertEquals(40, $existing->getMaxCapacity());
     }
 
     public function testEditDropshipUpdatesCapacity(): void
@@ -140,7 +140,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $dropship = new Dropship();
         $dropship->setCompany($company);
-        $dropship->setMaxCapacity(5);
+        $dropship->setMaxCapacity(100);
         $dropship->setName('Edit Dropship');
 
         $this->em->persist($dropship);
@@ -149,12 +149,12 @@ class DropshipIntegrationTest extends WebTestCase
         $dropshipId = $dropship->getId();
 
         // Update capacity
-        $dropship->setMaxCapacity(10);
+        $dropship->setMaxCapacity(40);
         $this->em->flush();
 
         $updated = $this->em->getRepository(Dropship::class)->find($dropshipId);
         $this->assertNotNull($updated);
-        $this->assertEquals(10, $updated->getMaxCapacity());
+        $this->assertEquals(40, $updated->getMaxCapacity());
     }
 
     public function testDeleteDropshipRemovesFromDatabase(): void
@@ -166,7 +166,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $dropship = new Dropship();
         $dropship->setCompany($company);
-        $dropship->setMaxCapacity(5);
+        $dropship->setMaxCapacity(40);
         $dropship->setName('Delete Dropship');
 
         $this->em->persist($dropship);
@@ -191,7 +191,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $dropship = new Dropship();
         $dropship->setCompany($company);
-        $dropship->setMaxCapacity(3);
+        $dropship->setMaxCapacity(40);
         $dropship->setName('Mech Dropship');
 
         $this->em->persist($dropship);
@@ -224,7 +224,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $dropship = new Dropship();
         $dropship->setCompany($company);
-        $dropship->setMaxCapacity(3);
+        $dropship->setMaxCapacity(180);
         $dropship->setName('Capacity Dropship');
 
         $this->em->persist($dropship);
@@ -263,7 +263,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $dropship = new Dropship();
         $dropship->setCompany($company);
-        $dropship->setMaxCapacity(5);
+        $dropship->setMaxCapacity(180);
         $dropship->setName('Unassign Dropship');
 
         $this->em->persist($dropship);
@@ -316,7 +316,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $dropship = new Dropship();
         $dropship->setCompany($company);
-        $dropship->setMaxCapacity(5);
+        $dropship->setMaxCapacity(100);
         $dropship->setMekbayCapacity(2);
         $dropship->setName('Acquire Dropship');
 
@@ -446,7 +446,7 @@ class DropshipIntegrationTest extends WebTestCase
 
         $dropship = new Dropship();
         $dropship->setCompany($company);
-        $dropship->setMaxCapacity(5);
+        $dropship->setMaxCapacity(40);
         $dropship->setMekbayCapacity(3);
         $dropship->setName('Store Dropship');
 

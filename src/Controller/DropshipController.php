@@ -110,8 +110,8 @@ class DropshipController extends AbstractController
         return $this->redirectToRoute('app_dropship_show');
     }
 
-    #[Route('/assign-mech/{id}', name: 'app_dropship_assign_mech', methods: ['POST'])]
-    public function assignMech(Request $request, Dropship $dropship, int $id, DropshipService $dropshipService): Response
+    #[Route('/{id}/assign-mech/{mechanId}', name: 'app_dropship_assign_mech', methods: ['POST'])]
+    public function assignMech(SalvagedMechService $salvagedMechService, Dropship $dropship, int $mechanId, DropshipService $dropshipService): Response
     {
         $company = $this->getUser()->getCompany();
 
@@ -120,7 +120,7 @@ class DropshipController extends AbstractController
             return $this->redirectToRoute('app_dropship_show');
         }
 
-        $mechan = $this->salvagedMechService->getMech($id);
+        $mechan = $salvagedMechService->getMech($mechanId);
 
         if (!$mechan) {
             $this->addFlash('error', 'Mech not found.');
@@ -134,11 +134,11 @@ class DropshipController extends AbstractController
             $this->addFlash('error', $e->getMessage());
         }
 
-        return $this->redirectToRoute('app_salvaged_mech_index');
+        return $this->redirectToRoute('app_dropship_show');
     }
 
-    #[Route('/assign-unit/{id}', name: 'app_dropship_assign_unit', methods: ['POST'])]
-    public function assignUnit(Request $request, Dropship $dropship, int $id, DropshipService $dropshipService): Response
+    #[Route('/{id}/assign-unit/{unitId}', name: 'app_dropship_assign_unit', methods: ['POST'])]
+    public function assignUnit(EntityManagerInterface $em, Dropship $dropship, int $unitId, DropshipService $dropshipService): Response
     {
         $company = $this->getUser()->getCompany();
 
@@ -147,7 +147,7 @@ class DropshipController extends AbstractController
             return $this->redirectToRoute('app_dropship_show');
         }
 
-        $unit = $this->em->getRepository(\App\Entity\Unit::class)->find($id);
+        $unit = $em->getRepository(\App\Entity\Unit::class)->find($unitId);
 
         if (!$unit) {
             $this->addFlash('error', 'Unit not found.');
@@ -161,11 +161,11 @@ class DropshipController extends AbstractController
             $this->addFlash('error', $e->getMessage());
         }
 
-        return $this->redirectToRoute('app_roster');
+        return $this->redirectToRoute('app_dropship_show');
     }
 
-    #[Route('/unassign-mech/{dropshipId}/{mechanId}', name: 'app_dropship_unassign_mech', methods: ['POST'])]
-    public function unassignMech(Dropship $dropship, int $mechanId): Response
+    #[Route('/unassign-mech/{id}/{mechanId}', name: 'app_dropship_unassign_mech', methods: ['POST'])]
+    public function unassignMech(EntityManagerInterface $em, SalvagedMechService $salvagedMechService, Dropship $dropship, int $mechanId): Response
     {
         $company = $this->getUser()->getCompany();
 
@@ -174,19 +174,19 @@ class DropshipController extends AbstractController
             return $this->redirectToRoute('app_dropship_show');
         }
 
-        $mechan = $this->salvagedMechService->getMech($mechanId);
+        $mechan = $salvagedMechService->getMech($mechanId);
 
         if ($mechan && $mechan->getDropship() === $dropship) {
             $mechan->setDropship(null);
-            $this->em->flush();
+            $em->flush();
             $this->addFlash('success', 'Mech removed from dropship.');
         }
 
         return $this->redirectToRoute('app_dropship_show');
     }
 
-    #[Route('/unassign-unit/{dropshipId}/{unitId}', name: 'app_dropship_unassign_unit', methods: ['POST'])]
-    public function unassignUnit(Dropship $dropship, int $unitId): Response
+    #[Route('/unassign-unit/{id}/{unitId}', name: 'app_dropship_unassign_unit', methods: ['POST'])]
+    public function unassignUnit(EntityManagerInterface $em, Dropship $dropship, int $unitId): Response
     {
         $company = $this->getUser()->getCompany();
 
@@ -195,11 +195,11 @@ class DropshipController extends AbstractController
             return $this->redirectToRoute('app_dropship_show');
         }
 
-        $unit = $this->em->getRepository(\App\Entity\Unit::class)->find($unitId);
+        $unit = $em->getRepository(\App\Entity\Unit::class)->find($unitId);
 
         if ($unit && $unit->getDropship() === $dropship) {
             $unit->setDropship(null);
-            $this->em->flush();
+            $em->flush();
             $this->addFlash('success', 'Unit removed from dropship.');
         }
 

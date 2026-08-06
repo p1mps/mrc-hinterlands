@@ -20,8 +20,7 @@ class UnitFormType extends AbstractType {
             ->add('tonnage', IntegerType::class)
             ->add('bv', IntegerType::class, ['label' => 'Base BV'])
             ->add('unitType', EnumType::class, ['class' => UnitType::class])
-            ->add('damageState', EnumType::class, ['class' => DamageState::class])
-            ->add('isActive', CheckboxType::class, ['required' => false, 'label' => 'Active']);
+            ->add('damageState', EnumType::class, ['class' => DamageState::class]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void {

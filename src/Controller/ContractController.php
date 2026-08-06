@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContractController extends AbstractController
 {
     #[Route('/contract', name: 'app_contracts')]
-    public function index(EntityManagerInterface $em, ContractGeneratorService $generator): Response
+    public function index(EntityManagerInterface $em): Response
     {
         $contracts = $em->getRepository(Contract::class)->findAllOrderedByConnections();
         return $this->render('contract/index.html.twig', [
@@ -35,8 +35,7 @@ class ContractController extends AbstractController
         $data = $generator->generate($scale);
 
         return $this->render('contract/generate.html.twig', [
-            'data'  => $data,
-            'scale' => $scale,
+            'data' => $data,
         ]);
     }
 
@@ -101,7 +100,7 @@ class ContractController extends AbstractController
     }
 
     #[Route('/contract/{id}/negotiate', name: 'app_contracts_negotiate_view', methods: ['GET'])]
-    public function negotiateView(Contract $contract, ContractService $contractService, ContractGeneratorService $generator): Response
+    public function negotiateView(Contract $contract, ContractGeneratorService $generator): Response
     {
         $company = $this->getUser()->getCompany();
         $data = $generator->generateWithNegotiation($contract->getScale(), $company->getReputation());
@@ -124,11 +123,7 @@ class ContractController extends AbstractController
         ]);
 
         return $this->render('contract/negotiate.html.twig', [
-            'data'              => $data,
-            'scale'             => $contract->getScale(),
             'contract'          => $contract,
-            'company'           => $company,
-            'initialSteps'      => $initialSteps,
             'negotiationData'   => $negotiationData,
         ]);
     }

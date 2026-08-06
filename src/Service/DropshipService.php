@@ -31,8 +31,8 @@ class DropshipService
             throw new \LogicException('This company already has a dropship. Each company may only have one dropship.');
         }
 
-        if ($maxCapacity <= 0) {
-            throw new \InvalidArgumentException('Dropship maxCapacity must be a positive integer.');
+        if ($maxCapacity < 40) {
+            throw new \InvalidArgumentException('Dropship maxCapacity must be at least 40 tons (minimum 2 mechs at 20 tons).');
         }
 
         $dropship = new Dropship();
@@ -49,8 +49,8 @@ class DropshipService
 
     public function updateDropship(Dropship $dropship, int $newMaxCapacity, int $newMekbayCapacity = 0): void
     {
-        if ($newMaxCapacity <= 0) {
-            throw new \InvalidArgumentException('Dropship maxCapacity must be a positive integer.');
+        if ($newMaxCapacity < 40) {
+            throw new \InvalidArgumentException('Dropship maxCapacity must be at least 40 tons (minimum 2 mechs at 20 tons).');
         }
 
         $dropship->setMaxCapacity($newMaxCapacity);

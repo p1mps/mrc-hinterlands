@@ -16,11 +16,9 @@ class PilotController extends AbstractController
     #[Route('', name: 'app_pilots')]
     public function index(PilotService $pilotService): Response
     {
-        $company = $this->getUser()->getCompany();
-        $pilots = $pilotService->getPilots($company);
+        $pilots = $pilotService->getPilots($this->getUser()->getCompany());
 
         return $this->render('pilot/index.html.twig', [
-            'company'         => $company,
             'pilots'          => $pilots,
             'thresholdAlerts' => $pilotService->getXpThresholdAlerts($pilots),
         ]);

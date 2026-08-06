@@ -642,7 +642,7 @@ class ContractLogServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $this->service->handlePostTrack($contract, $company, new \stdClass(), [
+        $this->service->handlePostTrack($contract, $company, [
             'combatPayTier' => CombatPayTier::Full,
         ], 1);
 
@@ -679,7 +679,7 @@ class ContractLogServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $this->service->handlePostTrack($contract, $company, new \stdClass(), [
+        $this->service->handlePostTrack($contract, $company, [
             'combatPayTier' => CombatPayTier::Full,
         ], 1);
 
@@ -715,7 +715,7 @@ class ContractLogServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $this->service->handlePostTrack($contract, $company, new \stdClass(), [
+        $this->service->handlePostTrack($contract, $company, [
             'combatPayTier' => CombatPayTier::Full,
         ], 1);
     }
@@ -748,7 +748,7 @@ class ContractLogServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $this->service->handlePostTrack($contract, $company, new \stdClass(), [
+        $this->service->handlePostTrack($contract, $company, [
             'combatPayTier' => CombatPayTier::None,
         ], 1);
     }
@@ -765,7 +765,7 @@ class ContractLogServiceTest extends TestCase
         $contract->method('getTrackRecords')->willReturn($collection);
 
         $this->expectException(\RuntimeException::class);
-        $this->service->handlePostTrack($contract, $company, new \stdClass(), [
+        $this->service->handlePostTrack($contract, $company, [
             'combatPayTier' => CombatPayTier::Full,
             'salvageClaimed' => true,
         ], 1);
@@ -798,7 +798,7 @@ class ContractLogServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $this->service->handlePostTrack($contract, $company, new \stdClass(), [
+        $this->service->handlePostTrack($contract, $company, [
             'combatPayTier' => CombatPayTier::Full,
             'salvageClaimed' => true,
         ], 1);
@@ -831,7 +831,7 @@ class ContractLogServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $this->service->handlePostTrack($contract, $company, new \stdClass(), [
+        $this->service->handlePostTrack($contract, $company, [
             'combatPayTier' => CombatPayTier::Full,
             'salvageClaimed' => false,
         ], 1);

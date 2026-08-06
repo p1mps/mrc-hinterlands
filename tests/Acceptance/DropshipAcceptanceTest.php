@@ -35,7 +35,7 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
         $crawler = $client->request('GET', '/dropship/new');
         $form = $crawler->selectButton('Save')->form([
             'dropship[name]' => 'Valkyrie VLK-KNT',
-            'dropship[maxCapacity]' => 5,
+            'dropship[maxCapacity]' => 40,
             'dropship[mekbayCapacity]' => 3,
         ]);
 
@@ -50,7 +50,7 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
     public function testEditDropshipSucceeds(): void
     {
         $ref = $this->seedUserAndCompany('editdrop', 'Edit Drop Co', 'Inner Sphere');
-        $dropshipId = $this->seedDropship($ref['companyId'], 'Old Dropship', 3);
+        $dropshipId = $this->seedDropship($ref['companyId'], 'Old Dropship', 40);
 
         $client = $this->login('editdrop');
 
@@ -62,14 +62,14 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
     public function testEditDropshipUpdatesMekbayCapacity(): void
     {
         $ref = $this->seedUserAndCompany('editmekbay', 'Edit Mekbay Co', 'Inner Sphere');
-        $dropshipId = $this->seedDropship($ref['companyId'], 'Mekbay Dropship', 5, 2);
+        $dropshipId = $this->seedDropship($ref['companyId'], 'Mekbay Dropship', 40, 2);
 
         $client = $this->login('editmekbay');
 
         $crawler = $client->request('GET', '/dropship/' . $dropshipId . '/edit');
         $form = $crawler->selectButton('Save Changes')->form([
             'dropship[name]' => 'Valkyrie VLK-KNT',
-            'dropship[maxCapacity]' => 8,
+            'dropship[maxCapacity]' => 40,
             'dropship[mekbayCapacity]' => 4,
         ]);
 
@@ -97,7 +97,7 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
     public function testDropshipShowDisplaysMekbayInfo(): void
     {
         $ref = $this->seedUserAndCompany('showmekbay', 'Show Mekbay Co', 'Inner Sphere');
-        $this->seedDropship($ref['companyId'], 'Valkyrie', 5, 3);
+        $this->seedDropship($ref['companyId'], 'Valkyrie', 40, 3);
 
         $client = $this->login('showmekbay');
         $crawler = $client->request('GET', '/dropship/');
@@ -110,7 +110,7 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
     public function testDropshipShowDisplaysNoMekbaysLabelWhenZeroCapacity(): void
     {
         $ref = $this->seedUserAndCompany('nomekbays', 'No Mekbay Co', 'Inner Sphere');
-        $this->seedDropship($ref['companyId'], 'Valkyrie', 5, 0);
+        $this->seedDropship($ref['companyId'], 'Valkyrie', 40, 0);
         $this->seedUnit($ref['companyId'], 'Thunderbird THB-XQ', 'Thunderbird THB-XQ', 60, 200, 'mech');
 
         $client = $this->login('nomekbays');
@@ -123,7 +123,7 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
     public function testDropshipShowWithZeroMekbaysAndUnitsOnBoard(): void
     {
         $ref = $this->seedUserAndCompany('zeromkbyunits', 'Zero Mekbay Units Co', 'Inner Sphere');
-        $this->seedDropship($ref['companyId'], 'Valkyrie', 5, 0);
+        $this->seedDropship($ref['companyId'], 'Valkyrie', 40, 0);
         $this->seedUnit($ref['companyId'], 'Gravino GRV-NI1', 'Gravino GRV-NI1', 35, 150, 'mech');
 
         $client = $this->login('zeromkbyunits');
@@ -136,7 +136,7 @@ class DropshipAcceptanceTest extends AcceptanceTestCase
     public function testDropshipShowWithNonZeroMekbays(): void
     {
         $ref = $this->seedUserAndCompany('nonzeromkby', 'Non Zero Mekbay Co', 'Inner Sphere');
-        $this->seedDropship($ref['companyId'], 'Valkyrie', 5, 2);
+        $this->seedDropship($ref['companyId'], 'Valkyrie', 40, 2);
         $this->seedUnit($ref['companyId'], 'Gravino GRV-NI1', 'Gravino GRV-NI1', 35, 150, 'mech');
 
         $client = $this->login('nonzeromkby');

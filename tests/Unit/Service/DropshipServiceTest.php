@@ -27,7 +27,7 @@ class DropshipServiceTest extends TestCase
         return $company;
     }
 
-    private function makeDropship(int $id = 1, int $maxCapacity = 5, ?MercenaryCompany $company = null, ?string $name = null, int $mekbayCapacity = 0): Dropship
+    private function makeDropship(int $id = 1, int $maxCapacity = 40, ?MercenaryCompany $company = null, ?string $name = null, int $mekbayCapacity = 0): Dropship
     {
         $dropship = new Dropship();
         $dropship->setId($id);
@@ -84,11 +84,11 @@ class DropshipServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $result = $this->service->createDropship($company, 5, 'Test Dropship');
+        $result = $this->service->createDropship($company, 40, 'Test Dropship');
 
         $this->assertCount(1, $captured);
         $this->assertEquals($company, $captured[0]->getCompany());
-        $this->assertEquals(5, $captured[0]->getMaxCapacity());
+        $this->assertEquals(40, $captured[0]->getMaxCapacity());
         $this->assertEquals('Test Dropship', $captured[0]->getName());
         $this->assertInstanceOf(Dropship::class, $result);
     }
@@ -104,7 +104,7 @@ class DropshipServiceTest extends TestCase
             ->willReturn($repoMock);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Dropship maxCapacity must be a positive integer.');
+        $this->expectExceptionMessage('Dropship maxCapacity must be at least 40 tons (minimum 2 mechs at 20 tons).');
 
         $this->service->createDropship($company, 0);
     }
@@ -120,7 +120,7 @@ class DropshipServiceTest extends TestCase
             ->willReturn($repoMock);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Dropship maxCapacity must be a positive integer.');
+        $this->expectExceptionMessage('Dropship maxCapacity must be at least 40 tons (minimum 2 mechs at 20 tons).');
 
         $this->service->createDropship($company, -1);
     }
@@ -128,7 +128,7 @@ class DropshipServiceTest extends TestCase
     public function testCreateDropshipRejectsSecondDropshipForCompany(): void
     {
         $company = $this->makeCompany();
-        $existing = $this->makeDropship(1, 3, $company);
+        $existing = $this->makeDropship(1, 40, $company);
 
         $repoMock = $this->createStub(\App\Repository\DropshipRepository::class);
         $repoMock->method('findOneBy')->willReturn($existing);
@@ -140,7 +140,7 @@ class DropshipServiceTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('This company already has a dropship. Each company may only have one dropship.');
 
-        $this->service->createDropship($company, 5);
+        $this->service->createDropship($company, 40);
     }
 
     // ── Update Dropship Tests ─────────────────────────────────────────────
@@ -148,7 +148,7 @@ class DropshipServiceTest extends TestCase
     public function testUpdateDropshipAllowsShrinkingBelowCurrentCount(): void
     {
         $company = $this->makeCompany();
-        $dropship = $this->makeDropship(1, 5, $company);
+        $dropship = $this->makeDropship(1, 100, $company);
 
         $repoMock = $this->createStub(\App\Repository\DropshipRepository::class);
 
@@ -164,15 +164,15 @@ class DropshipServiceTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $this->service->updateDropship($dropship, 2);
+        $this->service->updateDropship($dropship, 40);
 
-        $this->assertEquals(2, $dropship->getMaxCapacity());
+        $this->assertEquals(40, $dropship->getMaxCapacity());
     }
 
     public function testUpdateDropshipRejectsZeroCapacity(): void
     {
         $company = $this->makeCompany();
-        $dropship = $this->makeDropship(1, 5, $company);
+        $dropship = $this->makeDropship(1, 40, $company);
 
         $repoMock = $this->createStub(\App\Repository\DropshipRepository::class);
 
@@ -186,15 +186,15 @@ class DropshipServiceTest extends TestCase
             });
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Dropship maxCapacity must be a positive integer.');
+        $this->expectExceptionMessage('Dropship maxCapacity must be at least 40 tons (minimum 2 mechs at 20 tons).');
 
-        $this->service->updateDropship($dropship, 0);
+        $this->service->updateDropship($dropship, 39);
     }
 
     public function testUpdateDropshipRejectsNegativeCapacity(): void
     {
         $company = $this->makeCompany();
-        $dropship = $this->makeDropship(1, 5, $company);
+        $dropship = $this->makeDropship(1, 40, $company);
 
         $repoMock = $this->createStub(\App\Repository\DropshipRepository::class);
 
@@ -208,9 +208,9 @@ class DropshipServiceTest extends TestCase
             });
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Dropship maxCapacity must be a positive integer.');
+        $this->expectExceptionMessage('Dropship maxCapacity must be at least 40 tons (minimum 2 mechs at 20 tons).');
 
-        $this->service->updateDropship($dropship, -3);
+        $this->service->updateDropship($dropship, 39);
     }
 
     // ── Assign Mech to Dropship Tests ──────────────────────────────────────
@@ -221,7 +221,7 @@ class DropshipServiceTest extends TestCase
     public function testDeleteDropshipWithoutMechsSucceeds(): void
     {
         $company = $this->makeCompany();
-        $dropship = $this->makeDropship(1, 5, $company);
+        $dropship = $this->makeDropship(1, 40, $company);
 
         $dropshipRepo = $this->createStub(\App\Repository\DropshipRepository::class);
 
@@ -281,7 +281,7 @@ class DropshipServiceTest extends TestCase
     public function testGetUsedMekbaysReturnsCorrectCount(): void
     {
         $company = $this->makeCompany();
-        $dropship = $this->makeDropship(1, 5, $company, 'Test', 3);
+        $dropship = $this->makeDropship(1, 40, $company, 'Test', 3);
 
         $unitRepo = $this->createStub(\App\Repository\UnitRepository::class);
         $unitRepo->method('countTonnageOnDropship')->willReturn(0);
@@ -417,5 +417,171 @@ class DropshipServiceTest extends TestCase
             ->method('flush');
 
         $this->service->assignMechToDropship($mechan, $dropship);
+    }
+
+    // ── Get Tonnage on Dropship Tests ──────────────────────────────────────
+
+    public function testGetTonnageOnDropshipSumsUnitAndSalvagedMechTonnage(): void
+    {
+        $company = $this->makeCompany();
+        $dropship = $this->makeDropship(1, 200, $company);
+
+        $unitRepo = $this->createStub(\App\Repository\UnitRepository::class);
+        $unitRepo->method('countTonnageOnDropship')->willReturn(160);
+
+        $salvagedMechRepo = $this->createStub(\App\Repository\SalvagedMechRepository::class);
+
+        $queryBuilder = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder->method('select')->willReturn($queryBuilder);
+        $queryBuilder->method('from')->willReturn($queryBuilder);
+        $queryBuilder->method('where')->willReturn($queryBuilder);
+        $queryBuilder->method('setParameter')->willReturn($queryBuilder);
+
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
+        $query->method('getSingleScalarResult')->willReturn(80);
+        $queryBuilder->method('getQuery')->willReturn($query);
+
+        $this->em
+            ->method('getRepository')
+            ->willReturnCallback(function ($class) use ($unitRepo, $salvagedMechRepo) {
+                if (is_a($class, \App\Entity\Unit::class, true)) {
+                    return $unitRepo;
+                }
+                return $salvagedMechRepo;
+            });
+
+        $this->em
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+
+        $result = $this->service->getTonnageOnDropship($dropship);
+        $this->assertEquals(240, $result);
+    }
+
+    public function testGetTonnageOnDropshipWithZeroUnitTonnage(): void
+    {
+        $company = $this->makeCompany();
+        $dropship = $this->makeDropship(2, 100, $company);
+
+        $unitRepo = $this->createStub(\App\Repository\UnitRepository::class);
+        $unitRepo->method('countTonnageOnDropship')->willReturn(0);
+
+        $salvagedMechRepo = $this->createStub(\App\Repository\SalvagedMechRepository::class);
+
+        $queryBuilder = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder->method('select')->willReturn($queryBuilder);
+        $queryBuilder->method('from')->willReturn($queryBuilder);
+        $queryBuilder->method('where')->willReturn($queryBuilder);
+        $queryBuilder->method('setParameter')->willReturn($queryBuilder);
+
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
+        $query->method('getSingleScalarResult')->willReturn(0);
+        $queryBuilder->method('getQuery')->willReturn($query);
+
+        $this->em
+            ->method('getRepository')
+            ->willReturnCallback(function ($class) use ($unitRepo, $salvagedMechRepo) {
+                if (is_a($class, \App\Entity\Unit::class, true)) {
+                    return $unitRepo;
+                }
+                return $salvagedMechRepo;
+            });
+
+        $this->em
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+
+        $result = $this->service->getTonnageOnDropship($dropship);
+        $this->assertEquals(0, $result);
+    }
+
+    public function testGetTonnageOnDropshipWithNullSalvagedMechTonnage(): void
+    {
+        $company = $this->makeCompany();
+        $dropship = $this->makeDropship(3, 50, $company);
+
+        $unitRepo = $this->createStub(\App\Repository\UnitRepository::class);
+        $unitRepo->method('countTonnageOnDropship')->willReturn(30);
+
+        $salvagedMechRepo = $this->createStub(\App\Repository\SalvagedMechRepository::class);
+
+        $queryBuilder = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder->method('select')->willReturn($queryBuilder);
+        $queryBuilder->method('from')->willReturn($queryBuilder);
+        $queryBuilder->method('where')->willReturn($queryBuilder);
+        $queryBuilder->method('setParameter')->willReturn($queryBuilder);
+
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
+        $query->method('getSingleScalarResult')->willReturn(null);
+        $queryBuilder->method('getQuery')->willReturn($query);
+
+        $this->em
+            ->method('getRepository')
+            ->willReturnCallback(function ($class) use ($unitRepo, $salvagedMechRepo) {
+                if (is_a($class, \App\Entity\Unit::class, true)) {
+                    return $unitRepo;
+                }
+                return $salvagedMechRepo;
+            });
+
+        $this->em
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+
+        $result = $this->service->getTonnageOnDropship($dropship);
+        $this->assertEquals(30, $result);
+    }
+
+    // ── Get Unassigned Mech Tests ──────────────────────────────────────────
+
+    public function testGetUnassignedMechsReturnsOnlyUnassignedMechs(): void
+    {
+        $company = $this->makeCompany();
+
+        $mechan1 = $this->makeSalvagedMech(null);
+        $mechan2 = $this->makeSalvagedMech(null);
+
+        $queryBuilder = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder->method('select')->willReturn($queryBuilder);
+        $queryBuilder->method('from')->willReturn($queryBuilder);
+        $queryBuilder->method('where')->willReturn($queryBuilder);
+        $queryBuilder->method('andWhere')->willReturn($queryBuilder);
+        $queryBuilder->method('setParameter')->willReturn($queryBuilder);
+
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
+        $query->method('getResult')->willReturn([$mechan1, $mechan2]);
+        $queryBuilder->method('getQuery')->willReturn($query);
+
+        $this->em
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+
+        $result = $this->service->getUnassignedMechs($company);
+
+        $this->assertCount(2, $result);
+    }
+
+    public function testGetUnassignedMechsReturnsEmptyCollectionWhenNoneUnassigned(): void
+    {
+        $company = $this->makeCompany();
+
+        $queryBuilder = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder->method('select')->willReturn($queryBuilder);
+        $queryBuilder->method('from')->willReturn($queryBuilder);
+        $queryBuilder->method('where')->willReturn($queryBuilder);
+        $queryBuilder->method('andWhere')->willReturn($queryBuilder);
+        $queryBuilder->method('setParameter')->willReturn($queryBuilder);
+
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
+        $query->method('getResult')->willReturn([]);
+        $queryBuilder->method('getQuery')->willReturn($query);
+
+        $this->em
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+
+        $result = $this->service->getUnassignedMechs($company);
+
+        $this->assertCount(0, $result);
     }
 }

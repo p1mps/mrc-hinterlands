@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/salvaged-mechs')]
 class SalvagedMechController extends AbstractController
 {
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(private readonly EntityManagerInterface $em, private readonly SalvageCalculationService $salvageCalc) {}
     #[Route('/', name: 'app_salvaged_mech_index', methods: ['GET'])]
     public function index(SalvagedMechService $salvagedMechService, DropshipService $dropshipService): Response
     {
@@ -82,11 +82,18 @@ class SalvagedMechController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_salvaged_mech_show', methods: ['GET'])]
-    public function show(SalvagedMechService $salvagedMechService, SalvageCalculationService $salvageCalc, SalvagedMech $salvagedMech): Response
+    public function show(SalvagedMech $salvagedMech): Response
     {
+        $isScrapyard = $salvagedMech->isScrapyard();
+        $acquisitionCost = $isScrapyard
+            ? $this->salvageCalc->calculateSalvageValue($salvagedMech->getBvCost())
+            : ($salvagedMech->getSalvageValue() ?? $salvagedMech->getBvCost());
+        $scrapyardNote = $isScrapyard ? ' (Scrapyard: half BV, stays Crippled)' : '';
+
         return $this->render('salvaged_mech/show.html.twig', [
             'salvaged_mech' => $salvagedMech,
-            'salvageCalc' => $salvageCalc,
+            'acquisitionCost' => $acquisitionCost,
+            'scrapyardNote' => $scrapyardNote,
         ]);
     }
 

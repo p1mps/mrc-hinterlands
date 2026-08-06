@@ -23,6 +23,7 @@
 
 # Accidentally committed files (kept locally)
 .DS_Store
-.agents/AGENTS.md
+.agents/
+.claude/
 MISSING_FEATURES.md
 hinterlands.md

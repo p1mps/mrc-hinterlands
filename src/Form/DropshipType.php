@@ -19,7 +19,7 @@ class DropshipType extends AbstractType
         ]);
         $builder->add('maxCapacity', IntegerType::class, [
             'label' => 'Maximum Tonnage Capacity',
-            'attr' => ['min' => 1],
+            'attr' => ['min' => 40],
         ]);
         $builder->add('mekbayCapacity', IntegerType::class, [
             'label' => 'Maximum Mekbay Count',

@@ -290,7 +290,6 @@ class FullStackIntegrationTest extends WebTestCase
         $unit->setBv(200);
         $unit->setUnitType(\App\Enum\UnitType::Mech);
         $unit->setDamageState(\App\Enum\DamageState::None);
-        $unit->setIsActive(true);
         $unit->setCompany($this->em->getRepository(MercenaryCompany::class)->find($userRef['companyId']));
 
         $this->em->persist($unit);
@@ -325,7 +324,6 @@ class FullStackIntegrationTest extends WebTestCase
         $unit->setBv(200);
         $unit->setUnitType(\App\Enum\UnitType::Mech);
         $unit->setDamageState(\App\Enum\DamageState::None);
-        $unit->setIsActive(true);
         $unit->setCompany($this->em->getRepository(MercenaryCompany::class)->find($userRef['companyId']));
 
         $this->em->persist($unit);
@@ -350,7 +348,6 @@ class FullStackIntegrationTest extends WebTestCase
         $unit->setBv(200);
         $unit->setUnitType(\App\Enum\UnitType::Mech);
         $unit->setDamageState(\App\Enum\DamageState::None);
-        $unit->setIsActive(true);
         $unit->setCompany($this->em->getRepository(MercenaryCompany::class)->find($userRef['companyId']));
 
         $this->em->persist($unit);

@@ -32,7 +32,7 @@
     <td>{{ unit.damageState.value }}</td>
     <td>—</td>
     <td>
-        <form method="post" action="{{ path('app_dropship_unassign_unit', {dropshipId: dropship.id, unitId: unit.id}) }}" onsubmit="return confirm('Remove {{ unit.name }} from dropship?');">
+        <form method="post" action="{{ path('app_dropship_unassign_unit', {id: dropship.id, unitId: unit.id}) }}" onsubmit="return confirm('Remove {{ unit.name }} from dropship?');">
             <input type="hidden" name="_token" value="csrf_unassign_unit_{{ unit.id }}">
             <button class="btn btn-sm btn-outline-danger">Unassign</button>
         </form>
@@ -47,7 +47,7 @@
     <td>{{ mech.damageState ? mech.damageState.value : 'No' }}</td>
     <td>{{ mech.isAcquired ? 'Yes' : 'No' }}</td>
     <td>
-        <form method="post" action="{{ path('app_dropship_unassign_mech', {dropshipId: dropship.id, mechanId: mech.id}) }}" onsubmit="return confirm('Remove {{ mech.model }} from dropship?');">
+        <form method="post" action="{{ path('app_dropship_unassign_mech', {id: dropship.id, mechanId: mech.id}) }}" onsubmit="return confirm('Remove {{ mech.model }} from dropship?');">
             <input type="hidden" name="_token" value="csrf_unassign_mech_{{ mech.id }}">
             <button class="btn btn-sm btn-outline-danger">Unassign</button>
         </form>
@@ -60,7 +60,7 @@
 {% endif %}
 
 {% if remainingCapacity > 0 %}
-{% set unassignedUnits = dropship.company.units|filter(u => u.dropship is null and u.isActive) %}
+{% set unassignedUnits = dropship.company.units|filter(u => u.dropship is null) %}
 {% set unassignedSalvaged = dropshipService.getUnassignedMechs(dropship.company) %}
 {% if (unassignedUnits|length + unassignedSalvaged|length) > 0 %}
 <h4 class="mt-3">Available to Board ({{ remainingCapacity }} tons left{% if remainingMekbays > 0 %}, {{ remainingMekbays }} mekbays left{% endif %})</h4>
@@ -76,9 +76,9 @@
     <td>1</td>
     <td>
         {% if remainingMekbays > 0 %}
-        <form method="post" action="{{ path('app_dropship_assign_unit', {id: unit.id, dropship: dropship.id}) }}" onsubmit="return confirm('Board {{ unit.name }} on {{ dropship.name }}? This will take {{ unit.tonnage }} tons of capacity and 1 mekbay.');">
+        <form method="post" action="{{ path('app_dropship_assign_unit', {unitId: unit.id, id: dropship.id}) }}" onsubmit="return confirm('Board {{ unit.name }} on {{ dropship.name }}? This will take {{ unit.tonnage }} tons of capacity and 1 mekbay.');">
             <input type="hidden" name="_token" value="csrf_board_unit_{{ unit.id }}">
-            <button class="btn btn-sm btn-info">Board</button>
+            <button class="btn btn-sm btn-outline-secondary">Board</button>
         </form>
         {% else %}
         <span class="text-muted">No mekbays</span>
@@ -92,9 +92,9 @@
     <td>{{ mech.model ?? '—' }}</td>
     <td>{{ mech.tonnage }}</td>
     <td>
-        <form method="post" action="{{ path('app_dropship_assign_mech', {id: mech.id, dropship: dropship.id}) }}" onsubmit="return confirm('Board {{ mech.model }} on {{ dropship.name }}? This will take {{ mech.tonnage }} tons of capacity.');">
+        <form method="post" action="{{ path('app_dropship_assign_mech', {mechanId: mech.id, id: dropship.id}) }}" onsubmit="return confirm('Board {{ mech.model }} on {{ dropship.name }}? This will take {{ mech.tonnage }} tons of capacity.');">
             <input type="hidden" name="_token" value="csrf_board_mech_{{ mech.id }}">
-            <button class="btn btn-sm btn-info">Board</button>
+            <button class="btn btn-sm btn-outline-secondary">Board</button>
         </form>
     </td>
 </tr>
