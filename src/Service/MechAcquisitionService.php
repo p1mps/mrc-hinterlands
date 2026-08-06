@@ -73,8 +73,10 @@ class MechAcquisitionService
             }
         }
 
-        // Mark Salvaged Mech as Acquired
-        $salvagedMech->setAcquired(true);
+        // Guard: prevent re-acquisition
+        if ($salvagedMech->getContractId() !== null) {
+            throw new \LogicException('This mech has already been acquired.');
+        }
 
         // Unassign from dropship if assigned (frees up capacity)
         if ($salvagedMech->getDropship() !== null) {

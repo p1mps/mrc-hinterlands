@@ -548,7 +548,6 @@ class FullStackIntegrationTest extends WebTestCase
         $mechan->setModel('Catapult CAT-PU1');
         $mechan->setTonnage(80);
         $mechan->setBvCost(300);
-        $mechan->setAcquired(false);
         $mechan->setScrapyard(true);
 
         $this->em->persist($mechan);
@@ -559,7 +558,6 @@ class FullStackIntegrationTest extends WebTestCase
         $this->assertEquals('Catapult CAT-PU1', $createdMech->getModel());
         $this->assertEquals(80, $createdMech->getTonnage());
         $this->assertEquals(300, $createdMech->getBvCost());
-        $this->assertFalse($createdMech->isAcquired());
         $this->assertTrue($createdMech->isScrapyard());
     }
 
@@ -573,7 +571,6 @@ class FullStackIntegrationTest extends WebTestCase
         $mechan->setModel('Old Mech');
         $mechan->setTonnage(80);
         $mechan->setBvCost(300);
-        $mechan->setAcquired(false);
         $mechan->setScrapyard(true);
 
         $this->em->persist($mechan);
@@ -608,7 +605,6 @@ class FullStackIntegrationTest extends WebTestCase
         $mechan->setModel('ToDelete');
         $mechan->setTonnage(80);
         $mechan->setBvCost(300);
-        $mechan->setAcquired(false);
         $mechan->setScrapyard(true);
 
         $this->em->persist($mechan);

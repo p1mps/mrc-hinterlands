@@ -30,7 +30,6 @@ class MechAcquisitionServiceTest extends TestCase
             'model' => 'Catapult CAT-PU1',
             'tonnage' => 80,
             'bvCost' => 300,
-            'acquired' => false,
             'scrapyard' => false,
         ];
         foreach ($defaults as $key => $value) {
@@ -43,7 +42,6 @@ class MechAcquisitionServiceTest extends TestCase
         $mechan->setModel($merged['model']);
         $mechan->setTonnage($merged['tonnage']);
         $mechan->setBvCost($merged['bvCost']);
-        $mechan->setAcquired($merged['acquired']);
         $mechan->setScrapyard($merged['scrapyard'] ?? false);
         if (isset($merged['salvageValue'])) {
             $mechan->setSalvageValue($merged['salvageValue']);
@@ -76,7 +74,7 @@ class MechAcquisitionServiceTest extends TestCase
         $mechan = $this->makeSalvagedMech();
         $company = $this->makeCompany();
 
-        // persist() is called once for the new Unit; SalvagedMech is marked as acquired but NOT removed
+        // persist() is called once for the new Unit; SalvagedMech is NOT removed
         $this->em->expects($this->once())
             ->method('persist');
 
@@ -119,7 +117,7 @@ class MechAcquisitionServiceTest extends TestCase
         $this->assertEquals(UnitType::Mech, $unit->getUnitType());
     }
 
-    public function testAcquireMechMarksSalvagedMechAsAcquired(): void
+    public function testAcquireMechSucceedsWhenContractIdIsNull(): void
     {
         $mechan = $this->makeSalvagedMech();
         $company = $this->makeCompany();
@@ -132,7 +130,7 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->service->acquireMech($mechan, $company);
 
-        $this->assertTrue($mechan->isAcquired());
+        $this->assertNull($mechan->getContractId());
     }
 
     public function testAcquireMechLinksUnitToCompany(): void
@@ -219,8 +217,7 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->service->acquireMech($mechan, $company);
 
-        // Verify the SalvagedMech was NOT marked as acquired
-        $this->assertFalse($mechan->isAcquired());
+        $this->assertNull($mechan->getContractId());
     }
 
     public function testAcquireMechDoesNotPersistOrRemoveWhenInsufficientFunds(): void
@@ -369,21 +366,22 @@ class MechAcquisitionServiceTest extends TestCase
 
     // ── Already Acquired Mech ─────────────────────────────────────────────
 
-    public function testAcquireMechWorksOnAlreadyAcquiredMech(): void
+    public function testAcquireMechThrowsWhenContractIdIsSet(): void
     {
-        $mechan = $this->makeSalvagedMech(['acquired' => true]);
+        $mechan = $this->makeSalvagedMech();
+        $mechan->setContractId(42);
         $company = $this->makeCompany();
 
-        $this->em->expects($this->once())
-            ->method('persist');
-
-        $this->em->expects($this->once())
-            ->method('flush');
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('This mech has already been acquired.');
 
         $this->service->acquireMech($mechan, $company);
 
-        // Even if already acquired, calling setAcquired(true) again is idempotent
-        $this->assertTrue($mechan->isAcquired());
+        $this->em->expects($this->never())
+            ->method('persist');
+
+        $this->em->expects($this->never())
+            ->method('flush');
     }
 
     // ── Low Balance Edge Case ──────────────────────────────────────────────
@@ -430,7 +428,6 @@ class MechAcquisitionServiceTest extends TestCase
             'model' => 'Catapult CAT-PU1',
             'tonnage' => 80,
             'bvCost' => 300,
-            'acquired' => false,
             'scrapyard' => true,
         ], $overrides);
         return $this->makeSalvagedMech($defaults);
@@ -510,7 +507,7 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->service->acquireMech($mechan, $company);
 
-        $this->assertTrue($mechan->isAcquired());
+        $this->assertNull($mechan->getContractId());
     }
 
     public function testAcquireMechScrapyardWithNullBvCost(): void
@@ -536,7 +533,7 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->service->acquireMech($mechan, $company);
 
-        $this->assertFalse($mechan->isAcquired());
+        $this->assertNull($mechan->getContractId());
     }
 
     public function testAcquireMechNonScrapyardStillRemovesSalvagedMech(): void
@@ -552,7 +549,7 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->service->acquireMech($mechan, $company);
 
-        $this->assertTrue($mechan->isAcquired());
+        $this->assertNull($mechan->getContractId());
     }
 
     public function testAcquireMechNonScrapyardUsesSalvageValueWhenSet(): void

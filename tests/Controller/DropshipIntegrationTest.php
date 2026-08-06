@@ -202,7 +202,6 @@ class DropshipIntegrationTest extends WebTestCase
         $mechan->setModel('Catapult CAT-PU1');
         $mechan->setTonnage(80);
         $mechan->setBvCost(300);
-        $mechan->setAcquired(false);
         $mechan->setScrapyard(false);
         $mechan->setDropship($dropship);
 
@@ -239,7 +238,6 @@ class DropshipIntegrationTest extends WebTestCase
             $mechan->setModel("Mech {$i}");
             $mechan->setTonnage(60);
             $mechan->setBvCost(200);
-            $mechan->setAcquired(false);
             $mechan->setScrapyard(false);
             $mechan->setDropship($dropship);
             $this->em->persist($mechan);
@@ -278,7 +276,6 @@ class DropshipIntegrationTest extends WebTestCase
             $mechan->setModel("Unassign Mech {$i}");
             $mechan->setTonnage(60);
             $mechan->setBvCost(200);
-            $mechan->setAcquired(false);
             $mechan->setScrapyard(false);
             $mechan->setDropship($dropship);
             $this->em->persist($mechan);
@@ -328,7 +325,6 @@ class DropshipIntegrationTest extends WebTestCase
         $mechan->setModel('Acquire Mech');
         $mechan->setTonnage(60);
         $mechan->setBvCost(200);
-        $mechan->setAcquired(false);
         $mechan->setScrapyard(false);
         $mechan->setDropship($dropship);
 
@@ -337,16 +333,14 @@ class DropshipIntegrationTest extends WebTestCase
 
         $mechanId = $mechan->getId();
 
-        // Mark as acquired (simulating acquisition)
+        // Unassign mech (simulating acquisition)
         $mechan = $this->em->getRepository(SalvagedMech::class)->find($mechanId);
-        $mechan->setAcquired(true);
         $mechan->setDropship(null);
         $this->em->flush();
 
         // Verify mech is unassigned
         $updated = $this->em->getRepository(SalvagedMech::class)->find($mechanId);
         $this->assertNotNull($updated);
-        $this->assertTrue($updated->isAcquired());
         $this->assertNull($updated->getDropship());
 
         // Verify dropship count decreased
@@ -422,7 +416,6 @@ class DropshipIntegrationTest extends WebTestCase
         $mechan->setModel('Salvaged Mech');
         $mechan->setTonnage(100);
         $mechan->setBvCost(300);
-        $mechan->setAcquired(false);
         $mechan->setScrapyard(false);
         $mechan->setDropship($dropship);
 

@@ -95,7 +95,7 @@
         <td>
             {% if mech.isTrulyDestroyed %}
                 <span class="badge bg-danger">Truly Destroyed</span>
-            {% elseif mech.isAcquired %}
+            {% elseif mech.contractId is not null %}
                 <span class="badge bg-success">Acquired</span>
             {% elseif mech.spTaken is not null %}
                 <span class="badge bg-warning">SP Taken</span>

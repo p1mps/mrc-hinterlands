@@ -196,7 +196,6 @@ abstract class AcceptanceTestCase extends WebTestCase
             'salvage_rights_percent' => 50,
             'scrapyard' => 1,
             'is_truly_destroyed' => 0,
-            'acquired' => 0,
             'sp_taken' => 0,
             'company_id' => $companyId,
         ], $data);

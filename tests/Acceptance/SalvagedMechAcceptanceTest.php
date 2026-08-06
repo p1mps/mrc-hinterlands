@@ -165,15 +165,39 @@ class SalvagedMechAcceptanceTest extends AcceptanceTestCase
     public function testAcquireMechFromIndexNotShownWhenAlreadyAcquired(): void
     {
         $ref = $this->seedUserAndCompany('acquireindex', 'Acquire Index Co', 'Inner Sphere');
-        $this->seedSalvagedMech($ref['companyId'], [
-            'model' => 'Thunderbolt THG-11d',
-            'tonnage' => 100,
-            'bv_cost' => 200,
-            'scrapyard' => 0,
-            'salvage_rights_percent' => 50,
-            'acquired' => 1,
-            'sp_taken' => null,
+        $company = self::$sharedEm->getRepository(\App\Entity\MercenaryCompany::class)->find($ref['companyId']);
+
+        $conn = self::$sharedEm->getConnection();
+        $conn->insert('contract', [
+            'name' => 'Test Contract',
+            'type' => 'expedition',
+            'employer' => 'Test Employer',
+            'employer_affiliation' => 'Inner Sphere',
+            'scale' => 1,
+            'duration_months' => 12,
+            'status' => 'available',
+            'is_opposing' => false,
+            'command_rights' => 'integrated',
+            'support_terms' => 'None',
+            'salvage_rights' => 'None',
+            'transport_terms' => '—',
+            'number_of_tracks' => 1,
+            'tracks_completed' => 0,
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
+        $contractId = (int) $conn->lastInsertId('contract_id_seq');
+
+        $mechan = new \App\Entity\SalvagedMech();
+        $mechan->setCompany($company);
+        $mechan->setModel('Thunderbolt THG-11d');
+        $mechan->setTonnage(100);
+        $mechan->setBvCost(200);
+        $mechan->setSalvageValue(100);
+        $mechan->setSalvageRightsPercent(50);
+        $mechan->setScrapyard(false);
+        $mechan->setContractId($contractId);
+        self::$sharedEm->persist($mechan);
+        self::$sharedEm->flush();
 
         $client = $this->login('acquireindex');
         $crawler = $client->request('GET', '/salvaged-mechs/');

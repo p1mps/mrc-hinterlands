@@ -658,7 +658,6 @@ class SeedDatabaseCommand extends Command
                 'techBase' => TechBase::IS,
                 'salvageValue' => 150,
                 'salvageRightsPercent' => 50,
-                'acquired' => true,
                 'spTaken' => 75,
                 'scrapyard' => false,
             ],
@@ -670,7 +669,6 @@ class SeedDatabaseCommand extends Command
                 'techBase' => TechBase::Clan,
                 'salvageValue' => 425,
                 'salvageRightsPercent' => 50,
-                'acquired' => true,
                 'spTaken' => 212,
                 'scrapyard' => false,
             ],
@@ -682,7 +680,6 @@ class SeedDatabaseCommand extends Command
                 'techBase' => TechBase::Mixed,
                 'salvageValue' => null,
                 'salvageRightsPercent' => null,
-                'acquired' => false,
                 'spTaken' => 0,
                 'scrapyard' => true,
             ],
@@ -694,7 +691,6 @@ class SeedDatabaseCommand extends Command
                 'techBase' => TechBase::IS,
                 'salvageValue' => 340,
                 'salvageRightsPercent' => 50,
-                'acquired' => false,
                 'spTaken' => null,
                 'scrapyard' => false,
             ],
@@ -706,7 +702,6 @@ class SeedDatabaseCommand extends Command
                 'techBase' => TechBase::Clan,
                 'salvageValue' => 450,
                 'salvageRightsPercent' => 50,
-                'acquired' => false,
                 'spTaken' => null,
                 'scrapyard' => false,
             ],
@@ -722,7 +717,6 @@ class SeedDatabaseCommand extends Command
                 ->setTechBase($data['techBase'])
                 ->setSalvageValue($data['salvageValue'])
                 ->setSalvageRightsPercent($data['salvageRightsPercent'])
-                ->setAcquired($data['acquired'])
                 ->setSpTaken($data['spTaken'])
                 ->setScrapyard($data['scrapyard'])
                 ->setIsTrulyDestroyed($data['damageState'] === DamageState::Destroyed);

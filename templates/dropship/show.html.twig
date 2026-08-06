@@ -22,7 +22,7 @@
 <h3 class="mt-3">Mechs on Dropship ({{ currentTonnage }} / {{ dropship.maxCapacity }} tons)</h3>
 <div class="table-responsive mb-3">
 <table class="table table-bordered table-sm">
-<thead><tr><th>Type</th><th>Name / Model</th><th>Tonnage</th><th>Damaged?</th><th>Acquired?</th><th>Actions</th></tr></thead>
+<thead><tr><th>Type</th><th>Name / Model</th><th>Tonnage</th><th>Damaged?</th><th>Actions</th></tr></thead>
 <tbody>
 {% for unit in dropship.unitsOnDropship %}
 <tr>
@@ -45,7 +45,6 @@
     <td>{{ mech.model ?? '—' }}</td>
     <td>{{ mech.tonnage }}</td>
     <td>{{ mech.damageState ? mech.damageState.value : 'No' }}</td>
-    <td>{{ mech.isAcquired ? 'Yes' : 'No' }}</td>
     <td>
         <form method="post" action="{{ path('app_dropship_unassign_mech', {id: dropship.id, mechanId: mech.id}) }}" onsubmit="return confirm('Remove {{ mech.model }} from dropship?');">
             <input type="hidden" name="_token" value="csrf_unassign_mech_{{ mech.id }}">

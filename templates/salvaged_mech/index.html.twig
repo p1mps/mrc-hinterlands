@@ -39,7 +39,7 @@
             <td>
                 {% if salvaged_mech.isTrulyDestroyed %}
                     <span class="badge bg-danger">Truly Destroyed</span>
-                {% elseif salvaged_mech.isAcquired %}
+                {% elseif salvaged_mech.contractId is not null %}
                     <span class="badge bg-success">Acquired</span>
                 {% elseif salvaged_mech.spTaken is not null %}
                     <span class="badge bg-warning">SP Taken ({{ salvaged_mech.spTaken }})</span>
@@ -50,7 +50,7 @@
             <td class="text-nowrap">
                 {% set dropship = dropshipService.getDropshipByCompany(company) %}
                 <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                {% if not salvaged_mech.isAcquired and not salvaged_mech.isTrulyDestroyed and salvaged_mech.spTaken is null %}
+                {% if not salvaged_mech.isTrulyDestroyed and salvaged_mech.spTaken is null and salvaged_mech.contractId is null %}
                     <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech? This will cost {{ acquisitionPrice[salvaged_mech.id] ?? salvaged_mech.salvageValue ?? salvaged_mech.bvCost }} support points.');" class="d-inline">
                         <input type="hidden" name="_token" value="{{ csrf_token('acquire' ~ salvaged_mech.id) }}">
                         <button class="btn btn-sm btn-success">Acquire Mech</button>

@@ -34,9 +34,6 @@ class SalvagedMech
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $bvCost = null;
 
-    #[ORM\Column(type: 'boolean', options: ['default' => false])]
-    private bool $acquired = false;
-
     #[ORM\ManyToOne(targetEntity: Contract::class)]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Contract $contract = null;
@@ -111,17 +108,6 @@ class SalvagedMech
     public function setBvCost(?int $bvCost): static
     {
         $this->bvCost = $bvCost;
-        return $this;
-    }
-
-    public function isAcquired(): bool
-    {
-        return $this->acquired;
-    }
-
-    public function setAcquired(bool $acquired): static
-    {
-        $this->acquired = $acquired;
         return $this;
     }
 

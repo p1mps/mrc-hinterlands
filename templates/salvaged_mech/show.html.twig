@@ -13,7 +13,6 @@
 <tr><th>Damage State</th><td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td></tr>
 <tr><th>Tech Base</th><td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td></tr>
 <tr><th>Contract ID</th><td>{{ salvaged_mech.contractId ?? '—' }}</td></tr>
-<tr><th>Acquired</th><td>{{ salvaged_mech.isAcquired ? 'Yes' : 'No' }}</td></tr>
 <tr><th>Truly Destroyed</th><td>{{ salvaged_mech.isTrulyDestroyed ? 'Yes' : 'No' }}</td></tr>
 <tr><th>SP Taken</th><td>{{ salvaged_mech.spTaken ?? '—' }}</td></tr>
 <tr><th>Scrapyard</th><td>{{ salvaged_mech.isScrapyard ? 'Yes' : 'No' }}</td></tr>
@@ -30,7 +29,7 @@
     <div class="d-flex gap-2">
         <a href="{{ path('app_salvaged_mech_edit', {id: salvaged_mech.id}) }}" class="btn btn-primary">Edit</a>
         
-        {% if not salvaged_mech.isAcquired and not salvaged_mech.isTrulyDestroyed and salvaged_mech.spTaken is null %}
+            {% if not salvaged_mech.isTrulyDestroyed and salvaged_mech.spTaken is null and salvaged_mech.contractId is null %}
             <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech?{{ scrapyardNote }} This will deduct {{ acquisitionCost }} support points.');" class="d-inline">
                 <input type="hidden" name="_token" value="{{ csrf_token('acquire' ~ salvaged_mech.id) }}">
                 <button class="btn btn-success">Acquire Mech</button>

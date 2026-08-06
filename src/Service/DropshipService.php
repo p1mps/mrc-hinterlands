@@ -135,7 +135,6 @@ class DropshipService
             ->select('s')
             ->from(SalvagedMech::class, 's')
             ->where('s.dropship IS NULL')
-            ->andWhere('s.acquired = false')
             ->andWhere('s.spTaken IS NULL')
             ->andWhere('s.isTrulyDestroyed = false')
             ->andWhere('s.company = :company')
