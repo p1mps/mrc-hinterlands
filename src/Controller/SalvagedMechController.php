@@ -9,6 +9,7 @@ use App\Form\ScrapyardMechType;
 use App\Service\DropshipService;
 use App\Service\SalvageCalculationService;
 use App\Service\SalvagedMechService;
+use App\Service\ScrapyardService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,13 +20,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class SalvagedMechController extends BaseController
 {
     private readonly SalvageCalculationService $salvageCalc;
+    private readonly ScrapyardService $scrapyardService;
 
     public function __construct(
         EntityManagerInterface $em,
         SalvageCalculationService $salvageCalc,
+        ScrapyardService $scrapyardService,
     ) {
         parent::__construct($em);
         $this->salvageCalc = $salvageCalc;
+        $this->scrapyardService = $scrapyardService;
     }
     #[Route('/', name: 'app_salvaged_mech_index', methods: ['GET'])]
     public function index(SalvagedMechService $salvagedMechService, DropshipService $dropshipService, SalvageCalculationService $salvageCalc): Response
@@ -48,21 +52,21 @@ class SalvagedMechController extends BaseController
     #[Route('/new', name: 'app_salvaged_mech_new', methods: ['GET', 'POST'])]
     public function new(Request $request, SalvagedMechService $salvagedMechService): Response
     {
-        $mechan = new SalvagedMech();
-        $mechan->setScrapyard(true);
-        $form = $this->createForm(ScrapyardMechType::class, $mechan);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $company = $this->getUser()->getCompany();
-            $salvagedMechService->createMech($mechan, $company);
-            return $this->redirectToRoute('app_salvaged_mech_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('salvaged_mech/new.html.twig', [
-            'salvaged_mech' => $mechan,
-            'form' => $form,
-        ]);
+        $company = $this->getUser()->getCompany();
+        
+        // Roll for a scrapyard mech using the scrapyard tables
+        $mechan = $this->scrapyardService->rollScrapyardMech();
+        $salvagedMechService->createMech($mechan, $company);
+        
+        $this->addFlash('success', sprintf(
+            'Scrapyard roll: Found a %s (%s BV, %s) with %s condition.',
+            $mechan->getModel(),
+            $mechan->getBvCost(),
+            $mechan->getTonnage(),
+            $mechan->getDamageState()?->value ?? 'unknown'
+        ));
+        
+        return $this->redirectToRoute('app_salvaged_mech_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/new-with-check', name: 'app_salvaged_mech_new_with_check', methods: ['GET', 'POST'])]

@@ -26,9 +26,16 @@ class SalvagedMechAcceptanceTest extends AcceptanceTestCase
 
         $client = $this->login('addmech');
 
-        $crawler = $client->request('GET', '/salvaged-mechs/new');
-
+        // The scrapyard generation automatically creates a mech and redirects to the show page
+        $client->request('GET', '/salvaged-mechs/new');
+        $this->assertResponseRedirects('/salvaged-mechs/');
+        
+        // Follow the redirect to the show page
+        $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
+        
+        // Verify the newly created mech appears on the show page
+        $this->assertContainsText($crawler, 'Scrapyard');
     }
 
     public function testCreateBattlefieldMechSucceeds(): void
