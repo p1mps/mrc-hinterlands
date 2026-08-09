@@ -19,19 +19,24 @@ abstract class AcceptanceTestCase extends WebTestCase
 
     protected function seedUserAndCompany(string $username, string $companyName, string $faction): array
     {
-        $client = static::createClient();
+        // Reuse existing client if available to avoid kernel re-boot
+        $client = self::$sharedClient ?? static::createClient();
         self::$sharedClient = $client;
-        $container = $client->getContainer();
-        self::$sharedEm = $container->get(EntityManagerInterface::class);
 
-        $metadata = self::$sharedEm->getMetadataFactory()->getAllMetadata();
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool(self::$sharedEm);
-        try {
-            $schemaTool->dropSchema($metadata);
-        } catch (\Throwable) {
-            // Ignore errors during drop
+        // Only initialize schema on first call
+        if (self::$sharedEm === null) {
+            $container = $client->getContainer();
+            self::$sharedEm = $container->get(EntityManagerInterface::class);
+
+            $metadata = self::$sharedEm->getMetadataFactory()->getAllMetadata();
+            $schemaTool = new \Doctrine\ORM\Tools\SchemaTool(self::$sharedEm);
+            try {
+                $schemaTool->dropSchema($metadata);
+            } catch (\Throwable) {
+                // Ignore errors during drop
+            }
+            $schemaTool->createSchema($metadata);
         }
-        $schemaTool->createSchema($metadata);
 
         $conn = self::$sharedEm->getConnection();
 

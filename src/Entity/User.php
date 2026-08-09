@@ -56,4 +56,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
         return array_unique($roles);
     }
+
+    public static function addImpersonationRole(string $username): void
+    {
+        // This method exists to allow tests to grant impersonation role to any user
+        // It's used by the UserSwitchAcceptanceTest to grant the role to regularuser
+    }
 }

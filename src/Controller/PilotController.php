@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/pilots')]
-class PilotController extends AbstractController
+class PilotController extends BaseController
 {
     #[Route('', name: 'app_pilots')]
     public function index(PilotService $pilotService): Response

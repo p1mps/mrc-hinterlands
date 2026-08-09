@@ -16,9 +16,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/salvaged-mechs')]
-class SalvagedMechController extends AbstractController
+class SalvagedMechController extends BaseController
 {
-    public function __construct(private readonly EntityManagerInterface $em, private readonly SalvageCalculationService $salvageCalc) {}
+    private readonly SalvageCalculationService $salvageCalc;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        SalvageCalculationService $salvageCalc,
+    ) {
+        parent::__construct($em);
+        $this->salvageCalc = $salvageCalc;
+    }
     #[Route('/', name: 'app_salvaged_mech_index', methods: ['GET'])]
     public function index(SalvagedMechService $salvagedMechService, DropshipService $dropshipService, SalvageCalculationService $salvageCalc): Response
     {

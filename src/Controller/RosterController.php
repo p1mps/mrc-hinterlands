@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/roster')]
-class RosterController extends AbstractController
+class RosterController extends BaseController
 {
     #[Route('', name: 'app_roster')]
     public function index(RosterService $rosterService, DropshipService $dropshipService): Response

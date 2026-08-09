@@ -15,12 +15,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/contracts/{id}/log')]
-class ContractLogController extends AbstractController
+class ContractLogController extends BaseController
 {
     public function __construct(
         private readonly ContractLogService $logService,
-        private readonly EntityManagerInterface $em,
-    ) {}
+        EntityManagerInterface $em,
+    ) {
+        parent::__construct($em);
+    }
 
     #[Route('/entry/{entryId}/edit', name: 'app_contracts_log_edit', methods: ['GET', 'POST'])]
     public function editEntry(Contract $contract, int $entryId, Request $request): Response

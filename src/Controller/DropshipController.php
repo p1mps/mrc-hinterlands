@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/dropship')]
-class DropshipController extends AbstractController
+class DropshipController extends BaseController
 {
     #[Route('/', name: 'app_dropship_show', methods: ['GET'])]
     public function show(DropshipService $dropshipService): Response

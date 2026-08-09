@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ContractController extends AbstractController
+class ContractController extends BaseController
 {
     #[Route('/contract', name: 'app_contracts')]
     public function index(EntityManagerInterface $em): Response

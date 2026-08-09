@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/support-points')]
-class SupportPointController extends AbstractController
+class SupportPointController extends BaseController
 {
     #[Route('', name: 'app_support_points')]
     public function index(
