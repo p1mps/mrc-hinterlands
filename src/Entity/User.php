@@ -23,6 +23,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column]
     private string $password;
 
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
+
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?MercenaryCompany $company = null;
 
@@ -46,16 +49,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     public function getRoles(): array
     {
-        // Give everyone the default user role
-        $roles = ['ROLE_USER'];
+        // Return roles from database, or default to ROLE_USER if not set
+        $roles = $this->roles ?: ['ROLE_USER'];
+        
+        // Ensure ROLE_USER is always present
+        $roles[] = 'ROLE_USER';
 
-        // Grant the impersonation role to specific emails
+        // Grant the impersonation role to specific usernames
         if ($this->username == 'Andrea'|| $this->username == 'Zidahya' || $this->username == 'MitchellWelsh') {
             $roles[] = 'ROLE_ALLOWED_TO_SWITCH';
         }
 
         return array_unique($roles);
     }
+
+    public function getRolesArray(): array { return $this->roles; }
+    public function setRolesArray(array $roles): static { $this->roles = $roles; return $this; }
 
     public static function addImpersonationRole(string $username): void
     {

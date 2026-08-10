@@ -51,11 +51,19 @@ abstract class AcceptanceTestCase extends WebTestCase
 
         $hash = password_hash('testpassword', PASSWORD_BCRYPT, ['cost' => 4]);
 
+        // Admin users need ROLE_ALLOWED_TO_SWITCH for impersonation to work
+        $isAdmin = in_array($username, ['Andrea', 'Zidahya', 'MitchellWelsh'], true);
+        $roles = $isAdmin ? '["ROLE_USER", "ROLE_ALLOWED_TO_SWITCH"]' : '["ROLE_USER"]';
+
         $conn->insert('user', [
             'username' => $username,
             'email' => strtolower($username) . '@test.com',
             'password' => $hash,
+            'roles' => $roles,
         ]);
+
+        // Also update any existing users that were created before the roles column was added
+        $conn->executeStatement('UPDATE "user" SET roles = \'["ROLE_USER"]\' WHERE roles IS NULL');
 
         $userId = (int) $conn->lastInsertId();
 
@@ -203,6 +211,7 @@ abstract class AcceptanceTestCase extends WebTestCase
             'is_truly_destroyed' => 0,
             'sp_taken' => 0,
             'company_id' => $companyId,
+            'created_at' => date('Y-m-d H:i:s'),
         ], $data);
         $conn->insert('salvaged_mech', array_filter($row, fn ($v) => null !== $v, ARRAY_FILTER_USE_BOTH));
         return (int) $conn->lastInsertId();

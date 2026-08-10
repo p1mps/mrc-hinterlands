@@ -40,8 +40,8 @@ class SalvagedMechServiceTest extends TestCase
 
     public function testGetAllMechsReturnsEmptyArray(): void
     {
-        $repo = $this->createStub(\Doctrine\ORM\EntityRepository::class);
-        $repo->method('findAll')->willReturn([]);
+        $repo = $this->createMock(\App\Repository\SalvagedMechRepository::class);
+        $repo->expects($this->any())->method('findAllOrderedByCreatedAt')->willReturn([]);
         $this->em->method('getRepository')->willReturn($repo);
 
         $this->assertEquals([], $this->service->getAllMechs());
@@ -51,8 +51,8 @@ class SalvagedMechServiceTest extends TestCase
     {
         $mechan = $this->makeMech();
         $mechan->method('getModel')->willReturn('Catapult CAT-PU1');
-        $repo = $this->createStub(\Doctrine\ORM\EntityRepository::class);
-        $repo->method('findAll')->willReturn([$mechan]);
+        $repo = $this->createMock(\App\Repository\SalvagedMechRepository::class);
+        $repo->expects($this->any())->method('findAllOrderedByCreatedAt')->willReturn([$mechan]);
         $this->em->method('getRepository')->willReturn($repo);
 
         $result = $this->service->getAllMechs();

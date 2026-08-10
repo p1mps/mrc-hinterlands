@@ -53,6 +53,7 @@ class FullStackIntegrationTest extends WebTestCase
             'username' => $username,
             'email' => strtolower($username) . '@test.com',
             'password' => $hash,
+            'roles' => '["ROLE_USER"]',
         ]);
 
         $userId = (int) $conn->lastInsertId();
@@ -121,6 +122,7 @@ class FullStackIntegrationTest extends WebTestCase
         $user->setUsername('newpilot');
         $user->setEmail('newpilot@test.com');
         $user->setPassword(password_hash('secret123', PASSWORD_BCRYPT, ['cost' => 4]));
+        $user->setRolesArray(['ROLE_USER']);
 
         $this->em->persist($user);
         $this->em->flush();

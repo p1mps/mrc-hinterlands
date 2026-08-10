@@ -16,6 +16,18 @@ class SalvagedMechRepository extends ServiceEntityRepository
         parent::__construct($registry, SalvagedMech::class);
     }
 
+    /**
+     * @return SalvagedMech[] Returns an array of SalvagedMech objects ordered by creation time DESC
+     */
+    public function findAllOrderedByCreatedAt(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->orderBy('s.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return SalvagedMech[] Returns an array of SalvagedMech objects
     //     */

@@ -62,6 +62,14 @@ class SalvagedMech
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $scrapyard = false;
 
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -218,6 +226,17 @@ class SalvagedMech
     public function setDropship(?Dropship $dropship): static
     {
         $this->dropship = $dropship;
+        return $this;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
         return $this;
     }
 }

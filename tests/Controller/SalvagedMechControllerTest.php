@@ -48,6 +48,7 @@ class SalvagedMechControllerTest extends WebTestCase
             'username' => $username,
             'email' => strtolower($username) . '@test.com',
             'password' => $hash,
+            'roles' => '["ROLE_USER"]',
         ]);
 
         $userId = (int) $conn->lastInsertId();

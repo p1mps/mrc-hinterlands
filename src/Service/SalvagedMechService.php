@@ -17,7 +17,7 @@ class SalvagedMechService
     /** @return SalvagedMech[] */
     public function getAllMechs(): array
     {
-        return $this->em->getRepository(SalvagedMech::class)->findAll();
+        return $this->em->getRepository(SalvagedMech::class)->findAllOrderedByCreatedAt();
     }
 
     public function getMech(int $id): ?SalvagedMech

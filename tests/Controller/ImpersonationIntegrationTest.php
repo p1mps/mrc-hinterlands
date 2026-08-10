@@ -36,6 +36,7 @@ class ImpersonationIntegrationTest extends WebTestCase
             'username' => 'user_with_company',
             'email' => 'with@test.com',
             'password' => $hash,
+            'roles' => '[]',
         ]);
         $companyId = (int) $conn->lastInsertId();
 
@@ -50,12 +51,14 @@ class ImpersonationIntegrationTest extends WebTestCase
             'username' => 'user_without_company',
             'email' => 'without@test.com',
             'password' => $hash,
+            'roles' => '[]',
         ]);
 
         $conn->insert('user', [
             'username' => 'another_with_company',
             'email' => 'another@with.com',
             'password' => $hash,
+            'roles' => '[]',
         ]);
         $companyId2 = (int) $conn->lastInsertId();
 
@@ -85,6 +88,7 @@ class ImpersonationIntegrationTest extends WebTestCase
             'username' => 'zeta_pilot',
             'email' => 'zeta@test.com',
             'password' => $hash,
+            'roles' => '[]',
         ]);
         $zetaId = (int) $conn->lastInsertId();
 
@@ -99,6 +103,7 @@ class ImpersonationIntegrationTest extends WebTestCase
             'username' => 'alpha_pilot',
             'email' => 'alpha@test.com',
             'password' => $hash,
+            'roles' => '[]',
         ]);
         $alphaId = (int) $conn->lastInsertId();
 
@@ -113,6 +118,7 @@ class ImpersonationIntegrationTest extends WebTestCase
             'username' => 'beta_pilot',
             'email' => 'beta@test.com',
             'password' => $hash,
+            'roles' => '[]',
         ]);
         $betaId = (int) $conn->lastInsertId();
 
@@ -141,6 +147,7 @@ class ImpersonationIntegrationTest extends WebTestCase
             'username' => 'orphan_user',
             'email' => 'orphan@test.com',
             'password' => $hash,
+            'roles' => '[]',
         ]);
 
         $users = $this->em->getRepository(User::class)->findAllUsersWithCompany();
@@ -158,6 +165,7 @@ class ImpersonationIntegrationTest extends WebTestCase
             'username' => 'dashboard_test_user',
             'email' => 'dashboard@test.com',
             'password' => $hash,
+            'roles' => '[]',
         ]);
         $companyId = (int) $conn->lastInsertId();
 
@@ -187,6 +195,7 @@ class ImpersonationIntegrationTest extends WebTestCase
                 'username' => "multi_user_{$i}",
                 'email' => "multi{$i}@test.com",
                 'password' => $hash,
+                'roles' => '[]',
             ]);
             $companyId = (int) $conn->lastInsertId();
 
