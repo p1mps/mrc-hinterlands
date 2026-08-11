@@ -41,21 +41,22 @@ class SalvagedMechServiceTest extends TestCase
     public function testGetAllMechsReturnsEmptyArray(): void
     {
         $repo = $this->createMock(\App\Repository\SalvagedMechRepository::class);
-        $repo->expects($this->any())->method('findAllOrderedByCreatedAt')->willReturn([]);
+        $repo->expects($this->any())->method('findByCompanyOrderedByCreatedAt')->willReturn([]);
         $this->em->method('getRepository')->willReturn($repo);
 
-        $this->assertEquals([], $this->service->getAllMechs());
+        $this->assertEquals([], $this->service->getAllMechs($this->makeCompany()));
     }
 
     public function testGetAllMechsReturnsSavedMechs(): void
     {
         $mechan = $this->makeMech();
         $mechan->method('getModel')->willReturn('Catapult CAT-PU1');
+        $company = $this->makeCompany();
         $repo = $this->createMock(\App\Repository\SalvagedMechRepository::class);
-        $repo->expects($this->any())->method('findAllOrderedByCreatedAt')->willReturn([$mechan]);
+        $repo->expects($this->any())->method('findByCompanyOrderedByCreatedAt')->willReturn([$mechan]);
         $this->em->method('getRepository')->willReturn($repo);
 
-        $result = $this->service->getAllMechs();
+        $result = $this->service->getAllMechs($company);
         $this->assertCount(1, $result);
         $this->assertEquals('Catapult CAT-PU1', $result[0]->getModel());
     }

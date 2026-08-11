@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\MercenaryCompany;
 use App\Entity\SalvagedMech;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,6 +23,20 @@ class SalvagedMechRepository extends ServiceEntityRepository
     public function findAllOrderedByCreatedAt(): array
     {
         return $this->createQueryBuilder('s')
+            ->orderBy('s.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return SalvagedMech[] Returns an array of SalvagedMech objects for a specific company, ordered by creation time DESC
+     */
+    public function findByCompanyOrderedByCreatedAt(MercenaryCompany $company): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.company = :company')
+            ->setParameter('company', $company)
             ->orderBy('s.createdAt', 'DESC')
             ->getQuery()
             ->getResult()

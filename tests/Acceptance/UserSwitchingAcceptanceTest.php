@@ -85,9 +85,10 @@ class UserSwitchingAcceptanceTest extends AcceptanceTestCase
         // Now switch to the target user by submitting the switch form
         $client->request('GET', '/roster?_switch_user=targetuser2');
 
+        // Follow the redirect to get the actual rendered page
+        $crawler = $client->followRedirect();
+
         // After switching, we should see the target user's data
-        $this->assertResponseIsSuccessful();
-        $crawler = $client->Crawler;
 
         $html = $crawler->filter('body')->html();
         $this->assertStringContainsString($targetMechName, $html, 'Should see target mech after switching');
@@ -119,16 +120,19 @@ class UserSwitchingAcceptanceTest extends AcceptanceTestCase
 
         // Switch to target user
         $client->request('GET', '/roster?_switch_user=targetuser3');
-        $this->assertResponseIsSuccessful();
 
-        $html = $client->Crawler->filter('body')->html();
+        // Follow the redirect to get the actual rendered page
+        $crawler = $client->followRedirect();
+
+        $html = $crawler->filter('body')->html();
         $this->assertStringContainsString($targetMechName, $html, 'Should see target mech after switching');
 
         // Now stop impersonating by following the _exit link
         $client->request('GET', '/roster?_switch_user=_exit');
 
+        // Follow the redirect since Symfony redirects after exiting impersonation
+        $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
-        $crawler = $client->Crawler;
 
         $html = $crawler->filter('body')->html();
         $this->assertStringContainsString($adminMechName, $html, 'Should see admin mech after stopping impersonation');

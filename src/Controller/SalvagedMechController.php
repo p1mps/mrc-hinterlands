@@ -35,7 +35,7 @@ class SalvagedMechController extends BaseController
     public function index(SalvagedMechService $salvagedMechService, DropshipService $dropshipService, SalvageCalculationService $salvageCalc): Response
     {
         $company = $this->getUser()->getCompany();
-        $mechanList = $salvagedMechService->getAllMechs();
+        $mechanList = $salvagedMechService->getAllMechs($company);
         $acquisitionPrice = [];
         foreach ($mechanList as $mechan) {
             $acquisitionPrice[$mechan->getId()] = $salvageCalc->calculateAcquisitionCost($mechan->getSalvageValue(), $mechan->getSalvageRightsPercent());

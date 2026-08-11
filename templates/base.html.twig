@@ -24,24 +24,22 @@
                 <a class="nav-link" href="{{ path('app_salvaged_mech_index') }}">Salvage</a>
                 <a class="nav-link" href="{{ path('app_dropship_show') }}">Dropship</a>
                 <a class="nav-link" href="{{ path('app_rules') }}">Rules</a>
-                {% if app.user and 'ROLE_ALLOWED_TO_SWITCH' in app.user.getRoles() %}
-                    {% set impersonatedUser = app.request.query.get('_switch_user') %}
+                {% if is_granted('IS_IMPERSONATOR') %}
+                    {% set impersonatedUser = app.user.username %}
                     {% set currentUrl = app.request.requestUri %}
-                    {% set currentUrl = currentUrl|replace({('_switch_user=' ~ impersonatedUser): ''})|replace({'?_switch_user': ''})|replace({'&_switch_user': ''}) %}
-                    {% if impersonatedUser and impersonatedUser != '_exit' %}
-                        <span class="nav-link text-warning">Impersonating: {{ impersonatedUser }}</span>
-                        <a class="nav-link" href="{{ currentUrl }}?_switch_user=_exit">Stop Impersonating</a>
-                    {% else %}
-                        <form action="{{ currentUrl }}" method="get" class="d-inline">
-                            <input type="hidden" name="_switch_user" id="impersonateSelect" value="">
-                            <select class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.querySelector('#impersonateSelect').value = this.value; this.form.submit()">
-                                <option value="">Switch user...</option>
-                                {% for user in users ?? [] %}
-                                    <option value="{{ user.username }}" {% if user.username == app.user.username %}selected{% endif %}>{{ user.username }}</option>
-                                {% endfor %}
-                            </select>
-                        </form>
-                    {% endif %}
+                    <span class="nav-link text-warning">Impersonating: {{ impersonatedUser }}</span>
+                    <a class="nav-link" href="{{ currentUrl }}?_switch_user=_exit">Stop Impersonating</a>
+                {% elseif app.user and 'ROLE_ALLOWED_TO_SWITCH' in app.user.getRoles() %}
+                    {% set currentUrl = app.request.requestUri %}
+                    <form action="{{ currentUrl }}" method="get" class="d-inline">
+                        <input type="hidden" name="_switch_user" id="impersonateSelect" value="">
+                        <select class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.querySelector('#impersonateSelect').value = this.value; this.form.submit()">
+                            <option value="">Switch user...</option>
+                            {% for user in users ?? [] %}
+                                <option value="{{ user.username }}" {% if user.username == app.user.username %}selected{% endif %}>{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
                 {% endif %}
                 <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
             </div>
