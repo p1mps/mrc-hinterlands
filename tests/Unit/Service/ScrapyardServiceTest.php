@@ -186,17 +186,17 @@ class ScrapyardServiceTest extends TestCase
         $table = $this->service->getTable('light');
 
         $expectedModels = [
-            'Locust LCT-3M' => [522, 20],
-            'Wasp WSP-3S' => [595, 15],
-            'Tarantula ZPH-4A' => [967, 26],
+            'Locust LCT-3M' => [482, 35],
+            'Wasp WSP-3S' => [389, 25],
+            'Tarantula ZPH-4A' => [597, 30],
             'Hitman HM-1' => [925, 32],
             'Osiris OSR-3D' => [1138, 32],
-            'Spider SDR-7K' => [752, 27],
-            'Valkyrie VLK-QD1' => [807, 25],
-            'Garm GRM-01A' => [701, 17],
+            'Spider SDR-7K' => [482, 35],
+            'Valkyrie VLK-QD1' => [984, 50],
+            'Garm GRM-01A' => [482, 35],
             'Panther PNT-10K2' => [913, 22],
-            'Wolfhound WLF-2' => [1061, 28],
-            'Venom SDR-9K' => [798, 25],
+            'Wolfhound WLF-2' => [768, 40],
+            'Venom SDR-9K' => [482, 35],
         ];
 
         $this->assertEquals($expectedModels, $table);
@@ -228,8 +228,8 @@ class ScrapyardServiceTest extends TestCase
         $table = $this->service->getTable('heavy');
 
         $expectedModels = [
-            'Catapult CPLT-C5' => [1748, 42],
-            'JagerMech JM6-DDa' => [911, 26],
+            'Catapult CPLT-C5' => [1810, 60],
+            'JagerMech JM6-DDa' => [1279, 45],
             'Archer ARC-5R' => [1674, 37],
             'Gallowglas GAL-1GLS' => [1695, 36],
             'Rifleman RFL-5D' => [1395, 32],
