@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict aSDwgaT3oPJ5WMtS0hpwlvwAFTQ9TLJYeSbIHXYMytQs50j1pAcj7ulSEAogmEh
+\restrict QstsbnGqyyt9IYY3gUx8PlEf8v6KhiuKcw469rQfWxHGQZt7pmR0uOJRTYy39JH
 
 -- Dumped from database version 14.23 (Ubuntu 14.23-0ubuntu0.22.04.1)
 -- Dumped by pg_dump version 14.23 (Ubuntu 14.23-0ubuntu0.22.04.1)
@@ -126,7 +126,7 @@ CREATE TABLE public.dropship (
     max_capacity integer NOT NULL,
     company_id integer NOT NULL,
     name character varying(255) DEFAULT NULL::character varying,
-    mekbay_capacity integer DEFAULT 0 NOT NULL
+    mekbay_capacity integer NOT NULL
 );
 
 
@@ -247,7 +247,6 @@ CREATE TABLE public.salvaged_mech (
     model character varying(255) DEFAULT NULL::character varying,
     tonnage integer NOT NULL,
     bv_cost integer,
-    acquired boolean DEFAULT false NOT NULL,
     contract_id integer,
     damage_state character varying(50) DEFAULT NULL::character varying,
     tech_base character varying(50) DEFAULT NULL::character varying,
@@ -257,7 +256,8 @@ CREATE TABLE public.salvaged_mech (
     salvage_rights_percent integer,
     scrapyard boolean DEFAULT false NOT NULL,
     dropship_id integer,
-    company_id integer NOT NULL
+    company_id integer NOT NULL,
+    created_at timestamp(0) without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL
 );
 
 
@@ -353,7 +353,6 @@ CREATE TABLE public.unit (
     bv integer NOT NULL,
     unit_type character varying(50) NOT NULL,
     damage_state character varying(50) NOT NULL,
-    is_active boolean NOT NULL,
     company_id integer NOT NULL,
     pilot_id integer,
     dropship_id integer
@@ -384,7 +383,8 @@ CREATE TABLE public."user" (
     id integer NOT NULL,
     username character varying(180) NOT NULL,
     email character varying(255) NOT NULL,
-    password character varying(255) NOT NULL
+    password character varying(255) NOT NULL,
+    roles json DEFAULT '["ROLE_USER"]'::json NOT NULL
 );
 
 
@@ -415,9 +415,8 @@ COPY public.contract (id, is_opposing, type, employer, employer_affiliation, sca
 9	t	raid	Pirates	Pirates	1	1	0	independent	0%	100%	0%	1	1	completed	2026-06-29 09:06:30	\N	3	\N	6	Somerset	1	Raid	\N
 20	f	invasion	Mercenary Subcontract	Pirate	1	6	50	liaison	Straight/40%	100%	25%	4	0	available	2026-08-02 11:17:07	\N	\N	\N	\N	Radostov	\N	\N	**CONTRACT PACKET: OPERATION SILENT ORBIT**\n**OFFERING ENTITY:** Meridian Logistics / Director Aris Thorne (Liao-Taurian Border Consortium)\n**THEATER:** The Sian Marches – Orbital Transfer Complex Kowloon-7\n**BRIEFING CLASSIFICATION:** PRE-CONTRACT ORIENTER // COMMAND PACKET\n\n---\n\n### 📜 SURFACE BRIEFING (Read Aloud or Hand to Players)\n\n*“The Sian Marches haven’t seen a JumpShip in four years. The Great Houses stopped subsidizing patrol routes after the last Succession War bled their treasuries dry. Now it’s just warlords, smugglers, and the quiet hum of abandoned factories. That’s why we’re here.*\n\n*Meridian Logistics has secured the lease on Kowloon-7. It’s an Orion-class orbital transfer station, sitting idle but structurally sound. Our priority is simple: clear the surface perimeter, reactivate the landing rings, and bring the long-range comms array online. Once it’s humming, we control the corridor.*\n\n*You’ll be compensated with full base pay, covered transport, and standard salvage rights on any derelict hardware you recover. Meridian handles the jumpship charter, the fuel, and the diplomatic waivers. In exchange, you establish a forward operating base, secure the landing pads, and keep the local militias from burning the place to the ground. Do that, and you don’t just get paid. You get a foothold. You get a base. You get to operate outside New Avalon and Liao’s notice.*\n\n*Watch your flanks. The Marches don’t forgive hesitation. But if you hold the rings, you hold the future.”*\n\n---\n\n### 🌍 STRATEGIC CONTEXT (GM Reference)\n\n**Era & Geopolitics:** Post-3050s border friction. The Great Houses are stretched thin by Clan border conflicts and internal succession crises. The Sian Marches, formerly a Lyran-Draconis border zone, have devolved into a deniable staging ground for Taurian Concordat and Combine remnant forces. Jumpship traffic is down 70%. Local "Free Marcher" militias control the surface, running black-market refineries and refugee smuggling routes.\n\n**Political Necessity:** The Combine has imposed an informal orbital blockade, choking helium-3 shipments and cutting off Taurian-aligned worlds. Meridian Logistics, a corporate shell masking a joint Liao-Taurian venture, is trying to break the blockade without triggering a formal declaration of war. They need a deniable, heavily armed mercenary force to seize and hold Kowloon-7.\n\n**Economic Reality:** The station isn’t just a military asset. It’s a tax-collecting transit hub. Whoever controls it can levy tariffs on JumpShip landings, control refugee flows, and monopolize rare-earth mineral exports from three adjacent systems. For a mercenary unit, it’s a generational opportunity to transition from contractors to sovereign operators.\n\n---\n\n### 🎯 WHAT THE EMPLOYER STANDS TO GAIN\n\n1. **Corridor Dominance:** Reactivating the station breaks the Combine’s informal blockade, allowing Meridian to control regional trade, fund a puppet government, or sell transit rights to the highest bidder.\n2. **Political Insurance:** Director Thorne is a minor house remnant leader facing exile. Securing Kowloon-7 gives him leverage to negotiate a noble title, secure asylum, or fund a covert coup back home.\n3. **Mercenary Proxy Force:** By funding your unit, Meridian secures a loyal, combat-tested force they can call upon during border disputes, without triggering Great House treaties or drawing official military intervention.\n4. **Data Arbitrage:** The station’s archives contain decades of SLDF movement logs, trade manifests, and black-site intelligence. Meridian plans to sell this data to intelligence brokers, minor houses, and independent JumpShip operators.\n\n---\n\n### 🕳️ CLASSIFIED ANNEX (GM ONLY / Withheld Intel)\n\n*Surface-level plausibility is maintained. The unit receives no mention of the following. If pressed, Meridian personnel will deflect, cite “operational security,” or offer a 5% bonus to drop the line.*\n\n1. **The Station Is Not Idle:** Kowloon-7’s defense network, an SLDF-era AI designated ARGUS-7, has been running autonomous counter-piracy protocols for 150 years. It classifies unauthorized landings as hostile. The “local militia” are actually remnant SLDF defense drones, automated turrets, and degraded support mechs that ARGUS-7 has been maintaining.\n2. **A Rival Force Is Already On-Planet:** A Clan scout detachment (unmarked, black-painted, flying under false Free Worlds League registrations) landed eight months ago. They’re not after the station. They’re conducting a systematic search for a buried Clan-era experimental mechsuite cache. They’ve already breached the lower vaults and are actively hunting intruders.\n3. **The Corporate Trap:** Meridian’s true contract isn’t to run the station. It’s to trigger its orbital self-destruct sequence if a Combine or Lyran fleet approaches. They plan to sacrifice your forward base to cover a political extraction. The “lease” is a temporary occupancy agreement, not a deed.\n4. **Salvage Restrictions:** Meridian reserves the right to confiscate any Class-A military tech, experimental armor, or pre-Cluster War weapons under “Corporate Security Protocol 9.” If your unit finds it, they will be forced to hand it over or face contract termination. The employer wants the hardware, not your upgrades.\n\n---\n\n### 🧭 COMMANDER’S DILEMMA (For Table Play)\n\n- **Accept the contract:** Secure a foothold, gain massive resources, but risk walking into automated defenses, a rival Clan force, and a corporate betrayal.\n- **Dig deeper:** Invest time and resources into local informants, satellite recon, or black-market contacts. Discover ARGUS-7’s protocols, the Clan presence, and Meridian’s self-destruct clauses before committing.\n- **Negotiate terms:** Demand higher salvage shares, explicit Clauses of Exemption, or a guaranteed exit strategy. Meridian may agree, stall, or try to bind your unit with debt.\n- **Walk away:** Preserve your force, but lose a generational opportunity. The corridor will be sealed by Great House fleets or warlord blockades within the year.\n\n*“In the Hinterlands, there are no clean victories. Only calculated losses, corporate contracts, and the will to hold the ground you take.”* \n**— Meridian Logistics, Pre-Contract Acknowledgment**\n\n---\n**GM NOTES FOR TABLE USE:**\n- Provide players with a basic map of Kowloon-7’s surface perimeter, comms array, landing rings, and lower vaults.\n- Use ARGUS-7’s automated defenses as dynamic environmental hazards (random turret activations, drone patrols, AI comms jamming).\n- The Clan scout team should operate as a rival mercenary force with different loadouts, tactics, and objectives. They may be willing to trade, fight, or temporarily cooperate if利益 align.\n- Track Meridian’s true endgame as a ticking clock. If players secure the station but ignore the self-destruct protocols, the employer may trigger it remotely unless players can bypass Meridian’s override codes.
 6	f	garrison	Noble (Local)	Star league	1	3	100	independent	0%	60%	100%	2	2	completed	2026-06-27 09:44:37	2026-06-27 09:44:37	1	\N	\N	Somerset	0-1-1	Act of piracy contract	\N
-16	f	expedition	Planetary Government	Lyran Commonwealth	1	6	110	liaison	Straight/100%	10%	75%	2	0	available	2026-08-02 11:15:49	\N	\N	\N	\N	Gustrell	\N	\N	**CONTRACT DOSSIER: OPERATION IRON VEIL**\n**OFFERING ENTITY:** Charybdis Ventures / Lord-Proprietor Elias Vance (Lyran-Periphery Border Speculators)\n**THEATER:** The Kestrel Reach – Fractured Border Zone (Formerly FWL/Lyran contested space)\n**BRIEFING CLASSIFICATION:** COMMAND PACKET // PRE-CONTRACT ORIENTATION\n\n---\n\n### 📜 PLAYER-FACING BRIEFING (Read Aloud or Hand Out)\n\n*“The Jade Falcons pulled out three cycles ago, leaving the Kestrel Reach a graveyard of scorched earth and abandoned garrisons. What was once a bloody no-man’s-land between the Free Worlds League and the Lyran Commonwealth has become a goldmine for speculators, warlords, and ghosts. The Great Houses’ authority here has completely collapsed. Supply lines are dead. Jumpships don’t run clean routes. And the local militias? They answer to no one but their own survival.”*\n\n*“Charybdis Ventures is offering you a foothold. Not just salvage rights, but a permanent forward operating base. We’re funding your expedition to secure a rumored Star League-era logistics depot buried beneath the mountain ranges. Historical surveys suggest pre-Cluster War manufacturing data, functional mech bays, and intact production tooling. You secure the site, you establish a base, and you control the only viable jump corridor for the next fifty years.”*\n\n*“The political winds are shifting. The FWL’s central government is too fractured to project power. Lyran nobles are maneuvering in secret. If you move first, you don’t just get salvage. You get leverage. You get autonomy. You get to carve out a territory in a lawless sector where the only law is who holds the high ground and who controls the ore. Pay is aggressive. Salvage rights are heavily subsidized. Transportation and support are covered. We handle the paperwork. You handle the terrain.”*\n\n*“Do your recon. Watch your flanks. And don’t get attached to the rumors. The Reach doesn’t give up its secrets without a fight.”*\n\n---\n\n### 🔍 GEOPOLITICAL & STRATEGIC CONTEXT\n\nThe Kestrel Reach was carved out of a series of border skirmishes during the late Succession Wars, when the Draconis Combine and Lyran Commonwealth used proxy militias to bleed each other dry. With the recent Clan withdrawal and the collapse of several minor house governments, the region has devolved into a patchwork of warlord fiefdoms, black-market arms dealers, and desperate refugees. \n\nJumpship routes are unreliable due to unmarked minefields and pirate picket points. Local economies run on barter, stolen fuel, and unlicensed mech salvage. For a mercenary unit, this is a rare opportunity to operate outside Great House oversight, negotiate directly with local rulers, and build a self-sustaining fiefdom. \n\nCharybdis Ventures is a Lyran-FWL border consortium with deep ties to former SLDF logistics officers, independent jumpship operators, and Periphery black-market brokers. They don’t answer to Tharkad or New Avalon. They answer to profit, leverage, and survival.\n\n---\n\n### 🎯 WHAT THE EMPLOYER STANDS TO GAIN\n\n1. **Strategic Jump Control:** Securing the depot allows Charybdis to tax regional trade, control refugee flows, and block rival factions from establishing a foothold.\n2. **Star League Era Tech:** Recovering functional Star League manufacturing data or intact mech production lines could fund a generation of black-market sales or be traded for political favors with minor houses.\n3. **Political Insurance:** Lord-Proprietor Vance is facing a succession crisis back home. A successful expedition provides him with the leverage to negotiate his way into a minor noble title, or to fund a puppet government if his own house falls.\n4. **Mercenary Leverage:** By funding your unit, Charybdis secures a loyal, heavily armed proxy force they can call on during border disputes, without triggering Great House treaties or drawing official military intervention.\n\n---\n\n### 🕳️ CLASSIFIED ANNEX (GM ONLY / Withheld Intel)\n\n*Surface-level plausibility is maintained. The unit receives no mention of the following. If pressed, Charybdis personnel will deflect, cite “operational security,” or offer a 10% bonus to drop the line.*\n\n1. **The Site Is Active:** The depot isn’t abandoned. It’s running on automated defense grids, maintenance drones, and localized power plants that haven’t been powered down in 200 years. The “abandoned” status is a cover. The facility is actively filtering for intruders.\n2. **A Rival Unit Is Already On-Planet:** A heavily sanctioned Combine-backed mercenary outfit (flying unmarked, black-painted mechs) landed six months ago. They’re not after salvage. They’re conducting a systematic purge of the facility’s upper levels. Their commander is a former SLDF officer turned warlord.\n3. **The Cargo Is Unstable:** The depot contains experimental Clan-era countermeasures and sealed canisters of pre-Cluster War chemical agents. One breach could contaminate water tables, fry electronics, or trigger environmental collapse. Charybdis downplays this because they need the unit to breach the lower vaults first.\n4. **Political Expendability:** If the FWL or Lyran Commonwealth moves to reassert control, Charybdis will cut funding and denounce the contract as a rogue operation. Your unit will be left holding the bag, the base, and the wrath of two Great Houses. The employer’s true endgame is to test your unit’s loyalty and combat effectiveness before committing to a larger proxy war.\n5. **The Real Prize Isn’t the Tech:** The depot houses a buried SLDF-era command bunker containing encrypted troop movement logs and black-site intelligence. Charybdis doesn’t care about the mechs. They care about who moved where, when, and why. They’re building a ledger of Great House failures to sell to the highest bidder.\n\n---\n\n### 🧭 COMMANDER’S DILEMMA (For Table Play)\n\n- **Accept the contract:** Secure a foothold, gain massive resources, but risk walking into an active fortress, a rival mercenary force, and a political trap.\n- **Dig deeper:** Invest time and resources into local informants, black-market contacts, or satellite recon. Discover the rival unit, the automated defenses, and the chemical hazards before committing.\n- **Negotiate terms:** Demand higher salvage shares, explicit Clauses of Exemption, or an exit strategy. Charybdis may agree, stall, or try to bind your unit with debt.\n- **Walk away:** Preserve your force, but lose a generational opportunity. The Reach will be swept by warlords or Great House recon forces within the year.\n\n*“In the Hinterlands, there are no clean victories. Only calculated losses and the will to hold the ground you take.”* \n**— Charybdis Ventures, Pre-Contract Acknowledgment**
 14	f	retainer	Mercenary Subcontract	Periphery Power	1	6	70	independent	Straight/60%	10%	25%	4	0	available	2026-08-02 11:14:51	\N	\N	\N	\N	Eidsfoss	\N	\N	**CONTRACT DOSSIER: OPERATION IRON VEIL**\n**OFFERING ENTITY:** Charybdis Ventures / Lord-Proprietor Elias Vance (Lyran-Periphery Border Speculators)\n**THEATER:** The Kestrel Reach – Fractured Border Zone (Formerly FWL/Lyran contested space)\n**BRIEFING CLASSIFICATION:** COMMAND PACKET // PRE-CONTRACT ORIENTATION\n\n---\n\n### 📜 PLAYER-FACING BRIEFING (Read Aloud or Hand Out)\n\n*“The Jade Falcons pulled out three cycles ago, leaving the Kestrel Reach a graveyard of scorched earth and abandoned garrisons. What was once a bloody no-man’s-land between the Free Worlds League and the Lyran Commonwealth has become a goldmine for speculators, warlords, and ghosts. The Great Houses’ authority here has completely collapsed. Supply lines are dead. Jumpships don’t run clean routes. And the local militias? They answer to no one but their own survival.”*\n\n*“Charybdis Ventures is offering you a foothold. Not just salvage rights, but a permanent forward operating base. We’re funding your expedition to secure a rumored Star League-era logistics depot buried beneath the mountain ranges. Historical surveys suggest pre-Cluster War manufacturing data, functional mech bays, and intact production tooling. You secure the site, you establish a base, and you control the only viable jump corridor for the next fifty years.”*\n\n*“The political winds are shifting. The FWL’s central government is too fractured to project power. Lyran nobles are maneuvering in secret. If you move first, you don’t just get salvage. You get leverage. You get autonomy. You get to carve out a territory in a lawless sector where the only law is who holds the high ground and who controls the ore. Pay is aggressive. Salvage rights are heavily subsidized. Transportation and support are covered. We handle the paperwork. You handle the terrain.”*\n\n*“Do your recon. Watch your flanks. And don’t get attached to the rumors. The Reach doesn’t give up its secrets without a fight.”*\n\n---\n\n### 🔍 GEOPOLITICAL & STRATEGIC CONTEXT\n\nThe Kestrel Reach was carved out of a series of border skirmishes during the late Succession Wars, when the Draconis Combine and Lyran Commonwealth used proxy militias to bleed each other dry. With the recent Clan withdrawal and the collapse of several minor house governments, the region has devolved into a patchwork of warlord fiefdoms, black-market arms dealers, and desperate refugees. \n\nJumpship routes are unreliable due to unmarked minefields and pirate picket points. Local economies run on barter, stolen fuel, and unlicensed mech salvage. For a mercenary unit, this is a rare opportunity to operate outside Great House oversight, negotiate directly with local rulers, and build a self-sustaining fiefdom. \n\nCharybdis Ventures is a Lyran-FWL border consortium with deep ties to former SLDF logistics officers, independent jumpship operators, and Periphery black-market brokers. They don’t answer to Tharkad or New Avalon. They answer to profit, leverage, and survival.\n\n---\n\n### 🎯 WHAT THE EMPLOYER STANDS TO GAIN\n\n1. **Strategic Jump Control:** Securing the depot allows Charybdis to tax regional trade, control refugee flows, and block rival factions from establishing a foothold.\n2. **Star League Era Tech:** Recovering functional Star League manufacturing data or intact mech production lines could fund a generation of black-market sales or be traded for political favors with minor houses.\n3. **Political Insurance:** Lord-Proprietor Vance is facing a succession crisis back home. A successful expedition provides him with the leverage to negotiate his way into a minor noble title, or to fund a puppet government if his own house falls.\n4. **Mercenary Leverage:** By funding your unit, Charybdis secures a loyal, heavily armed proxy force they can call on during border disputes, without triggering Great House treaties or drawing official military intervention.\n\n---\n\n### 🕳️ CLASSIFIED ANNEX (GM ONLY / Withheld Intel)\n\n*Surface-level plausibility is maintained. The unit receives no mention of the following. If pressed, Charybdis personnel will deflect, cite “operational security,” or offer a 10% bonus to drop the line.*\n\n1. **The Site Is Active:** The depot isn’t abandoned. It’s running on automated defense grids, maintenance drones, and localized power plants that haven’t been powered down in 200 years. The “abandoned” status is a cover. The facility is actively filtering for intruders.\n2. **A Rival Unit Is Already On-Planet:** A heavily sanctioned Combine-backed mercenary outfit (flying unmarked, black-painted mechs) landed six months ago. They’re not after salvage. They’re conducting a systematic purge of the facility’s upper levels. Their commander is a former SLDF officer turned warlord.\n3. **The Cargo Is Unstable:** The depot contains experimental Clan-era countermeasures and sealed canisters of pre-Cluster War chemical agents. One breach could contaminate water tables, fry electronics, or trigger environmental collapse. Charybdis downplays this because they need the unit to breach the lower vaults first.\n4. **Political Expendability:** If the FWL or Lyran Commonwealth moves to reassert control, Charybdis will cut funding and denounce the contract as a rogue operation. Your unit will be left holding the bag, the base, and the wrath of two Great Houses. The employer’s true endgame is to test your unit’s loyalty and combat effectiveness before committing to a larger proxy war.\n5. **The Real Prize Isn’t the Tech:** The depot houses a buried SLDF-era command bunker containing encrypted troop movement logs and black-site intelligence. Charybdis doesn’t care about the mechs. They care about who moved where, when, and why. They’re building a ledger of Great House failures to sell to the highest bidder.\n\n---\n\n### 🧭 COMMANDER’S DILEMMA (For Table Play)\n\n- **Accept the contract:** Secure a foothold, gain massive resources, but risk walking into an active fortress, a rival mercenary force, and a political trap.\n- **Dig deeper:** Invest time and resources into local informants, black-market contacts, or satellite recon. Discover the rival unit, the automated defenses, and the chemical hazards before committing.\n- **Negotiate terms:** Demand higher salvage shares, explicit Clauses of Exemption, or an exit strategy. Charybdis may agree, stall, or try to bind your unit with debt.\n- **Walk away:** Preserve your force, but lose a generational opportunity. The Reach will be swept by warlords or Great House recon forces within the year.\n\n*“In the Hinterlands, there are no clean victories. Only calculated losses and the will to hold the ground you take.”* \n**— Charybdis Ventures, Pre-Contract Acknowledgment**
-21	f	raid	Corporation	Draconis Combine	1	3	130	liaison	Straight/20%	20%	75%	2	0	available	2026-08-02 19:36:01	\N	\N	\N	\N	Sabik	\N	\N	
+29	f	retainer	House Government	Draconis Combine	1	6	100	integrated	Straight/100%	None	50%	4	0	available	2026-08-10 22:22:13	\N	\N	\N	\N	Eidsfoss	\N	\N	
 \.
 
 
@@ -489,6 +488,10 @@ DoctrineMigrations\\Version20260731083825	2026-07-31 22:02:09	57
 DoctrineMigrations\\Version20260731093631	2026-07-31 22:02:09	1
 DoctrineMigrations\\Version20260731185500	2026-08-01 00:25:35	9
 DoctrineMigrations\\Version20260804164637	2026-08-05 13:50:02	130
+DoctrineMigrations\\Version20260806085522	2026-08-06 16:12:12	18
+DoctrineMigrations\\Version20260806090000	2026-08-06 20:57:07	8
+DoctrineMigrations\\Version20260809144115	2026-08-10 08:32:21	36
+DoctrineMigrations\\Version20260809145957	2026-08-10 08:32:21	7
 \.
 
 
@@ -497,7 +500,8 @@ DoctrineMigrations\\Version20260804164637	2026-08-05 13:50:02	130
 --
 
 COPY public.dropship (id, max_capacity, company_id, name, mekbay_capacity) FROM stdin;
-1	400	2	Warbound	0
+1	1000	2	Warbound	4
+2	500	3	Perfect Storm	4
 \.
 
 
@@ -537,7 +541,16 @@ COPY public.pilot (id, name, is_named, gunnery, piloting, gunnery_xp, company_id
 -- Data for Name: salvaged_mech; Type: TABLE DATA; Schema: public; Owner: p1mps
 --
 
-COPY public.salvaged_mech (id, model, tonnage, bv_cost, acquired, contract_id, damage_state, tech_base, is_truly_destroyed, sp_taken, salvage_value, salvage_rights_percent, scrapyard, dropship_id, company_id) FROM stdin;
+COPY public.salvaged_mech (id, model, tonnage, bv_cost, contract_id, damage_state, tech_base, is_truly_destroyed, sp_taken, salvage_value, salvage_rights_percent, scrapyard, dropship_id, company_id, created_at) FROM stdin;
+11	Phoenix Hawk PXH-3K	45	1380	\N	none	\N	f	\N	\N	\N	t	\N	2	2026-08-11 06:32:13
+12	Hunchback HBK-5N	50	1485	\N	crippled	\N	f	\N	\N	\N	t	\N	2	2026-08-11 06:32:16
+13	Marauder MAD-5D	60	1790	\N	crippled	\N	f	\N	\N	\N	t	\N	2	2026-08-11 06:32:18
+14	Marauder MAD-5D	60	1790	\N	crippled	\N	f	\N	\N	\N	t	\N	1	2026-08-11 11:20:06
+15	Blackjack BJ-2	45	1265	\N	none	\N	f	\N	\N	\N	t	\N	1	2026-08-11 11:20:08
+16	Maelstrom MTR-5K	55	1620	\N	structural	\N	f	\N	\N	\N	t	\N	1	2026-08-11 11:20:11
+17	Gallowglas GAL-1GLS	45	1425	\N	none	\N	f	\N	\N	\N	t	\N	3	2026-08-11 11:54:01
+18	Vindicator VND-3L	45	1520	\N	structural	\N	f	\N	\N	\N	t	\N	3	2026-08-11 11:54:03
+19	Wasp WSP-3S	25	389	\N	structural	\N	f	\N	\N	\N	t	\N	3	2026-08-11 11:54:04
 \.
 
 
@@ -606,12 +619,12 @@ COPY public.track_record (id, track_number, mission_type, terrain, command_compl
 -- Data for Name: unit; Type: TABLE DATA; Schema: public; Owner: p1mps
 --
 
-COPY public.unit (id, name, chassis, tonnage, bv, unit_type, damage_state, is_active, company_id, pilot_id, dropship_id) FROM stdin;
-1	Event Horizon	Black Hawk (Nova) S	50	2056	mech	none	t	2	1	\N
-2	Distant Thunder	Whitworth WTH-2	40	936	mech	none	t	2	2	\N
-3	Tempest's Edge	Jade Hawk	75	2523	mech	none	t	3	3	\N
-4	Augur	Tribune Mobile Tactical Command HQ	30	424	vehicle	none	t	3	4	\N
-5	Thunderhead	Black Hawk-KU [BHKU-OR]	60	2193	mech	none	t	3	\N	\N
+COPY public.unit (id, name, chassis, tonnage, bv, unit_type, damage_state, company_id, pilot_id, dropship_id) FROM stdin;
+1	Event Horizon	Black Hawk (Nova) S	50	2056	mech	none	2	1	\N
+2	Distant Thunder	Whitworth WTH-2	40	936	mech	none	2	2	\N
+3	Tempest's Edge	Jade Hawk	75	2523	mech	none	3	3	2
+4	Augur	Tribune Mobile Tactical Command HQ	30	424	vehicle	none	3	4	2
+5	Thunderhead	Black Hawk-KU [BHKU-OR]	60	2193	mech	none	3	\N	2
 \.
 
 
@@ -619,10 +632,10 @@ COPY public.unit (id, name, chassis, tonnage, bv, unit_type, damage_state, is_ac
 -- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: p1mps
 --
 
-COPY public."user" (id, username, email, password) FROM stdin;
-2	Andrea	imparato.andrea@gmail.com	$2y$13$3894MxDJgJy4B25Wulz5uOXAGeW.qJA1q6CYxIF0BOPDDjf2LoMVq
-1	MitchellWelsh	mitchellcwelsh@outlook.com	$2y$13$UCLE0vXuNBq.ZIM.BpjO6.2mXFlf4pjXEchL0ifG4Q.p0hXbpQ4u2
-3	Zidahya	zidahya@gmx.net	$2y$13$Ht91GVH2WJqw16ELCR2zLe/QXlnyh61HBCuzRzL.1OISd7LfNdcLW
+COPY public."user" (id, username, email, password, roles) FROM stdin;
+2	Andrea	imparato.andrea@gmail.com	$2y$13$3894MxDJgJy4B25Wulz5uOXAGeW.qJA1q6CYxIF0BOPDDjf2LoMVq	["ROLE_USER"]
+1	MitchellWelsh	mitchellcwelsh@outlook.com	$2y$13$UCLE0vXuNBq.ZIM.BpjO6.2mXFlf4pjXEchL0ifG4Q.p0hXbpQ4u2	["ROLE_USER"]
+3	Zidahya	zidahya@gmx.net	$2y$13$Ht91GVH2WJqw16ELCR2zLe/QXlnyh61HBCuzRzL.1OISd7LfNdcLW	["ROLE_USER"]
 \.
 
 
@@ -630,7 +643,7 @@ COPY public."user" (id, username, email, password) FROM stdin;
 -- Name: contract_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.contract_id_seq', 21, true);
+SELECT pg_catalog.setval('public.contract_id_seq', 29, true);
 
 
 --
@@ -644,7 +657,7 @@ SELECT pg_catalog.setval('public.contract_log_entry_id_seq', 133, true);
 -- Name: dropship_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.dropship_id_seq', 1, true);
+SELECT pg_catalog.setval('public.dropship_id_seq', 2, true);
 
 
 --
@@ -672,7 +685,7 @@ SELECT pg_catalog.setval('public.pilot_id_seq', 5, true);
 -- Name: salvaged_mech_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.salvaged_mech_id_seq', 1, true);
+SELECT pg_catalog.setval('public.salvaged_mech_id_seq', 19, true);
 
 
 --
@@ -1072,5 +1085,5 @@ ALTER TABLE ONLY public.salvaged_mech
 -- PostgreSQL database dump complete
 --
 
-\unrestrict aSDwgaT3oPJ5WMtS0hpwlvwAFTQ9TLJYeSbIHXYMytQs50j1pAcj7ulSEAogmEh
+\unrestrict QstsbnGqyyt9IYY3gUx8PlEf8v6KhiuKcw469rQfWxHGQZt7pmR0uOJRTYy39JH
 
