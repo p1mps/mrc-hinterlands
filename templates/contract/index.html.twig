@@ -47,7 +47,9 @@
                 {% set linked = linked|merge([c.linkedContract]) %}
             {% endif %}
             {% if linked|length > 0 %}
-                {{ linked|map(l => '<a href="' ~ path('app_contracts_show', {id: l.id}) ~ '">' ~ (l.name ?? '(no name)') ~ '</a>')|raw|join(', ') }}
+                {% for l in linked %}
+                    <a href="{{ path('app_contracts_show', {'id': l.id}) }}">{{ l.name ?? '(no name)' }}</a>{% if not loop.last %}, {% endif %}
+                {% endfor %}
             {% else %}
                 —
             {% endif %}
