@@ -21,6 +21,7 @@ use App\Enum\DamageState;
 use App\Enum\TechBase;
 use App\Enum\TrackStatus;
 use App\Enum\UnitType;
+use App\Service\TrackIntensityGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -31,8 +32,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'app:seed-database', description: 'Seed the database with sample data for all entities')]
 class SeedDatabaseCommand extends Command
 {
-    public function __construct(private readonly EntityManagerInterface $em)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly TrackIntensityGenerator $intensityGenerator
+    ) {
         parent::__construct();
     }
 
@@ -343,7 +346,7 @@ class SeedDatabaseCommand extends Command
             ->setStatus(ContractStatus::Active)
             ->setName('Operation Vermeer Shield')
             ->setPlanet('Vermeer-4')
-            ->setIntensity('High');
+            ->setIntensity($this->intensityGenerator->generate($contract1->getDurationMonths(), $contract1->getNumberOfTracks()));
         $this->em->persist($contract1);
         $contracts[] = $contract1;
 
@@ -366,7 +369,7 @@ class SeedDatabaseCommand extends Command
             ->setStatus(ContractStatus::Completed)
             ->setName('Operation Blackout')
             ->setPlanet('Kowloon')
-            ->setIntensity('Medium');
+            ->setIntensity($this->intensityGenerator->generate($contract2->getDurationMonths(), $contract2->getNumberOfTracks()));
         $this->em->persist($contract2);
         $contracts[] = $contract2;
 
@@ -389,7 +392,7 @@ class SeedDatabaseCommand extends Command
             ->setStatus(ContractStatus::Available)
             ->setName('Operation Iron Wall')
             ->setPlanet('New Glasgow')
-            ->setIntensity('Low');
+            ->setIntensity($this->intensityGenerator->generate($contract3->getDurationMonths(), $contract3->getNumberOfTracks()));
         $this->em->persist($contract3);
         $contracts[] = $contract3;
 
@@ -414,7 +417,7 @@ class SeedDatabaseCommand extends Command
             ->setStatus(ContractStatus::Active)
             ->setName('Operation Crossfire')
             ->setPlanet('Tharkad')
-            ->setIntensity('Very High');
+            ->setIntensity($this->intensityGenerator->generate($contract4->getDurationMonths(), $contract4->getNumberOfTracks()));
         $this->em->persist($contract4);
         $contracts[] = $contract4;
 
@@ -439,7 +442,7 @@ class SeedDatabaseCommand extends Command
             ->setStatus(ContractStatus::Active)
             ->setName('Operation Steel Tempest')
             ->setPlanet('Luthien')
-            ->setIntensity('Very High');
+            ->setIntensity($this->intensityGenerator->generate($contract5->getDurationMonths(), $contract5->getNumberOfTracks()));
         $contract5->setLinkedContract($contract4);
         $this->em->persist($contract5);
         $contracts[] = $contract5;
@@ -463,7 +466,7 @@ class SeedDatabaseCommand extends Command
             ->setStatus(ContractStatus::Accepted)
             ->setName('Operation Silent Watch')
             ->setPlanet('Marian')
-            ->setIntensity('Low');
+            ->setIntensity($this->intensityGenerator->generate($contract6->getDurationMonths(), $contract6->getNumberOfTracks()));
         $this->em->persist($contract6);
         $contracts[] = $contract6;
 
@@ -486,7 +489,7 @@ class SeedDatabaseCommand extends Command
             ->setStatus(ContractStatus::Available)
             ->setName('Operation Silver Tongue')
             ->setPlanet('Davos')
-            ->setIntensity('Low');
+            ->setIntensity($this->intensityGenerator->generate($contract7->getDurationMonths(), $contract7->getNumberOfTracks()));
         $this->em->persist($contract7);
         $contracts[] = $contract7;
 
@@ -509,7 +512,7 @@ class SeedDatabaseCommand extends Command
             ->setStatus(ContractStatus::Broken)
             ->setName('Operation Broken Promise')
             ->setPlanet('Bjost')
-            ->setIntensity('Medium');
+            ->setIntensity($this->intensityGenerator->generate($contract8->getDurationMonths(), $contract8->getNumberOfTracks()));
         $this->em->persist($contract8);
         $contracts[] = $contract8;
 

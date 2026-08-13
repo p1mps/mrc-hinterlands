@@ -28,7 +28,7 @@
     <div class="d-flex gap-2">
         <a href="{{ path('app_contracts_edit', {id: contract.id}) }}" class="btn btn-outline-secondary">Edit Contract</a>
         <a href="{{ path('app_contracts_negotiate_view', {id: contract.id}) }}" class="btn btn-outline-info">Negotiate</a>
-        {% if contract.status.value == 'active' %}
+        {% if contract.status.value == 'accepted' %}
         <a href="{{ path('app_contracts_log_add', {id: contract.id}) }}" class="btn btn-primary">Add Log Entry</a>
         {% endif %}
     </div>
