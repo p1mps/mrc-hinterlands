@@ -240,6 +240,7 @@ class ContractController extends BaseController
         $opposing = $contractService->createContract($opposingData);
         $opposing->setPlanet(PlanetTable::randomPlanet());
         $opposing->setLinkedContract($contract);
+        $contract->getOpposingContracts()->add($opposing);
         $em->persist($opposing);
         $em->flush();
         $this->addFlash('success', 'Opposing contract generated.');

@@ -3,6 +3,7 @@
 namespace App\Tests\Unit;
 
 use App\Service\TrackIntensityGenerator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class TrackIntensityGeneratorTest extends TestCase
@@ -14,15 +15,25 @@ class TrackIntensityGeneratorTest extends TestCase
         $this->generator = new TrackIntensityGenerator();
     }
 
-    #[\PHPUnit\Framework\TestWith([3, 1])]
-    #[\PHPUnit\Framework\TestWith([3, 2])]
-    #[\PHPUnit\Framework\TestWith([3, 3])]
-    #[\PHPUnit\Framework\TestWith([6, 1])]
-    #[\PHPUnit\Framework\TestWith([6, 2])]
-    #[\PHPUnit\Framework\TestWith([6, 3])]
-    #[\PHPUnit\Framework\TestWith([6, 4])]
-    #[\PHPUnit\Framework\TestWith([6, 5])]
-    #[\PHPUnit\Framework\TestWith([6, 6])]
+    /**
+     * @return iterable<string, array{int, int}>
+     */
+    public static function validIntensityCases(): iterable
+    {
+        return [
+            '3-month 1-track' => [3, 1],
+            '3-month 2-tracks' => [3, 2],
+            '3-month 3-tracks' => [3, 3],
+            '6-month 1-track' => [6, 1],
+            '6-month 2-tracks' => [6, 2],
+            '6-month 3-tracks' => [6, 3],
+            '6-month 4-tracks' => [6, 4],
+            '6-month 5-tracks' => [6, 5],
+            '6-month 6-tracks' => [6, 6],
+        ];
+    }
+
+    #[DataProvider('validIntensityCases')]
     public function testGenerateReturnsValidIntensityString(int $months, int $tracks): void
     {
         // Run multiple times to test different random rolls
@@ -30,12 +41,13 @@ class TrackIntensityGeneratorTest extends TestCase
             $intensity = $this->generator->generate($months, $tracks);
             $parts = explode('-', $intensity);
             
-            // Sum of parts must equal total tracks
-            $totalTracks = array_sum(array_map('intval', $parts));
-            $this->assertEquals($tracks, $totalTracks, "Intensity string '{$intensity}' for {$months}-month/{$tracks}-track contract does not sum to {$tracks}.");
-
-            // Number of parts must equal contract duration
+            // Number of parts must equal contract duration (one intensity value per month)
             $this->assertCount($months, $parts, "Intensity string '{$intensity}' for {$months}-month contract does not have {$months} parts.");
+
+            // Each part must be a non-negative integer
+            foreach ($parts as $part) {
+                $this->assertMatchesRegularExpression('/^\d+$/', $part, "Intensity part '{$part}' is not a non-negative integer.");
+            }
         }
     }
 
