@@ -17,6 +17,7 @@ use App\DataTables\TerrainTable;
 use App\DataTables\TransportationTable;
 use App\Enum\CommandRights;
 use App\Enum\ContractType;
+use App\Entity\Contract;
 use App\Entity\MercenaryCompany;
 
 class ContractGeneratorService {
@@ -95,6 +96,94 @@ class ContractGeneratorService {
         $result['isOpposing'] = true;
         $result['numberOfTracks'] = $numberOfTracks;
         return $result;
+    }
+
+    public function negotiateExistingContract(Contract $contract, int $reputation, array $negotiationChanges = []): array {
+        // Start from existing contract values, not random generation
+        $result = [
+            'type' => $contract->getType(),
+            'duration' => $contract->getDurationMonths(),
+            'employer' => $contract->getEmployer(),
+            'affiliation' => $contract->getEmployerAffiliation(),
+            'scale' => $contract->getScale(),
+            'basePayPercent' => $contract->getBasePayPercent(),
+            'commandRights' => $contract->getCommandRights(),
+            'supportTerms' => $contract->getSupportTerms(),
+            'salvageRights' => $contract->getSalvageRights(),
+            'transportTerms' => $contract->getTransportTerms(),
+            'numberOfTracks' => $contract->getNumberOfTracks(),
+            'rolls' => $this->buildCurrentStateRolls($contract),
+            'negotiationSummary' => [
+                'reputation' => $reputation,
+                'availableSteps' => $reputation,
+            ],
+        ];
+
+        // Apply negotiation changes on top
+        foreach ($negotiationChanges as $category => $targetStep) {
+            $currentStep = match ($category) {
+                'basePayPercent' => $this->getStepForValue('basePayPercent', $result['basePayPercent']),
+                'commandRights' => $this->getStepForValue('commandRights', $result['commandRights']),
+                'salvageRights' => $this->getStepForValue('salvageRights', $result['salvageRights']),
+                'supportTerms' => $this->getStepForValue('supportTerms', $result['supportTerms']),
+                'transportTerms' => $this->getStepForValue('transportTerms', $result['transportTerms'] ?? '—'),
+                default => null,
+            };
+
+            if ($currentStep === null || $targetStep === null) continue;
+
+            match ($category) {
+                'basePayPercent' => $result['basePayPercent'] = ContractStepsTable::getBasePayPercent($targetStep),
+                'commandRights' => $result['commandRights'] = ContractStepsTable::getCommandRights($targetStep) ?? CommandRights::Liaison,
+                'salvageRights' => $result['salvageRights'] = ContractStepsTable::getSalvageRights($targetStep),
+                'supportTerms' => $result['supportTerms'] = ContractStepsTable::getSupportTerms($targetStep),
+                'transportTerms' => $result['transportTerms'] = ContractStepsTable::getTransportTerms($targetStep) ?? '—',
+            };
+        }
+
+        // Build stepsTable
+        $stepsTable = [];
+        foreach (range(1, 13) as $step) {
+            $stepsTable[$step] = [
+                'basePayPercent' => ContractStepsTable::getBasePayPercent($step),
+                'commandRights' => ContractStepsTable::getCommandRights($step)?->value ?? null,
+                'salvageRights' => ContractStepsTable::getSalvageRights($step),
+                'supportTerms' => ContractStepsTable::getSupportTerms($step),
+                'transportTerms' => ContractStepsTable::getTransportTerms($step),
+            ];
+        }
+        $result['stepsTable'] = $stepsTable;
+
+        return $result;
+    }
+
+    private function buildCurrentStateRolls(Contract $contract): array {
+        $rolls = [];
+
+        // Pay Rate
+        $payStep = $this->getStepForValue('basePayPercent', $contract->getBasePayPercent());
+        $rolls[] = ['label' => 'Pay Rate', 'roll' => $payStep, 'step' => $payStep];
+
+        // Command Rights
+        $cmdStep = $this->getStepForValue('commandRights', $contract->getCommandRights());
+        $rolls[] = ['label' => 'Command Rights', 'roll' => $cmdStep, 'step' => $cmdStep];
+
+        // Salvage Rights
+        $salvageStep = $this->getStepForValue('salvageRights', $contract->getSalvageRights());
+        $rolls[] = ['label' => 'Salvage Rights', 'roll' => $salvageStep, 'step' => $salvageStep];
+
+        // Support
+        $supportStep = $this->getStepForValue('supportTerms', $contract->getSupportTerms());
+        $rolls[] = ['label' => 'Support', 'roll' => $supportStep, 'step' => $supportStep];
+
+        // Transportation
+        $transStep = $this->getStepForValue('transportTerms', $contract->getTransportTerms());
+        $rolls[] = ['label' => 'Transportation', 'roll' => $transStep, 'step' => $transStep];
+
+        // Number of Tracks
+        $rolls[] = ['label' => 'Number of Tracks', 'roll' => $contract->getNumberOfTracks(), 'result' => $contract->getNumberOfTracks()];
+
+        return $rolls;
     }
 
     public function generateWithNegotiation(int $scale, int $reputation, array $negotiationChanges = []): array {
