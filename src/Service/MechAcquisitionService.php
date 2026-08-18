@@ -29,16 +29,16 @@ class MechAcquisitionService
      */
     public function acquireMech(SalvagedMech $salvagedMech, MercenaryCompany $company): void
     {
-        // Determine cost: scrapyard uses half BV, otherwise uses salvageValue or bvCost
+        // Determine base cost: scrapyard uses half BV, otherwise uses salvageValue or bvCost
         if ($salvagedMech->isScrapyard()) {
-            $cost = $this->salvageCalc->calculateSalvageValue($salvagedMech->getBvCost());
+            $baseCost = $this->salvageCalc->calculateSalvageValue($salvagedMech->getBvCost());
         } else {
-            $cost = $salvagedMech->getSalvageValue() ?? $salvagedMech->getBvCost();
+            $baseCost = $salvagedMech->getSalvageValue() ?? $salvagedMech->getBvCost();
         }
 
-        // Add repair cost to total acquisition cost
+        // Add repair cost to total acquisition cost for SP deduction only
         $repairCost = $salvagedMech->getRepairCost() ?? 0;
-        $cost = $cost + $repairCost;
+        $cost = $baseCost + $repairCost;
 
         if ($cost === null || $cost <= 0) {
             throw new \InvalidArgumentException('Salvaged Mech must have a valid BV cost or salvage value.');
@@ -61,7 +61,7 @@ class MechAcquisitionService
         $newUnit->setName($salvagedMech->getModel() ?? '');
         $newUnit->setChassis($salvagedMech->getModel() ?? 'Unknown Chassis');
         $newUnit->setTonnage($salvagedMech->getTonnage() ?? 0);
-        $newUnit->setBv($cost);
+        $newUnit->setBv($baseCost);
 
         try {
             $newUnit->setUnitType(UnitType::Mech);

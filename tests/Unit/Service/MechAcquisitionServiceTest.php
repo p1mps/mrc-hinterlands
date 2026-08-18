@@ -49,6 +49,9 @@ class MechAcquisitionServiceTest extends TestCase
         if (isset($merged['salvageRightsPercent'])) {
             $mechan->setSalvageRightsPercent($merged['salvageRightsPercent']);
         }
+        if (isset($merged['repairCost'])) {
+            $mechan->setRepairCost($merged['repairCost']);
+        }
 
         return $mechan;
     }
@@ -646,6 +649,130 @@ class MechAcquisitionServiceTest extends TestCase
         $company->expects($this->once())
             ->method('deductSupportPoints')
             ->with(150, 'Acquisition of Gravino GRV-NI1 (Scrapyard)');
+
+        $this->service->acquireMech($mechan, $company);
+    }
+
+    // ── Repair Cost Tests (P1 Bug Fix) ────────────────────────────────────
+
+    public function testAcquireMechSetsUnitBvToBaseCostNotIncludingRepairCost(): void
+    {
+        $mechan = $this->makeSalvagedMech([
+            'bvCost' => 300,
+            'repairCost' => 50,
+        ]);
+        $company = $this->makeCompany();
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->acquireMech($mechan, $company);
+
+        // Unit.bv should be base cost (300), NOT base + repair (350)
+        $this->assertCount(1, $captured);
+        $this->assertEquals(300, $captured[0]->getBv());
+    }
+
+    public function testAcquireMechDeductsRepairCostFromSupportPoints(): void
+    {
+        $mechan = $this->makeSalvagedMech([
+            'bvCost' => 300,
+            'model' => 'Gravino GRV-NI1',
+            'repairCost' => 75,
+        ]);
+        $company = $this->createMock(MercenaryCompany::class);
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        // SP deduction should be base + repair = 375
+        $company->expects($this->once())
+            ->method('deductSupportPoints')
+            ->with(375, 'Acquisition of Gravino GRV-NI1 (includes 75 SP repair)');
+
+        $this->service->acquireMech($mechan, $company);
+    }
+
+    public function testAcquireMechScrapyardSetsUnitBvToBaseCostNotIncludingRepairCost(): void
+    {
+        $mechan = $this->makeScrapyardMech([
+            'bvCost' => 400,
+            'repairCost' => 100,
+        ]);
+        $company = $this->makeCompany();
+
+        $this->salvageCalc->method('calculateSalvageValue')->willReturn(200);
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->never())
+            ->method('remove');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->acquireMech($mechan, $company);
+
+        // Unit.bv should be base cost (200 = half of 400), NOT base + repair (300)
+        $this->assertCount(1, $captured);
+        $this->assertEquals(200, $captured[0]->getBv());
+    }
+
+    public function testAcquireMechDeductsScrapyardBasePlusRepairFromSupportPoints(): void
+    {
+        $mechan = $this->makeScrapyardMech([
+            'bvCost' => 400,
+            'model' => 'Gravino GRV-NI1',
+            'repairCost' => 100,
+        ]);
+        $company = $this->createMock(MercenaryCompany::class);
+
+        $this->salvageCalc->method('calculateSalvageValue')->willReturn(200);
+
+        $captured = [];
+        $this->em
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$captured) {
+                if ($obj instanceof Unit) {
+                    $captured[] = $obj;
+                }
+            });
+
+        $this->em->expects($this->never())
+            ->method('remove');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        // SP deduction should be base (200) + repair (100) = 300
+        $company->expects($this->once())
+            ->method('deductSupportPoints')
+            ->with(300, 'Acquisition of Gravino GRV-NI1 (Scrapyard) (includes 100 SP repair)');
 
         $this->service->acquireMech($mechan, $company);
     }
