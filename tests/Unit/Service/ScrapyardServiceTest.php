@@ -186,17 +186,17 @@ class ScrapyardServiceTest extends TestCase
         $table = $this->service->getTable('light');
 
         $expectedModels = [
-            'Locust LCT-3M' => [482, 35],
-            'Wasp WSP-3S' => [389, 25],
-            'Tarantula ZPH-4A' => [597, 30],
-            'Hitman HM-1' => [925, 32],
-            'Osiris OSR-3D' => [1138, 32],
-            'Spider SDR-7K' => [482, 35],
+            'Locust LCT-3M' => [522, 20],
+            'Wasp WSP-3S' => [595, 20],
+            'Tarantula ZPH-4A' => [967, 25],
+            'Hitman HM-1' => [925, 30],
+            'Osiris OSR-3D' => [1138, 30],
+            'Spider SDR-7K' => [752, 30],
             'Valkyrie VLK-QD1' => [984, 50],
-            'Garm GRM-01A' => [482, 35],
-            'Panther PNT-10K2' => [913, 22],
-            'Wolfhound WLF-2' => [768, 40],
-            'Venom SDR-9K' => [482, 35],
+            'Garm GRM-01A' => [701, 35],
+            'Panther PNT-10K2' => [913, 35],
+            'Wolfhound WLF-2' => [1061, 35],
+            'Venom SDR-9K' => [798, 35],
         ];
 
         $this->assertEquals($expectedModels, $table);
@@ -207,17 +207,17 @@ class ScrapyardServiceTest extends TestCase
         $table = $this->service->getTable('medium');
 
         $expectedModels = [
-            'Vindicator VND-3L' => [1520, 45],
-            'Assassin ASN-30' => [1275, 45],
-            'Hunchback HBK-5N' => [1485, 50],
-            'Bushwacker BSW-X1' => [1390, 45],
-            'Blackjack BJ-2' => [1265, 45],
-            'Dervish DV-9D' => [1425, 45],
-            'Phoenix Hawk PXH-3K' => [1380, 45],
-            'Shadow Hawk SHD-5D' => [1495, 45],
-            'Centurion CN-9Da' => [1310, 45],
-            'Stealth STH-1D' => [1290, 45],
-            'Huron Warrior HUR-W0-R4L' => [1440, 45],
+            'Vindicator VND-3L' => [1105, 45],
+            'Assassin ASN-30' => [925, 40],
+            'Hunchback HBK-5N' => [1041, 50],
+            'Bushwacker BSW-X1' => [1223, 55],
+            'Blackjack BJ-2' => [1148, 45],
+            'Dervish DV-9D' => [1518, 55],
+            'Phoenix Hawk PXH-3K' => [1359, 45],
+            'Shadow Hawk SHD-5D' => [1684, 55],
+            'Centurion CN-9Da' => [1236, 50],
+            'Stealth STH-1D' => [1231, 45],
+            'Huron Warrior HUR-W0-R4L' => [1530, 50],
         ];
 
         $this->assertEquals($expectedModels, $table);
@@ -228,17 +228,17 @@ class ScrapyardServiceTest extends TestCase
         $table = $this->service->getTable('heavy');
 
         $expectedModels = [
-            'Catapult CPLT-C5' => [1810, 60],
-            'JagerMech JM6-DDa' => [1279, 45],
-            'Archer ARC-5R' => [1685, 60],
-            'Gallowglas GAL-1GLS' => [1425, 45],
-            'Rifleman RFL-5D' => [1445, 50],
-            'Grand Dragon DRG-5K' => [1520, 55],
-            'Marauder MAD-5D' => [1790, 60],
-            'Falconer FLC-8R' => [2150, 60],
-            'War Dog WR-DG-02FC' => [1485, 45],
-            'Rakshasa MDG-1A' => [1795, 45],
-            'Maelstrom MTR-5K' => [1620, 55],
+            'Catapult CPLT-C5' => [1748, 65],
+            'JagerMech JM6-DDa' => [911, 65],
+            'Archer ARC-5R' => [1674, 70],
+            'Gallowglas GAL-1GLS' => [1695, 70],
+            'Rifleman RFL-5D' => [1395, 60],
+            'Grand Dragon DRG-5K' => [1358, 60],
+            'Marauder MAD-5D' => [1787, 75],
+            'Falconer FLC-8R' => [2231, 75],
+            'War Dog WR-DG-02FC' => [1814, 75],
+            'Rakshasa MDG-1A' => [1795, 75],
+            'Maelstrom MTR-5K' => [1694, 75],
         ];
 
         $this->assertEquals($expectedModels, $table);
@@ -249,17 +249,17 @@ class ScrapyardServiceTest extends TestCase
         $table = $this->service->getTable('assault');
 
         $expectedModels = [
-            'Charger CGR-3Kr' => [2180, 60],
-            'Goliath GOL-3M2' => [1720, 60],
-            'Awesome AWS-9M' => [2850, 90],
-            'Victor VTR-9K/D' => [1625, 55],
-            'BattleMaster BLR-3M' => [1680, 55],
-            'Atlas AS7-K' => [2650, 75],
-            'Stalker STK-5M' => [1820, 60],
-            'Gunslinger GUN-1ERD' => [2380, 65],
-            'Longbow LGB-7V' => [1890, 60],
-            'Cyclops CP-11-B' => [2580, 75],
-            'Cerberus MR-V2' => [1685, 55],
+            'Charger CGR-3Kr' => [2092, 80],
+            'Goliath GOL-3M2' => [1631, 80],
+            'Awesome AWS-9M' => [1812, 80],
+            'Victor VTR-9K/D' => [1717, 80],
+            'BattleMaster BLR-3M' => [1679, 85],
+            'Atlas AS7-K' => [2175, 100],
+            'Stalker STK-5M' => [1655, 85],
+            'Gunslinger GUN-1ERD' => [2286, 85],
+            'Longbow LGB-7V' => [1816, 85],
+            'Cyclops CP-11-B' => [2145, 90],
+            'Cerberus MR-V2' => [2001, 95],
         ];
 
         $this->assertEquals($expectedModels, $table);

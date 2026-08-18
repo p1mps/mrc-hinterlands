@@ -113,8 +113,8 @@ class SalvagedMechControllerTest extends WebTestCase
         $lightTable = $scrapyardService->getTable('light');
         $this->assertArrayHasKey('Locust LCT-3M', $lightTable);
         // Table entries are [bvCost, tonnage] as a numeric array
-        $this->assertEquals(482, $lightTable['Locust LCT-3M'][0]);
-        $this->assertEquals(35, $lightTable['Locust LCT-3M'][1]);
+        $this->assertEquals(522, $lightTable['Locust LCT-3M'][0]);
+        $this->assertEquals(20, $lightTable['Locust LCT-3M'][1]);
     }
 
     public function testMultipleScrapyardRollsGenerateDifferentMechs(): void

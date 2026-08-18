@@ -276,7 +276,7 @@ class SeedDatabaseCommand extends Command
             $pilots[] = $pilot;
 
             $unitTypes = [UnitType::Mech, UnitType::Vehicle, UnitType::Mech];
-            $chassisNames = ['Warhammer WHM-A', 'Stalker STK-3F', 'Rhino RHN-0'];
+            $chassisNames = ['Warhammer WHM-A', 'Stalker STK-5M', 'Rhino RHN-0'];
             $bvs = [900, 680, 780];
 
             $unit = new Unit();
@@ -687,12 +687,12 @@ class SeedDatabaseCommand extends Command
                 'scrapyard' => true,
             ],
             [
-                'model' => 'Stalker STK-3F',
-                'tonnage' => 55,
-                'bvCost' => 680,
+                'model' => 'Stalker STK-5M',
+                'tonnage' => 85,
+                'bvCost' => 1655,
                 'damageState' => DamageState::ArmorOnly,
                 'techBase' => TechBase::IS,
-                'salvageValue' => 340,
+                'salvageValue' => 827,
                 'salvageRightsPercent' => 50,
                 'spTaken' => null,
                 'scrapyard' => false,
