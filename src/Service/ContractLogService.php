@@ -74,9 +74,9 @@ class ContractLogService
         return $lastMaintenance->getMonth() + 1;
     }
 
-    public function handleTransport(Contract $contract, $company, int $jumps): void
+    public function handleTransport(Contract $contract, $company): void
     {
-        $full = 50 + (50 * $jumps);
+        $full = 300;
         $pct = $contract->parseTransportPercent();
         $employerShare = (int) round($full * $pct / 100);
         $playerPays = $full - $employerShare;
@@ -84,7 +84,7 @@ class ContractLogService
         $sp = (new SupportPointEntry())
             ->setCompany($company)
             ->setAmount(-$playerPays)
-            ->setDescription("Transport ({$jumps} jumps)");
+            ->setDescription("Transport ({$playerPays})");
 
         $this->em->persist($sp);
 
@@ -94,7 +94,7 @@ class ContractLogService
             ->setContract($contract)
             ->setMonth($contract->getTracksCompleted() + 1)
             ->setEntryType(ContractLogEntryType::Transport)
-            ->setDescription("Transport: 50 + (50 × {$jumps}) = {$full} SP total{$pctNote} → player pays -{$playerPays} SP")
+            ->setDescription("Transport: $playerPays SP")
             ->setSupportPointEntry($sp);
 
         $this->em->persist($log);

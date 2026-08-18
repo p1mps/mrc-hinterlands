@@ -5,6 +5,7 @@
     <a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
 
     {% set transportPct = contract.parseTransportPercent() %}
+    {% set transportPay = transportPct > 0 ? 300 * transportPct / 100: 0 %}
     {% set supportPct = contract.parseSupportPercent() %}
     {% set supportType = contract.getSupportType() %}
 
@@ -20,7 +21,7 @@
                 <div class="col-6 col-sm-4 col-md">
                     <div class="fw-bold">Transport</div>
                     <div class="fs-5">{{ transportPct > 0 ? transportPct ~ '%' : '—' }}</div>
-                    <div class="text-muted small">50 SP + 50 SP × jumps, employer covers {{ transportPct }}%</div>
+                    <div class="text-muted small">{{ transportPay > 0 ?  transportPay }} SP</div>
                 </div>
                 <div class="col-6 col-sm-4 col-md">
                     <div class="fw-bold">Support</div>
@@ -50,13 +51,12 @@
             <div class="card">
                 <div class="card-header">Step 0 — Transport</div>
                 <div class="card-body">
-                    <p class="text-muted small">Cost = 50 SP flat + 50 SP × jumps. Employer covers {{ transportPct }}%.</p>
+                    <p class="text-muted small">Cost = 300 Employer covers {{ transportPct }}% = {{ transportPay }}.</p>
                     <form method="post">
                         <input type="hidden" name="month" value="{{ currentMonth }}">
                         <input type="hidden" name="action" value="transport">
                         <div class="mb-2">
-                            <label class="form-label">Number of jumps</label>
-                            <input type="number" name="jumps" id="jumpsInput" class="form-control" value="0" min="0" oninput="calcTransport(this.value)">
+                            <input type="number" name="transportPay" id="transportPay" class="form-control" value="{{ transportPay }}" min="0" oninput="calcTransport(this.value)">
                         </div>
                         <div id="transportBreakdown" class="mb-2"></div>
                         <button class="btn btn-info">Record Transport</button>

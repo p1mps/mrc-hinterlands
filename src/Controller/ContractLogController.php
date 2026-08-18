@@ -82,7 +82,7 @@ class ContractLogController extends BaseController
 
         if ($request->isMethod('POST')) {
             match ($action) {
-                'transport'   => $this->logService->handleTransport($contract, $company, $request->request->getInt('jumps', 0)),
+                'transport'   => $this->logService->handleTransport($contract, $company),
                 'maintenance' => $this->logService->handleMaintenance($contract, $company, $currentMonth),
                 'base_pay'    => $this->logService->handleBasePay($contract, $company, $currentMonth),
                 'track_setup' => $this->logService->handleTrackSetup($contract, $request->request->getInt('month'), $request->request->getBoolean('toftt')),
@@ -92,7 +92,10 @@ class ContractLogController extends BaseController
             };
 
             if ($action !== 'post_track') {
-                return $this->redirectToRoute('app_contracts');
+                $this->addFlash('success', "Log entry added $action.");
+                return $this->redirectToRoute('app_contracts_log_add', [
+                    'id' => $contract->getId(),
+                ]);
             }
         }
 
