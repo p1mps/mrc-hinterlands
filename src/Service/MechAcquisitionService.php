@@ -34,7 +34,7 @@ class MechAcquisitionService
         } else {
             $cost = $salvagedMech->getSalvageValue() ?? $salvagedMech->getBvCost();
         }
-        
+
         if ($cost === null || $cost <= 0) {
             throw new \InvalidArgumentException('Salvaged Mech must have a valid BV cost or salvage value.');
         }
@@ -85,6 +85,7 @@ class MechAcquisitionService
 
         // Persist Changes
         $this->em->persist($newUnit);
+        $this->em->remove($salvagedMech);
         $this->em->flush();
     }
 }
