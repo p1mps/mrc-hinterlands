@@ -12,6 +12,7 @@
 <tr><th>Salvage Rights</th><td>{{ salvaged_mech.salvageRightsPercent is null ? 'Exchange (25%)' : (salvaged_mech.salvageRightsPercent ~ '%') }}</td></tr>
 <tr><th>Damage State</th><td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td></tr>
 <tr><th>Tech Base</th><td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td></tr>
+<tr><th>Repair Cost</th><td>{{ salvaged_mech.repairCost ?? '—' }}</td></tr>
 <tr><th>Contract ID</th><td>{{ salvaged_mech.contractId ?? '—' }}</td></tr>
 <tr><th>Truly Destroyed</th><td>{{ salvaged_mech.isTrulyDestroyed ? 'Yes' : 'No' }}</td></tr>
 <tr><th>SP Taken</th><td>{{ salvaged_mech.spTaken ?? '—' }}</td></tr>

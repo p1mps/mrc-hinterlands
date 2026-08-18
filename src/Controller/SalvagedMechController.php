@@ -38,7 +38,7 @@ class SalvagedMechController extends BaseController
         $mechanList = $salvagedMechService->getAllMechs($company);
         $acquisitionPrice = [];
         foreach ($mechanList as $mechan) {
-            $acquisitionPrice[$mechan->getId()] = $salvageCalc->calculateAcquisitionCost($mechan->getSalvageValue(), $mechan->getSalvageRightsPercent());
+            $acquisitionPrice[$mechan->getId()] = $this->calculateTotalAcquisitionCost($mechan);
         }
 
         return $this->render('salvaged_mech/index.html.twig', [
@@ -59,11 +59,12 @@ class SalvagedMechController extends BaseController
         $salvagedMechService->createMech($mechan, $company);
         
         $this->addFlash('success', sprintf(
-            'Scrapyard roll: Found a %s (%s BV, %s) with %s condition.',
+            'Scrapyard roll: Found a %s (%s BV, %s) with %s condition. Repair cost: %s SP.',
             $mechan->getModel(),
             $mechan->getBvCost(),
             $mechan->getTonnage(),
-            $mechan->getDamageState()?->value ?? 'unknown'
+            $mechan->getDamageState()?->value ?? 'unknown',
+            $mechan->getRepairCost() ?? 0
         ));
         
         return $this->redirectToRoute('app_salvaged_mech_index', [], Response::HTTP_SEE_OTHER);
@@ -84,6 +85,14 @@ class SalvagedMechController extends BaseController
             $salvageValue = $salvageCalc->calculateSalvageValue($mechan->getBvCost());
             $mechan->setSalvageValue($salvageValue);
 
+            // Calculate and set repair cost (defaults to IS tech base)
+            $repairCost = $salvageCalc->calculateRepairCost(
+                $mechan->getTonnage(),
+                $mechan->getDamageState(),
+                $mechan->getTechBase()
+            );
+            $mechan->setRepairCost($repairCost);
+
             $company = $this->getUser()->getCompany();
             $salvagedMechService->createMech($mechan, $company);
             
@@ -99,13 +108,30 @@ class SalvagedMechController extends BaseController
         ]);
     }
 
+    /**
+     * Calculate total acquisition cost including repair cost.
+     */
+    private function calculateTotalAcquisitionCost(SalvagedMech $mechan): int
+    {
+        // Base cost: scrapyard uses half BV, otherwise uses salvageValue or bvCost
+        if ($mechan->isScrapyard()) {
+            $cost = $this->salvageCalc->calculateSalvageValue($mechan->getBvCost());
+        } else {
+            $cost = $mechan->getSalvageValue() ?? $mechan->getBvCost();
+        }
+
+        // Add repair cost
+        $repairCost = $mechan->getRepairCost() ?? 0;
+        $cost = $cost + $repairCost;
+
+        return $cost;
+    }
+
     #[Route('/{id}', name: 'app_salvaged_mech_show', methods: ['GET'])]
     public function show(SalvagedMech $salvagedMech): Response
     {
         $isScrapyard = $salvagedMech->isScrapyard();
-        $acquisitionCost = $isScrapyard
-            ? $this->salvageCalc->calculateSalvageValue($salvagedMech->getBvCost())
-            : ($salvagedMech->getSalvageValue() ?? $salvagedMech->getBvCost());
+        $acquisitionCost = $this->calculateTotalAcquisitionCost($salvagedMech);
         $scrapyardNote = $isScrapyard ? ' (Scrapyard: half BV, stays Crippled)' : '';
 
         return $this->render('salvaged_mech/show.html.twig', [

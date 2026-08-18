@@ -31,10 +31,10 @@
     <tr>
         <td>{{ salvaged_mech.model }}</td>
         <td>{{ salvaged_mech.tonnage }}</td>
-        <td>{{ acquisitionPrice[salvaged_mech.id] ?? salvaged_mech.salvageValue ?? salvaged_mech.bvCost ?? '—' }}</td>
+        <td>{{ acquisitionPrice[salvaged_mech.id] ?? '—' }}</td>
         <td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td>
             <td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td>
-            <td>{{ salvagedMechService.calculateRepairCost(salvaged_mech.tonnage, salvaged_mech.damageState ? salvaged_mech.damageState.value : null, salvaged_mech.techBase ? salvaged_mech.techBase.value : null) ?? '—' }}</td>
+            <td>{{ salvaged_mech.repairCost ?? '—' }}</td>
             <td>{{ salvaged_mech.scrapyard ? 'Yes' : 'No' }}</td>
             <td>
                 {% if salvaged_mech.isTrulyDestroyed %}
@@ -51,7 +51,7 @@
                 {% set dropship = dropshipService.getDropshipByCompany(company) %}
                 <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
                 {% if not salvaged_mech.isTrulyDestroyed and salvaged_mech.spTaken is null and salvaged_mech.contractId is null %}
-                    <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech? This will cost {{ acquisitionPrice[salvaged_mech.id] ?? salvaged_mech.salvageValue ?? salvaged_mech.bvCost }} support points.');" class="d-inline">
+                    <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech? This will cost {{ acquisitionPrice[salvaged_mech.id] }} support points.');" class="d-inline">
                         <input type="hidden" name="_token" value="{{ csrf_token('acquire' ~ salvaged_mech.id) }}">
                         <button class="btn btn-sm btn-success">Acquire Mech</button>
                     </form>

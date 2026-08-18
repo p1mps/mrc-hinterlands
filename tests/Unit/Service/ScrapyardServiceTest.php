@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Service;
 
 use App\Service\DiceRoller;
+use App\Service\SalvageCalculationService;
 use App\Service\ScrapyardService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -12,6 +13,7 @@ class ScrapyardServiceTest extends TestCase
 {
     private ScrapyardService $service;
     private DiceRoller $diceRoller;
+    private SalvageCalculationService $salvageCalc;
 
     protected function setUp(): void
     {
@@ -35,7 +37,8 @@ class ScrapyardServiceTest extends TestCase
             }
         };
 
-        $this->service = new ScrapyardService($this->diceRoller);
+        $this->salvageCalc = new SalvageCalculationService();
+        $this->service = new ScrapyardService($this->diceRoller, $this->salvageCalc);
     }
 
     // ── Weight Class Tests ──────────────────────────────────────────────────
@@ -167,6 +170,51 @@ class ScrapyardServiceTest extends TestCase
         $this->assertNull($mechan->getSalvageRightsPercent());
         $this->assertFalse($mechan->isTrulyDestroyed());
         $this->assertNull($mechan->getSpTaken());
+    }
+
+    public function testMechHasRepairCostSet(): void
+    {
+        $this->diceRoller->setRolls([3, 5, 7]);
+
+        $mechan = $this->service->rollScrapyardMech();
+
+        // Hitman HM-1 is 30t, condition 7 = Crippled
+        // IS: 30 * 3.0 = 90
+        $this->assertNotNull($mechan->getRepairCost());
+        $this->assertEquals(90, $mechan->getRepairCost());
+    }
+
+    public function testMechHasRepairCostForStructuralCondition(): void
+    {
+        // Locust LCT-3M: 20t, Structural (IS: 20 * 2.0 = 40)
+        $this->diceRoller->setRolls([3, 3, 3]);
+
+        $mechan = $this->service->rollScrapyardMech();
+
+        $this->assertNotNull($mechan->getRepairCost());
+        $this->assertEquals(40, $mechan->getRepairCost());
+    }
+
+    public function testMechHasRepairCostForNoneCondition(): void
+    {
+        // 20t, None damage = 0 repair cost
+        $this->diceRoller->setRolls([6, 6, 9]);
+
+        $mechan = $this->service->rollScrapyardMech();
+
+        $this->assertNotNull($mechan->getRepairCost());
+        $this->assertEquals(0, $mechan->getRepairCost());
+    }
+
+    public function testMechHasRepairCostForArmorOnlyCondition(): void
+    {
+        // Blackjack BJ-2: 45t, ArmorOnly (IS: 45 * 0.5 = 22.5 → 23)
+        $this->diceRoller->setRolls([6, 6, 12]);
+
+        $mechan = $this->service->rollScrapyardMech();
+
+        $this->assertNotNull($mechan->getRepairCost());
+        $this->assertEquals(23, $mechan->getRepairCost());
     }
 
     public function testWeightClassesAreCorrectlyDefined(): void
@@ -302,5 +350,13 @@ class ScrapyardServiceTest extends TestCase
         $this->assertGreaterThan(0, $mechan1->getBvCost());
         $this->assertGreaterThan(0, $mechan2->getBvCost());
         $this->assertGreaterThan(0, $mechan3->getBvCost());
+
+        // Repair costs should be non-negative integers
+        $this->assertNotNull($mechan1->getRepairCost());
+        $this->assertNotNull($mechan2->getRepairCost());
+        $this->assertNotNull($mechan3->getRepairCost());
+        $this->assertGreaterThanOrEqual(0, $mechan1->getRepairCost());
+        $this->assertGreaterThanOrEqual(0, $mechan2->getRepairCost());
+        $this->assertGreaterThanOrEqual(0, $mechan3->getRepairCost());
     }
 }

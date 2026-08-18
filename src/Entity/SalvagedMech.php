@@ -59,6 +59,9 @@ class SalvagedMech
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $salvageRightsPercent = null;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $repairCost = null;
+
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $scrapyard = false;
 
@@ -204,6 +207,17 @@ class SalvagedMech
     public function setSalvageRightsPercent(?int $salvageRightsPercent): static
     {
         $this->salvageRightsPercent = $salvageRightsPercent;
+        return $this;
+    }
+
+    public function getRepairCost(): ?int
+    {
+        return $this->repairCost;
+    }
+
+    public function setRepairCost(?int $repairCost): static
+    {
+        $this->repairCost = $repairCost;
         return $this;
     }
 

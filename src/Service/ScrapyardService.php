@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\SalvagedMech;
 use App\Enum\DamageState;
+use App\Enum\TechBase;
 
 class ScrapyardService
 {
@@ -104,10 +105,12 @@ class ScrapyardService
     ];
 
     private readonly DiceRoller $diceRoller;
+    private readonly SalvageCalculationService $salvageCalc;
 
-    public function __construct(DiceRoller $diceRoller)
+    public function __construct(DiceRoller $diceRoller, SalvageCalculationService $salvageCalc)
     {
         $this->diceRoller = $diceRoller;
+        $this->salvageCalc = $salvageCalc;
     }
 
     /**
@@ -139,6 +142,10 @@ class ScrapyardService
         $conditionRoll = $this->diceRoller->roll(2, 6);
         $damageKey = self::CONDITION_ROLLS[$conditionRoll] ?? 'crippled';
         $mechan->setDamageState(DamageState::from($damageKey));
+
+        // Calculate and set repair cost (defaults to IS tech base)
+        $repairCost = $this->salvageCalc->calculateRepairCost($tonnage, $mechan->getDamageState(), TechBase::IS);
+        $mechan->setRepairCost($repairCost);
 
         return $mechan;
     }

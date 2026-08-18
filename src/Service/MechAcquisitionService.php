@@ -22,6 +22,7 @@ class MechAcquisitionService
      * Acquires a salvaged mech by deducting support points and creating a new Unit in the roster.
      *
      * Uses salvageValue (if set) or falls back to bvCost for backward compatibility.
+     * Includes repairCost in the total acquisition cost.
      * The SalvagedMech entry is NOT removed from the DB — it stays as a record.
      *
      * @throws \Exception
@@ -35,6 +36,10 @@ class MechAcquisitionService
             $cost = $salvagedMech->getSalvageValue() ?? $salvagedMech->getBvCost();
         }
 
+        // Add repair cost to total acquisition cost
+        $repairCost = $salvagedMech->getRepairCost() ?? 0;
+        $cost = $cost + $repairCost;
+
         if ($cost === null || $cost <= 0) {
             throw new \InvalidArgumentException('Salvaged Mech must have a valid BV cost or salvage value.');
         }
@@ -43,6 +48,9 @@ class MechAcquisitionService
         $deductionLabel = 'Acquisition of ' . ($salvagedMech->getModel() ?: 'Unknown Mech');
         if ($salvagedMech->isScrapyard()) {
             $deductionLabel .= ' (Scrapyard)';
+        }
+        if ($repairCost > 0) {
+            $deductionLabel .= ' (includes ' . $repairCost . ' SP repair)';
         }
         $company->deductSupportPoints($cost, $deductionLabel);
 
@@ -83,9 +91,13 @@ class MechAcquisitionService
             $salvagedMech->setDropship(null);
         }
 
+
         // Persist Changes
+        // Scrapyard mechs stay in DB (per docstring); non-scrapyard are removed
         $this->em->persist($newUnit);
-        $this->em->remove($salvagedMech);
+        if (!$salvagedMech->isScrapyard()) {
+            $this->em->remove($salvagedMech);
+        }
         $this->em->flush();
     }
 }
