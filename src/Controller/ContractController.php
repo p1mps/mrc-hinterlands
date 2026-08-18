@@ -103,7 +103,7 @@ class ContractController extends BaseController
     public function negotiateView(Contract $contract, ContractGeneratorService $generator): Response
     {
         $company = $this->getUser()->getCompany();
-        $data = $generator->generateWithNegotiation($contract->getScale(), $company->getReputation());
+        $data = $generator->negotiateExistingContract($contract, $company->getReputation());
 
         $initialSteps = $this->getInitialSteps($data);
 
@@ -142,7 +142,7 @@ class ContractController extends BaseController
             }
         }
 
-        $data = $generator->generateWithNegotiation($contract->getScale(), $company->getReputation(), $negotiationChanges);
+        $data = $generator->negotiateExistingContract($contract, $company->getReputation(), $negotiationChanges);
 
         $contractData = [
             'type'             => $data['type'],
