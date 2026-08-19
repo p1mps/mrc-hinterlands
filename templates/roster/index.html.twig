@@ -16,6 +16,7 @@
     <th>Type</th>
     <th>Damage</th>
     <th>Tech Base</th>
+    <th>Repair Cost</th>
     <th>Pilot</th>
     <!-- Set the min-width here for the button column -->
     <th style="min-width: 250px;">Actions</th>
@@ -30,6 +31,7 @@
     <td>{{ unit.unitType.value }}</td>
     <td>{{ unit.damageState.value }}</td>
     <td>{{ unit.techBase ? unit.techBase.value : "-" }}</td>
+    <td>{{ repairCosts[unit.id] ?? "-" }}</td>
     <td>
         <form method="post" action="{{ path('app_roster_assign_pilot', {id: unit.id}) }}" class="d-flex gap-1">
             <select name="pilot_id" class="form-select form-select-sm">
@@ -68,7 +70,7 @@
 
 </tr>
 {% else %}
-<tr><td colspan="9" class="text-muted">No units yet.</td></tr>
+<tr><td colspan="10" class="text-muted">No units yet.</td></tr>
 {% endfor %}
 </tbody>
 </table>

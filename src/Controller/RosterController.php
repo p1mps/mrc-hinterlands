@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Unit;
 use App\Form\UnitFormType;
 use App\Service\DropshipService;
+use App\Service\SalvageCalculationService;
 use App\Service\RosterService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,16 +16,31 @@ use Symfony\Component\Routing\Attribute\Route;
 class RosterController extends BaseController
 {
     #[Route('', name: 'app_roster')]
-    public function index(RosterService $rosterService, DropshipService $dropshipService): Response
+    public function index(
+        RosterService $rosterService,
+        DropshipService $dropshipService,
+        SalvageCalculationService $salvageCalculationService,
+    ): Response
     {
         $company = $this->getUser()->getCompany();
+        $units = $rosterService->getUnits($company);
+
+        $repairCosts = [];
+        foreach ($units as $unit) {
+            $repairCosts[$unit->getId()] = $salvageCalculationService->calculateRepairCost(
+                $unit->getTonnage(),
+                $unit->getDamageState(),
+                $unit->getTechBase(),
+            );
+        }
 
         return $this->render('roster/index.html.twig', [
             'company' => $company,
-            'units'   => $rosterService->getUnits($company),
+            'units'   => $units,
             'pilots'  => $rosterService->getPilots($company),
             'totalBv' => $company->getTotalBv(),
             'dropshipService' => $dropshipService,
+            'repairCosts' => $repairCosts,
         ]);
     }
 
