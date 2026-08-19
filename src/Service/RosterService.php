@@ -89,7 +89,7 @@ class RosterService
         $repairCost = $this->salvageCalc->calculateRepairCost(
             $unit->getTonnage(),
             $currentDamage,
-            null
+            $unit->getTechBase()
         );
 
         if ($repairCost === null) {

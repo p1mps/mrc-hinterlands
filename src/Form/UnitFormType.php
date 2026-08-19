@@ -3,6 +3,7 @@ namespace App\Form;
 
 use App\Entity\Unit;
 use App\Enum\DamageState;
+use App\Enum\TechBase;
 use App\Enum\UnitType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,6 +21,7 @@ class UnitFormType extends AbstractType {
             ->add('tonnage', IntegerType::class)
             ->add('bv', IntegerType::class, ['label' => 'Base BV'])
             ->add('unitType', EnumType::class, ['class' => UnitType::class])
+            ->add('techBase', EnumType::class, ['class' => TechBase::class])
             ->add('damageState', EnumType::class, ['class' => DamageState::class]);
     }
 

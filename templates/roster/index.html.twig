@@ -15,6 +15,7 @@
     <th>BV</th>
     <th>Type</th>
     <th>Damage</th>
+    <th>Tech Base</th>
     <th>Pilot</th>
     <!-- Set the min-width here for the button column -->
     <th style="min-width: 250px;">Actions</th>
@@ -28,6 +29,7 @@
     <td>{{ unit.bv }}</td>
     <td>{{ unit.unitType.value }}</td>
     <td>{{ unit.damageState.value }}</td>
+    <td>{{ unit.techBase ? unit.techBase.value : "-" }}</td>
     <td>
         <form method="post" action="{{ path('app_roster_assign_pilot', {id: unit.id}) }}" class="d-flex gap-1">
             <select name="pilot_id" class="form-select form-select-sm">

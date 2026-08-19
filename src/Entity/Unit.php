@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use App\Enum\DamageState;
+use App\Enum\TechBase;
 use App\Enum\UnitType;
 use App\Entity\Dropship;
 use App\Repository\UnitRepository;
@@ -28,6 +29,9 @@ class Unit {
 
     #[ORM\Column(length: 255)]
     private string $name;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?TechBase $techBase = null;
 
     #[ORM\Column(length: 255)]
     private string $chassis;
@@ -72,4 +76,15 @@ class Unit {
 
     public function getDamageState(): DamageState { return $this->damageState; }
     public function setDamageState(DamageState $damageState): static { $this->damageState = $damageState; return $this; }
+
+    public function getTechBase(): ?TechBase
+    {
+        return $this->techBase;
+    }
+
+    public function setTechBase(?TechBase $techBase): static
+    {
+        $this->techBase = $techBase;
+        return $this;
+    }
 }
