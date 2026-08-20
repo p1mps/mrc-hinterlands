@@ -29,18 +29,9 @@ class MechAcquisitionService
      */
     public function acquireMech(SalvagedMech $salvagedMech, MercenaryCompany $company): void
     {
-        // Determine base cost: scrapyard uses half BV, otherwise uses salvageValue or bvCost
-        if ($salvagedMech->isScrapyard()) {
-            $baseCost = $this->salvageCalc->calculateSalvageValue($salvagedMech->getBvCost());
-        } else {
-            $baseCost = $salvagedMech->getSalvageValue() ?? $salvagedMech->getBvCost();
-        }
+        $cost = $salvagedMech->getAcquisitionCost();
 
-        // Add repair cost to total acquisition cost for SP deduction only
-        $repairCost = $salvagedMech->getRepairCost() ?? 0;
-        $cost = $baseCost + $repairCost;
-
-        if ($cost === null || $cost <= 0) {
+        if ($cost <= 0) {
             throw new \InvalidArgumentException('Salvaged Mech must have a valid BV cost or salvage value.');
         }
 
@@ -49,6 +40,7 @@ class MechAcquisitionService
         if ($salvagedMech->isScrapyard()) {
             $deductionLabel .= ' (Scrapyard)';
         }
+        $repairCost = $salvagedMech->getRepairCost();
         if ($repairCost > 0) {
             $deductionLabel .= ' (includes ' . $repairCost . ' SP repair)';
         }
@@ -58,10 +50,19 @@ class MechAcquisitionService
         $newUnit = new Unit();
 
         // Map fields from SalvagedMech to Unit
-        $newUnit->setName($salvagedMech->getModel() ?? '');
+        $newUnit->setName($salvagedMech->getModel() ?? 'Unknown Mech');
         $newUnit->setChassis($salvagedMech->getModel() ?? 'Unknown Chassis');
         $newUnit->setTonnage($salvagedMech->getTonnage() ?? 0);
-        $newUnit->setBv($baseCost);
+
+        // BV assignment: scrapyard → half base cost, non-scrapyard with salvageValue → salvageValue, else → base cost
+        if ($salvagedMech->isScrapyard()) {
+            $newUnit->setBv(floor($salvagedMech->getBvCost() / 2));
+        } elseif ($salvagedMech->getSalvageValue() !== null) {
+            $newUnit->setBv($salvagedMech->getSalvageValue());
+        } else {
+            $newUnit->setBv($salvagedMech->getBvCost());
+        }
+        $newUnit->setDamageState(DamageState::None);
 
         try {
             $newUnit->setUnitType(UnitType::Mech);
@@ -79,6 +80,9 @@ class MechAcquisitionService
             } catch (\ValueError $e) {
                 throw new \InvalidArgumentException('Could not set Crippled damage state.');
             }
+        } else {
+            $damageState = $salvagedMech->getDamageState();
+            $newUnit->setDamageState($damageState ?? DamageState::None);
         }
 
         // Guard: prevent re-acquisition
@@ -90,7 +94,6 @@ class MechAcquisitionService
         if ($salvagedMech->getDropship() !== null) {
             $salvagedMech->setDropship(null);
         }
-
 
         // Persist Changes
         // Scrapyard mechs stay in DB (per docstring); non-scrapyard are removed
