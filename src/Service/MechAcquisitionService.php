@@ -8,43 +8,78 @@ use App\Entity\SalvagedMech;
 use App\Entity\Unit;
 use App\Enum\DamageState;
 use App\Enum\UnitType;
-use App\Service\SalvageCalculationService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MechAcquisitionService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly SalvageCalculationService $salvageCalc
+        private readonly SalvageCalculationService $salvageCalc,
     ) {}
 
     /**
      * Acquires a salvaged mech by deducting support points and creating a new Unit in the roster.
      *
-     * Uses salvageValue (if set) or falls back to bvCost for backward compatibility.
-     * Includes repairCost in the total acquisition cost.
-     * The SalvagedMech entry is NOT removed from the DB — it stays as a record.
+     * For non-scrapyard mechs that have been attached to a contract, the acquisition
+     * cost is adjusted by the contract's salvage rights percentage.
      *
-     * @throws \Exception
+     * Scrapyard and non-scrapyard mechs both use floor(bvCost / 2) for BV assignment.
+     * Includes repairCost in the total acquisition cost.
+     * The SalvagedMech entry for scrapyard mechs stays in the DB as a record.
+     *
+     * @throws \InvalidArgumentException When BV cost is invalid
+     * @throws \LogicException When mech has already been acquired
+     * @throws \Exception When insufficient support points
      */
     public function acquireMech(SalvagedMech $salvagedMech, MercenaryCompany $company): void
     {
-        $cost = $salvagedMech->getAcquisitionCost();
+        // Guard: prevent re-acquisition (idempotency check)
+        if ($salvagedMech->getContractId() !== null) {
+            throw new \LogicException('This mech has already been acquired.');
+        }
+
+        // Calculate base salvage value: floor(bvCost / 2)
+        $bvCost = $salvagedMech->getBvCost();
+        if ($bvCost === null) {
+            throw new \InvalidArgumentException('Salvaged Mech must have a valid BV cost or salvage value.');
+        }
+        $baseSalvage = (int) floor($bvCost / 2);
+
+        // Apply salvage rights discount from contract if present
+        // For non-scrapyard mechs attached to a contract, use the contract's salvage rights
+        // For scrapyard mechs, use the mech's own salvageRightsPercent (if set manually)
+        $salvageRightsPercent = $salvagedMech->getSalvageRightsPercent();
+
+        // Calculate adjusted cost: max(0, baseSalvage * (1 - salvageRightsPercent/100))
+        if ($salvageRightsPercent !== null && $salvageRightsPercent > 0) {
+            $baseSalvage = (int) floor($baseSalvage * (1 - $salvageRightsPercent / 100));
+        }
+
+        // Add repair cost to total acquisition cost
+        $repairCost = $salvagedMech->getRepairCost() ?? 0;
+        $cost = $baseSalvage + $repairCost;
 
         if ($cost <= 0) {
             throw new \InvalidArgumentException('Salvaged Mech must have a valid BV cost or salvage value.');
         }
 
-        // Deduct Support Points from Company
+        // Build deduction label with cost breakdown
         $deductionLabel = 'Acquisition of ' . ($salvagedMech->getModel() ?: 'Unknown Mech');
+
         if ($salvagedMech->isScrapyard()) {
             $deductionLabel .= ' (Scrapyard)';
         }
-        $repairCost = $salvagedMech->getRepairCost();
+
+        if ($salvageRightsPercent !== null && $salvageRightsPercent > 0) {
+            $deductionLabel .= ' (salvage rights ' . $salvageRightsPercent . '%)';
+        }
+
         if ($repairCost > 0) {
             $deductionLabel .= ' (includes ' . $repairCost . ' SP repair)';
         }
-        $company->deductSupportPoints($cost, $deductionLabel);
+
+        // Deduct Support Points from Company (primary failure mechanism)
+        $company->deductSupportPoints($cost, $deductionLabel, $this->em->getConnection());
 
         // Create New Roster Unit
         $newUnit = new Unit();
@@ -54,14 +89,8 @@ class MechAcquisitionService
         $newUnit->setChassis($salvagedMech->getModel() ?? 'Unknown Chassis');
         $newUnit->setTonnage($salvagedMech->getTonnage() ?? 0);
 
-        // BV assignment: scrapyard → half base cost, non-scrapyard with salvageValue → salvageValue, else → base cost
-        if ($salvagedMech->isScrapyard()) {
-            $newUnit->setBv(floor($salvagedMech->getBvCost() / 2));
-        } elseif ($salvagedMech->getSalvageValue() !== null) {
-            $newUnit->setBv($salvagedMech->getSalvageValue());
-        } else {
-            $newUnit->setBv($salvagedMech->getBvCost());
-        }
+        // BV assignment: both scrapyard and non-scrapyard use floor(bvCost / 2)
+        $newUnit->setBv(floor($salvagedMech->getBvCost() / 2));
         $newUnit->setDamageState(DamageState::None);
 
         try {
@@ -83,11 +112,6 @@ class MechAcquisitionService
         } else {
             $damageState = $salvagedMech->getDamageState();
             $newUnit->setDamageState($damageState ?? DamageState::None);
-        }
-
-        // Guard: prevent re-acquisition
-        if ($salvagedMech->getContractId() !== null) {
-            throw new \LogicException('This mech has already been acquired.');
         }
 
         // Unassign from dropship if assigned (frees up capacity)

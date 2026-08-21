@@ -27,7 +27,7 @@ class SalvageCalculationService
     public function calculateRepairCost(?int $tonnage, ?DamageState $damageState, ?TechBase $techBase): ?int
     {
         if ($tonnage === null || $tonnage <= 0) return null;
-        if ($damageState === null || $damageState === DamageState::None) return null;
+        if ($damageState === null || $damageState === DamageState::None) return 0;
         if ($techBase === null) $techBase = TechBase::IS;
 
         $multiplier = match($damageState) {

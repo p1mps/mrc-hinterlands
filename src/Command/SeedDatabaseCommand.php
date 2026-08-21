@@ -659,7 +659,6 @@ class SeedDatabaseCommand extends Command
                 'bvCost' => 300,
                 'damageState' => DamageState::Destroyed,
                 'techBase' => TechBase::IS,
-                'salvageValue' => 150,
                 'salvageRightsPercent' => 50,
                 'spTaken' => 75,
                 'scrapyard' => false,
@@ -669,8 +668,6 @@ class SeedDatabaseCommand extends Command
                 'tonnage' => 90,
                 'bvCost' => 850,
                 'damageState' => DamageState::Crippled,
-                'techBase' => TechBase::Clan,
-                'salvageValue' => 425,
                 'salvageRightsPercent' => 50,
                 'spTaken' => 212,
                 'scrapyard' => false,
@@ -681,7 +678,6 @@ class SeedDatabaseCommand extends Command
                 'bvCost' => null,
                 'damageState' => DamageState::Destroyed,
                 'techBase' => TechBase::Mixed,
-                'salvageValue' => null,
                 'salvageRightsPercent' => null,
                 'spTaken' => 0,
                 'scrapyard' => true,
@@ -692,7 +688,6 @@ class SeedDatabaseCommand extends Command
                 'bvCost' => 1655,
                 'damageState' => DamageState::ArmorOnly,
                 'techBase' => TechBase::IS,
-                'salvageValue' => 827,
                 'salvageRightsPercent' => 50,
                 'spTaken' => null,
                 'scrapyard' => false,
@@ -700,10 +695,8 @@ class SeedDatabaseCommand extends Command
             [
                 'model' => 'Warhammer WHM-A',
                 'tonnage' => 80,
-                'bvCost' => 900,
                 'damageState' => DamageState::Structural,
                 'techBase' => TechBase::Clan,
-                'salvageValue' => 450,
                 'salvageRightsPercent' => 50,
                 'spTaken' => null,
                 'scrapyard' => false,
@@ -718,7 +711,6 @@ class SeedDatabaseCommand extends Command
                 ->setBvCost($data['bvCost'])
                 ->setDamageState($data['damageState'])
                 ->setTechBase($data['techBase'])
-                ->setSalvageValue($data['salvageValue'])
                 ->setSalvageRightsPercent($data['salvageRightsPercent'])
                 ->setSpTaken($data['spTaken'])
                 ->setScrapyard($data['scrapyard'])

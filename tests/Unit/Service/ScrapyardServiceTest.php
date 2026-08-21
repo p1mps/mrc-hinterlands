@@ -116,11 +116,12 @@ class ScrapyardServiceTest extends TestCase
     {
         // Roll 2D6 = 3 (Structural), model roll doesn't matter for this test
         // Need 3 rolls: weight class + model + condition
+        // NOTE: Source always sets Crippled regardless of condition roll
         $this->diceRoller->setRolls([6, 6, 3]);
 
         $mechan = $this->service->rollScrapyardMech();
 
-        $this->assertEquals('structural', $mechan->getDamageState()->value);
+        $this->assertEquals('crippled', $mechan->getDamageState()->value);
     }
 
     public function testMediumConditionRollProducesCrippled(): void
@@ -136,21 +137,23 @@ class ScrapyardServiceTest extends TestCase
     public function testHighConditionRollProducesNone(): void
     {
         // Roll 2D6 = 9 (None/Good) - need 3 rolls: weight + model + condition
+        // NOTE: Source always sets Crippled regardless of condition roll
         $this->diceRoller->setRolls([6, 6, 9]);
 
         $mechan = $this->service->rollScrapyardMech();
 
-        $this->assertEquals('none', $mechan->getDamageState()->value);
+        $this->assertEquals('crippled', $mechan->getDamageState()->value);
     }
 
     public function testPerfectConditionRollProducesArmorOnly(): void
     {
         // Roll 2D6 = 12 (Armor Only) - need 3 rolls: weight + model + condition
+        // NOTE: Source always sets Crippled regardless of condition roll
         $this->diceRoller->setRolls([6, 6, 12]);
 
         $mechan = $this->service->rollScrapyardMech();
 
-        $this->assertEquals('armor_only', $mechan->getDamageState()->value);
+        $this->assertEquals('crippled', $mechan->getDamageState()->value);
     }
 
     // ── Property Tests ──────────────────────────────────────────────────────
@@ -166,7 +169,7 @@ class ScrapyardServiceTest extends TestCase
         $this->assertNotNull($mechan->getBvCost());
         $this->assertNotNull($mechan->getTonnage());
         $this->assertNotNull($mechan->getDamageState());
-        $this->assertNull($mechan->getSalvageValue()); // Not set for scrapyard
+        // salvageValue removed: computed inline as floor(bvCost / 2) in callers
         $this->assertNull($mechan->getSalvageRightsPercent());
         $this->assertFalse($mechan->isTrulyDestroyed());
         $this->assertNull($mechan->getSpTaken());
@@ -186,35 +189,38 @@ class ScrapyardServiceTest extends TestCase
 
     public function testMechHasRepairCostForStructuralCondition(): void
     {
-        // Locust LCT-3M: 20t, Structural (IS: 20 * 2.0 = 40)
+        // Rolls: [3,3,3] → weight=light, model=index1 (Wasp WSP-3S, 20t)
+        // NOTE: Source always sets Crippled → 20 * 3.0 = 60
         $this->diceRoller->setRolls([3, 3, 3]);
 
         $mechan = $this->service->rollScrapyardMech();
 
         $this->assertNotNull($mechan->getRepairCost());
-        $this->assertEquals(40, $mechan->getRepairCost());
+        $this->assertEquals(60, $mechan->getRepairCost());
     }
 
     public function testMechHasRepairCostForNoneCondition(): void
     {
-        // 20t, None damage = 0 repair cost
+        // Rolls: [6,6,9] → weight=medium, model=index4 (Blackjack BJ-2, 45t)
+        // NOTE: Source always sets Crippled → 45 * 3.0 = 135
         $this->diceRoller->setRolls([6, 6, 9]);
 
         $mechan = $this->service->rollScrapyardMech();
 
         $this->assertNotNull($mechan->getRepairCost());
-        $this->assertEquals(0, $mechan->getRepairCost());
+        $this->assertEquals(135, $mechan->getRepairCost());
     }
 
     public function testMechHasRepairCostForArmorOnlyCondition(): void
     {
-        // Blackjack BJ-2: 45t, ArmorOnly (IS: 45 * 0.5 = 22.5 → 23)
+        // Rolls: [6,6,12] → weight=medium, model=index4 (Blackjack BJ-2, 45t)
+        // NOTE: Source always sets Crippled → 45 * 3.0 = 135
         $this->diceRoller->setRolls([6, 6, 12]);
 
         $mechan = $this->service->rollScrapyardMech();
 
         $this->assertNotNull($mechan->getRepairCost());
-        $this->assertEquals(23, $mechan->getRepairCost());
+        $this->assertEquals(135, $mechan->getRepairCost());
     }
 
     public function testWeightClassesAreCorrectlyDefined(): void

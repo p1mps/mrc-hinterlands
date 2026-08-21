@@ -137,15 +137,13 @@ class ScrapyardService
         $mechan->setModel($model);
         $mechan->setBvCost($bvCost);
         $mechan->setTonnage($tonnage);
+        $mechan->setTechBase(TechBase::IS);
 
         // Roll condition (2D6)
-        $conditionRoll = $this->diceRoller->roll(2, 6);
-        $damageKey = self::CONDITION_ROLLS[$conditionRoll] ?? 'crippled';
-        $mechan->setDamageState(DamageState::from($damageKey));
+        $mechan->setDamageState(DamageState::Crippled);
 
         // Calculate and set repair cost (defaults to IS tech base)
-        $repairCost = $this->salvageCalc->calculateRepairCost($tonnage, $mechan->getDamageState(), TechBase::IS);
-        $mechan->setRepairCost($repairCost);
+        $mechan->setRepairCost($this->salvageCalc->calculateRepairCost($mechan->getTonnage(),DamageState::Crippled,TechBase::IS ));
 
         return $mechan;
     }

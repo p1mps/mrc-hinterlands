@@ -16,7 +16,9 @@
     <th>Type</th>
     <th>Damage</th>
     <th>Tech Base</th>
-    <th>Repair Cost</th>
+    <th>Base Repair Cost</th>
+    <th>Discounted Repair Cost</th>
+    <th>Support %</th>
     <th>Pilot</th>
     <!-- Set the min-width here for the button column -->
     <th style="min-width: 250px;">Actions</th>
@@ -31,7 +33,9 @@
     <td>{{ unit.unitType.value }}</td>
     <td>{{ unit.damageState.value }}</td>
     <td>{{ unit.techBase ? unit.techBase.value : "-" }}</td>
+    <td>{{ baseRepairCosts[unit.id] ?? "-" }}</td>
     <td>{{ repairCosts[unit.id] ?? "-" }}</td>
+    <td>{{ supportPercentages[unit.id] ?? 0 }}%</td>
     <td>
         <form method="post" action="{{ path('app_roster_assign_pilot', {id: unit.id}) }}" class="d-flex gap-1">
             <select name="pilot_id" class="form-select form-select-sm">
@@ -65,12 +69,18 @@
                   class="flex-fill">
                 <button class="btn btn-sm btn-danger w-100">Del</button>
             </form>
+
+            <form method="post" action="{{ path('app_roster_battlefield_lose', {id: unit.id}) }}"
+                  onsubmit="return confirm('Mark \'{{ unit.name }}\' as a battlefield loss? This will remove the unit and credit support points based on your active contract.');"
+                  class="flex-fill">
+                <button class="btn btn-sm btn-warning w-100">Battlefield Loss</button>
+            </form>
         </div>
     </td>
 
 </tr>
 {% else %}
-<tr><td colspan="10" class="text-muted">No units yet.</td></tr>
+<tr><td colspan="11" class="text-muted">No units yet.</td></tr>
 {% endfor %}
 </tbody>
 </table>

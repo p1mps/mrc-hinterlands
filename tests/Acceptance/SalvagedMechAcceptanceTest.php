@@ -199,7 +199,6 @@ class SalvagedMechAcceptanceTest extends AcceptanceTestCase
         $mechan->setModel('Thunderbolt THG-11d');
         $mechan->setTonnage(100);
         $mechan->setBvCost(200);
-        $mechan->setSalvageValue(100);
         $mechan->setSalvageRightsPercent(50);
         $mechan->setScrapyard(false);
         $mechan->setContractId($contractId);
@@ -262,5 +261,241 @@ class SalvagedMechAcceptanceTest extends AcceptanceTestCase
         $this->assertResponseRedirects('/salvaged-mechs/');
         $client->followRedirect();
         $this->assertResponseIsSuccessful();
+    }
+
+    // ── Sell Tests ──────────────────────────────────────────────────────────
+
+    public function testSellMechSucceedsWithNumericSalvageRights(): void
+    {
+        $ref = $this->seedUserAndCompany('selluser', 'Sell Mech Co', 'Inner Sphere');
+        $companyId = $ref['companyId'];
+        $this->seedSupportPoints($companyId, 1000, 'Funding');
+
+        // Seed a contract with numeric salvage rights (e.g., "3" = 3%)
+        $this->seedContract($companyId, [
+            'status' => 'active',
+            'salvage_rights' => '3',
+        ]);
+
+        $mechanId = $this->seedSalvagedMech($companyId, [
+            'model' => 'Warhammer WHM-6M',
+            'tonnage' => 90,
+            'bv_cost' => 200,
+            'salvage_rights_percent' => 50,
+            'is_truly_destroyed' => 0,
+            'sp_taken' => null,
+        ]);
+
+        $client = $this->login('selluser');
+
+        // Submit the Sell form
+        $client->request('POST', '/salvaged-mechs/' . $mechanId . '/sell');
+        $this->assertResponseRedirects('/salvaged-mechs/');
+        $crawler = $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+
+        // Verify success flash message
+        $this->assertFlashMessage($crawler, 'Sold Warhammer WHM-6M for');
+    }
+
+    public function testSellMechFailsWithExchangeSalvageTerms(): void
+    {
+        $ref = $this->seedUserAndCompany('sellfail', 'Sell Fail Co', 'Inner Sphere');
+        $companyId = $ref['companyId'];
+        $this->seedSupportPoints($companyId, 1000, 'Funding');
+
+        // Seed a contract with "Exchange" salvage terms (prohibits selling)
+        $this->seedContract($companyId, [
+            'status' => 'active',
+            'salvage_rights' => 'Exchange',
+        ]);
+
+        $mechanId = $this->seedSalvagedMech($companyId, [
+            'model' => 'Warhammer WHM-6M',
+            'tonnage' => 90,
+            'bv_cost' => 200,
+            'salvage_rights_percent' => 50,
+            'is_truly_destroyed' => 0,
+            'sp_taken' => null,
+        ]);
+
+        $client = $this->login('sellfail');
+
+        // Submit the Sell form — should fail with error about Exchange terms
+        $client->request('POST', '/salvaged-mechs/' . $mechanId . '/sell');
+        $this->assertResponseRedirects('/salvaged-mechs/');
+        $crawler = $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+
+        // Verify error flash message about Exchange terms
+        $this->assertFlashMessage($crawler, 'Exchange');
+    }
+
+    public function testSellMechFailsWithExchangePercentSalvageTerms(): void
+    {
+        $ref = $this->seedUserAndCompany('sellfail2', 'Sell Fail 2 Co', 'Inner Sphere');
+        $companyId = $ref['companyId'];
+        $this->seedSupportPoints($companyId, 1000, 'Funding');
+
+        // Seed a contract with "Exchange/50%" salvage terms (prohibits selling)
+        $this->seedContract($companyId, [
+            'status' => 'active',
+            'salvage_rights' => 'Exchange/50%',
+        ]);
+
+        $mechanId = $this->seedSalvagedMech($companyId, [
+            'model' => 'Warhammer WHM-6M',
+            'tonnage' => 90,
+            'bv_cost' => 200,
+            'salvage_rights_percent' => 50,
+            'is_truly_destroyed' => 0,
+            'sp_taken' => null,
+        ]);
+
+        $client = $this->login('sellfail2');
+
+        // Submit the Sell form — should fail with error about Exchange terms
+        $client->request('POST', '/salvaged-mechs/' . $mechanId . '/sell');
+        $this->assertResponseRedirects('/salvaged-mechs/');
+        $crawler = $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+
+        // Verify error flash message about Exchange terms
+        $this->assertFlashMessage($crawler, 'Exchange');
+    }
+
+    public function testSellMechFailsWithNoSalvageRights(): void
+    {
+        $ref = $this->seedUserAndCompany('sellfail3', 'Sell Fail 3 Co', 'Inner Sphere');
+        $companyId = $ref['companyId'];
+        $this->seedSupportPoints($companyId, 1000, 'Funding');
+
+        // Seed a contract with "None" salvage terms (no salvage rights)
+        $this->seedContract($companyId, [
+            'status' => 'active',
+            'salvage_rights' => 'None',
+        ]);
+
+        $mechanId = $this->seedSalvagedMech($companyId, [
+            'model' => 'Warhammer WHM-6M',
+            'tonnage' => 90,
+            'bv_cost' => 200,
+            'salvage_rights_percent' => 50,
+            'is_truly_destroyed' => 0,
+            'sp_taken' => null,
+        ]);
+
+        $client = $this->login('sellfail3');
+
+        // Submit the Sell form — should fail with error about no salvage rights
+        $client->request('POST', '/salvaged-mechs/' . $mechanId . '/sell');
+        $this->assertResponseRedirects('/salvaged-mechs/');
+        $crawler = $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+
+        // Verify error flash message about no salvage rights
+        $this->assertFlashMessage($crawler, 'no salvage rights');
+    }
+
+    public function testSellMechFailsWhenNoActiveContract(): void
+    {
+        $ref = $this->seedUserAndCompany('sellfail4', 'Sell Fail 4 Co', 'Inner Sphere');
+        $companyId = $ref['companyId'];
+        $this->seedSupportPoints($companyId, 1000, 'Funding');
+
+        // No active contract seeded
+
+        $mechanId = $this->seedSalvagedMech($companyId, [
+            'model' => 'Warhammer WHM-6M',
+            'tonnage' => 90,
+            'bv_cost' => 200,
+            'salvage_rights_percent' => 50,
+            'is_truly_destroyed' => 0,
+            'sp_taken' => null,
+        ]);
+
+        $client = $this->login('sellfail4');
+
+        // Submit the Sell form — should fail because no active contract
+        $client->request('POST', '/salvaged-mechs/' . $mechanId . '/sell');
+        $this->assertResponseRedirects('/salvaged-mechs/');
+        $crawler = $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+
+        // Verify error flash message about no active contract
+        $this->assertFlashMessage($crawler, 'no active contract');
+    }
+
+    public function testSellMechNotShownWhenAlreadyAcquired(): void
+    {
+        $ref = $this->seedUserAndCompany('sellfail5', 'Sell Fail 5 Co', 'Inner Sphere');
+        $companyId = $ref['companyId'];
+
+        $mechanId = $this->seedSalvagedMech($companyId, [
+            'model' => 'Warhammer WHM-6M',
+            'tonnage' => 90,
+            'bv_cost' => 200,
+            'salvage_rights_percent' => 50,
+            'is_truly_destroyed' => 0,
+            'sp_taken' => null,
+        ]);
+
+        // Manually set contract_id to simulate already acquired
+        $conn = self::$sharedEm->getConnection();
+        $conn->update('salvaged_mech', ['contract_id' => 1], ['id' => $mechanId]);
+
+        $client = $this->login('sellfail5');
+        $crawler = $client->request('GET', '/salvaged-mechs/');
+
+        $this->assertResponseIsSuccessful();
+
+        $submitButtons = $crawler->selectButton('Sell');
+        $this->assertCount(0, $submitButtons, 'Expected no Sell buttons for acquired mech');
+    }
+
+    public function testSellMechNotShownWhenAlreadySpTaken(): void
+    {
+        $ref = $this->seedUserAndCompany('sellfail6', 'Sell Fail 6 Co', 'Inner Sphere');
+        $companyId = $ref['companyId'];
+
+        $mechanId = $this->seedSalvagedMech($companyId, [
+            'model' => 'Warhammer WHM-6M',
+            'tonnage' => 90,
+            'bv_cost' => 200,
+            'salvage_rights_percent' => 50,
+            'is_truly_destroyed' => 0,
+            'sp_taken' => 75,
+        ]);
+
+        $client = $this->login('sellfail6');
+        $crawler = $client->request('GET', '/salvaged-mechs/');
+
+        $this->assertResponseIsSuccessful();
+
+        $submitButtons = $crawler->selectButton('Sell');
+        $this->assertCount(0, $submitButtons, 'Expected no Sell buttons for SP-taken mech');
+    }
+
+    public function testSellButtonVisibleOnIndexForAvailableMech(): void
+    {
+        $ref = $this->seedUserAndCompany('sellvisible', 'Sell Visible Co', 'Inner Sphere');
+        $this->seedSupportPoints($ref['companyId'], 1000, 'Funding');
+
+        $mechanId = $this->seedSalvagedMech($ref['companyId'], [
+            'model' => 'Warhammer WHM-6M',
+            'tonnage' => 90,
+            'bv_cost' => 200,
+            'salvage_rights_percent' => 50,
+            'is_truly_destroyed' => 0,
+            'sp_taken' => null,
+        ]);
+
+        $client = $this->login('sellvisible');
+        $crawler = $client->request('GET', '/salvaged-mechs/');
+
+        $this->assertResponseIsSuccessful();
+
+        $submitButtons = $crawler->selectButton('Sell');
+        $this->assertCount(1, $submitButtons, 'Expected exactly one Sell button for available mech');
     }
 }

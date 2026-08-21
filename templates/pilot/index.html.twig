@@ -19,6 +19,11 @@
     <td>{{ pilot.unit ? pilot.unit.name : '—' }}</td>
     <td class="text-nowrap">
         <a href="{{ path('app_pilots_edit', {id: pilot.id}) }}" class="btn btn-sm btn-secondary">Edit</a>
+        {% if pilot.wounded %}
+        <form method="post" action="{{ path('app_pilots_heal', {id: pilot.id}) }}" class="d-inline">
+            <button class="btn btn-sm btn-success">Heal</button>
+        </form>
+        {% endif %}
         <form method="post" action="{{ path('app_pilots_delete', {id: pilot.id}) }}" class="d-inline"
               onsubmit="return confirm('Delete this pilot?')">
             <button class="btn btn-sm btn-danger">Del</button>

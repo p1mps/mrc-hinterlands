@@ -17,11 +17,13 @@
         <tr>
             <th>Model</th>
             <th>Tonnage</th>
-            <th>Acquisition Price</th>
+            <th>BV</th>
+            <th>Base Price</th>
+            <th>Salvage Rights %</th>
+            <th>Acquisition Cost</th>
             <th>Damage State</th>
             <th>Tech Base</th>
-            <th>Repair Cost</th>
-            <th>Scrapyard</th>
+            <th>Source</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -31,39 +33,54 @@
     <tr>
         <td>{{ salvaged_mech.model }}</td>
         <td>{{ salvaged_mech.tonnage }}</td>
-        <td>{{ acquisitionPrice[salvaged_mech.id] ?? '—' }}</td>
+        <td>{{ salvaged_mech.bvCost }}</td>
+        <td>{{ basePrices[salvaged_mech.id] ?? '-' }}</td>
+        <td>
+            {% set srPct = salvageRightsPcts[salvaged_mech.id] %}
+            {% if salvaged_mech.isScrapyard %}
+                <span class="text-muted">N/A (scrapyard)</span>
+            {% elseif srPct is not null %}
+                {{ srPct }}%
+            {% else %}
+                <span class="text-muted">Exchange (25%)</span>
+            {% endif %}
+        </td>
+        <td>{{ acquisitionCosts[salvaged_mech.id] ?? '-' }}</td>
         <td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td>
-            <td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td>
-            <td>{{ salvaged_mech.repairCost ?? '—' }}</td>
-            <td>{{ salvaged_mech.scrapyard ? 'Yes' : 'No' }}</td>
-            <td>
-                {% if salvaged_mech.isTrulyDestroyed %}
-                    <span class="badge bg-danger">Truly Destroyed</span>
-                {% elseif salvaged_mech.contractId is not null %}
-                    <span class="badge bg-success">Acquired</span>
-                {% elseif salvaged_mech.spTaken is not null %}
-                    <span class="badge bg-warning">SP Taken ({{ salvaged_mech.spTaken }})</span>
-                {% else %}
-                    <span class="badge bg-info">Available</span>
-                {% endif %}
-            </td>
-            <td class="text-nowrap">
-                {% set dropship = dropshipService.getDropshipByCompany(company) %}
-                <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                {% if not salvaged_mech.isTrulyDestroyed and salvaged_mech.spTaken is null and salvaged_mech.contractId is null %}
-                    <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech? This will cost {{ acquisitionPrice[salvaged_mech.id] }} support points.');" class="d-inline">
-                        <input type="hidden" name="_token" value="{{ csrf_token('acquire' ~ salvaged_mech.id) }}">
-                        <button class="btn btn-sm btn-success">Acquire Mech</button>
-                    </form>
-                {% endif %}
-                <form method="post" action="{{ path('app_salvaged_mech_delete', {'id': salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to delete this mech?');" class="d-inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ salvaged_mech.id) }}">
-                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+        <td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td>
+        <td>{{ salvaged_mech.scrapyard ? 'Scrapyard' : 'Battlefield' }}</td>
+        <td>
+            {% if salvaged_mech.isTrulyDestroyed %}
+                <span class="badge bg-danger">Truly Destroyed</span>
+            {% elseif salvaged_mech.contractId is not null %}
+                <span class="badge bg-success">Acquired</span>
+            {% elseif salvaged_mech.spTaken is not null %}
+                <span class="badge bg-warning">SP Taken ({{ salvaged_mech.spTaken }})</span>
+            {% else %}
+                <span class="badge bg-info">Available</span>
+            {% endif %}
+        </td>
+        <td class="text-nowrap">
+            {% set dropship = dropshipService.getDropshipByCompany(company) %}
+            <a href="{{ path('app_salvaged_mech_edit', {'id': salvaged_mech.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+            {% if not salvaged_mech.isTrulyDestroyed and salvaged_mech.spTaken is null and salvaged_mech.contractId is null %}
+                <form method="post" action="{{ path('app_salvaged_mech_acquire', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to acquire this mech? This will cost {{ acquisitionCosts[salvaged_mech.id] }} support points.');" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('acquire' ~ salvaged_mech.id) }}">
+                    <button class="btn btn-sm btn-success">Acquire Mech</button>
                 </form>
-            </td>
-        </tr>
-        {% else %}
-        <tr><td colspan="9" class="text-muted">No records found.</td></tr>
+                <form method="post" action="{{ path('app_salvaged_mech_sell', {id: salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to sell this mech?');" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('sell' ~ salvaged_mech.id) }}">
+                    <button class="btn btn-sm btn-warning">Sell</button>
+                </form>
+            {% endif %}
+            <form method="post" action="{{ path('app_salvaged_mech_delete', {'id': salvaged_mech.id}) }}" onsubmit="return confirm('Are you sure you want to delete this mech?');" class="d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ salvaged_mech.id) }}">
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="11" class="text-muted">No records found.</td></tr>
     {% endfor %}
     </tbody>
 </table>

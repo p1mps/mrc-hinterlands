@@ -19,7 +19,7 @@
     <tr><th>Model</th><td>{{ salvaged_mech.model ?? '—' }}</td></tr>
     <tr><th>Tonnage</th><td>{{ salvaged_mech.tonnage ?? '—' }}</td></tr>
     <tr><th>BV Cost</th><td>{{ salvaged_mech.bvCost ?? '—' }}</td></tr>
-    <tr><th>Salvage Value (BV/2)</th><td>{{ salvaged_mech.salvageValue ?? '—' }}</td></tr>
+    <tr><th>Salvage Value (BV/2)</th><td>{{ salvaged_mech.bvCost is not null ? (salvaged_mech.bvCost // 2) : '—' }}</td></tr>
     <tr><th>Salvage Rights</th><td>{{ salvaged_mech.salvageRightsPercent is null ? 'Exchange (25%)' : (salvaged_mech.salvageRightsPercent ~ '%') }}</td></tr>
     <tr><th>Damage State</th><td>{{ salvaged_mech.damageState ? salvaged_mech.damageState.value : '—' }}</td></tr>
     <tr><th>Tech Base</th><td>{{ salvaged_mech.techBase ? salvaged_mech.techBase.value : '—' }}</td></tr>

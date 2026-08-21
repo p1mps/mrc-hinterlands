@@ -15,13 +15,15 @@ class RosterServiceTest extends TestCase
 {
     private EntityManagerInterface $em;
     private \App\Service\SalvageCalculationService $salvageCalc;
+    private \App\Repository\ContractRepository $contractRepo;
     private \App\Service\RosterService $service;
 
     protected function setUp(): void
     {
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->salvageCalc = $this->createStub(\App\Service\SalvageCalculationService::class);
-        $this->service = new \App\Service\RosterService($this->em, $this->salvageCalc);
+        $this->contractRepo = $this->createStub(\App\Repository\ContractRepository::class);
+        $this->service = new \App\Service\RosterService($this->em, $this->salvageCalc, $this->contractRepo);
     }
 
     private function makeCompany(): MercenaryCompany

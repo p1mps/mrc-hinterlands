@@ -46,7 +46,9 @@ class ContractLogController extends BaseController
             $this->em->flush();
             $this->addFlash('success', 'Log entry updated.');
 
-            return $this->redirectToRoute('app_contracts');
+            return $this->redirectToRoute('app_contracts_show', [
+                'id' => $contract->getId(),
+            ]);
         }
 
         return $this->render('contract_log/edit.html.twig', [
@@ -68,7 +70,9 @@ class ContractLogController extends BaseController
             $this->addFlash('success', 'Log entry deleted.');
         }
 
-        return $this->redirectToRoute('app_contracts');
+        return $this->redirectToRoute('app_contracts_show', [
+            'id' => $contract->getId(),
+        ]);
     }
 
     #[Route('/add', name: 'app_contracts_log_add', methods: ['GET', 'POST'])]
@@ -93,7 +97,7 @@ class ContractLogController extends BaseController
 
             if ($action !== 'post_track') {
                 $this->addFlash('success', "Log entry added $action.");
-                return $this->redirectToRoute('app_contracts_log_add', [
+                return $this->redirectToRoute('app_contracts_show', [
                     'id' => $contract->getId(),
                 ]);
             }

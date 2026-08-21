@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Pilot;
 use App\Form\PilotFormType;
+use App\Repository\ContractRepository;
 use App\Service\PilotService;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +16,13 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/pilots')]
 class PilotController extends BaseController
 {
+    public function __construct(
+        EntityManagerInterface $em,
+        private readonly ContractRepository $contractRepository,
+    ) {
+        parent::__construct($em);
+    }
+
     #[Route('', name: 'app_pilots')]
     public function index(PilotService $pilotService): Response
     {
@@ -65,6 +75,40 @@ class PilotController extends BaseController
     {
         $pilotService->deletePilot($pilot);
         $this->addFlash('success', 'Pilot deleted.');
+        return $this->redirectToRoute('app_pilots');
+    }
+
+    #[Route('/{id}/heal', name: 'app_pilots_heal', methods: ['POST'])]
+    public function heal(Pilot $pilot): Response
+    {
+        $company = $this->getUser()->getCompany();
+        $baseCost = 30;
+
+        // Apply active contract support terms to healing cost
+        $activeContract = $this->contractRepository->findActiveContractByCompany($company);
+        $healCost = 30; // default base cost
+        if ($activeContract !== null) {
+            $supportType = $activeContract->getSupportType();
+            if ($supportType === 'Battle') {
+                $healCost = 0;
+            } elseif ($supportType === 'Straight') {
+                $supportPercent = $activeContract->parseSupportPercent();
+                $healCost = max(0, (int) floor($baseCost * (1 - $supportPercent / 100)));
+            }
+        }
+
+        try {
+            if ($healCost > 0) {
+                $company->deductSupportPoints($healCost, 'Pilot heal', $this->em->getConnection());
+            } else {
+                // Battle support or Straight/100%: no deduction
+            }
+            $pilot->setWounded(false);
+            $this->em->flush();
+            $this->addFlash('success', 'Pilot healed.');
+        } catch (\Exception $e) {
+            $this->addFlash('danger', $e->getMessage());
+        }
         return $this->redirectToRoute('app_pilots');
     }
 }

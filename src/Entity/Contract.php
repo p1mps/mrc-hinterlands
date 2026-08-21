@@ -197,6 +197,16 @@ public function parseSupportPercent(): int {
         return 0;
     }
 
+    /**
+     * Returns the numeric support percentage from support terms, or 0 if no numeric percentage exists.
+     * Handles formats like "Straight/50%", "Straight/80%", "None", etc.
+     */
+    public function getSupportPercent(): int {
+        if (!$this->supportTerms || $this->supportTerms === 'None') return 0;
+        if (preg_match('/(\d+)%/', $this->supportTerms, $m)) return (int) $m[1];
+        return 0;
+    }
+
     public function getSupportType(): string {
         if (str_starts_with($this->supportTerms ?? '', 'Straight')) return 'Straight';
         if (str_starts_with($this->supportTerms ?? '', 'Battle')) return 'Battle';

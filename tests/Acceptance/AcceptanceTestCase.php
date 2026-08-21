@@ -17,6 +17,38 @@ abstract class AcceptanceTestCase extends WebTestCase
         self::$sharedClient = null;
     }
 
+    /**
+     * Lazily reinitialize the shared EntityManager if it was reset by setUp().
+     * This handles the case where seedUserAndCompany fails to reinitialize.
+     */
+    protected function ensureSharedEm(): void
+    {
+        if (self::$sharedEm !== null) {
+            return;
+        }
+
+        $client = static::createClient();
+        self::$sharedClient = $client;
+
+        $container = $client->getContainer();
+
+        // Try to get EntityManagerInterface directly; fall back to doctrine service
+        try {
+            self::$sharedEm = $container->get(EntityManagerInterface::class);
+        } catch (\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException) {
+            self::$sharedEm = $container->get('doctrine')->getManager();
+        }
+
+        $metadata = self::$sharedEm->getMetadataFactory()->getAllMetadata();
+        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool(self::$sharedEm);
+        try {
+            $schemaTool->dropSchema($metadata);
+        } catch (\Throwable) {
+            // Ignore errors during drop
+        }
+        $schemaTool->createSchema($metadata);
+    }
+
     protected function seedUserAndCompany(string $username, string $companyName, string $faction): array
     {
         // Reuse existing client if available to avoid kernel re-boot
@@ -26,7 +58,13 @@ abstract class AcceptanceTestCase extends WebTestCase
         // Only initialize schema on first call
         if (self::$sharedEm === null) {
             $container = $client->getContainer();
-            self::$sharedEm = $container->get(EntityManagerInterface::class);
+
+            // Try to get EntityManagerInterface directly; fall back to doctrine service
+            try {
+                self::$sharedEm = $container->get(EntityManagerInterface::class);
+            } catch (\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException) {
+                self::$sharedEm = $container->get('doctrine')->getManager();
+            }
 
             $metadata = self::$sharedEm->getMetadataFactory()->getAllMetadata();
             $schemaTool = new \Doctrine\ORM\Tools\SchemaTool(self::$sharedEm);
@@ -205,7 +243,7 @@ abstract class AcceptanceTestCase extends WebTestCase
             'bv_cost' => 300,
             'damage_state' => 'none',
             'tech_base' => 'is',
-            'salvage_value' => 150,
+
             'salvage_rights_percent' => 50,
             'scrapyard' => 1,
             'is_truly_destroyed' => 0,
@@ -219,13 +257,12 @@ abstract class AcceptanceTestCase extends WebTestCase
 
     protected function seedSupportPoints(int $companyId, int $amount, string $description = 'Test'): void
     {
-        $conn = self::$sharedEm->getConnection();
-        $conn->insert('support_point_entry', [
-            'company_id' => $companyId,
-            'amount' => $amount,
-            'description' => $description,
-            'created_at' => date('Y-m-d H:i:s'),
-        ]);
+        $entry = new \App\Entity\SupportPointEntry();
+        $entry->setAmount($amount);
+        $entry->setCompany(self::$sharedEm->getRepository(\App\Entity\MercenaryCompany::class)->find($companyId));
+        $entry->setDescription($description);
+        self::$sharedEm->persist($entry);
+        self::$sharedEm->flush();
     }
 
     protected function assertFlashMessage(Crawler $crawler, string $expectedMessage): void

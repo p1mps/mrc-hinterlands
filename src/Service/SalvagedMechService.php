@@ -11,7 +11,9 @@ class SalvagedMechService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly MechAcquisitionService $acquisition,
-        private readonly SalvageCalculationService $salvageCalc
+        private readonly SalvageCalculationService $salvageCalc,
+        private readonly ?ContractResolver $contractResolver = null,
+        private readonly ?SalvageRightsParser $salvageRightsParser = null,
     ) {}
 
     /** @return SalvagedMech[] */
@@ -25,11 +27,71 @@ class SalvagedMechService
         return $this->em->getRepository(SalvagedMech::class)->find($id);
     }
 
-    public function createMech(SalvagedMech $mechan, MercenaryCompany $company): void
-    {
+    /**
+     * Create a SalvagedMech and optionally attach it to the active contract.
+     *
+     * For non-scrapyard mechs, if an active contract exists, the mech is attached
+     * to that contract and its salvageRightsPercent is set based on the contract's
+     * salvage rights terms.
+     *
+     * @param SalvagedMech $mechan The mech to create
+     * @param MercenaryCompany $company The company that owns the mech
+     * @param bool $attachToContract Whether to attempt attachment to active contract (default: true for non-scrapyard)
+     * @param ?string $techBase Optional tech base override (defaults to IS)
+     * @param ?string $damageState Optional damage state override (defaults to Crippled)
+     *
+     * @return ?array Resolved contract info if attached, null otherwise
+     *   ['contract' => Contract, 'salvageRightsPercent' => int|null, 'adjustedCost' => int]
+     */
+    public function createMech(
+        SalvagedMech $mechan,
+        MercenaryCompany $company,
+        bool $attachToContract = true,
+        ?string $techBase = null,
+        ?string $damageState = null,
+    ): ?array {
         $mechan->setCompany($company);
         $this->em->persist($mechan);
+
+        // For non-scrapyard mechs, attempt to attach to active contract
+        if ($attachToContract && !$mechan->isScrapyard() && $this->contractResolver !== null && $this->salvageRightsParser !== null) {
+            $contract = $this->contractResolver->resolveActiveContract($company);
+
+            if ($contract !== null) {
+                $salvageRightsPercent = $this->salvageRightsParser->parse($contract->getSalvageRights());
+
+                // Only attach if salvage rights allow it (not Exchange/None)
+                if ($salvageRightsPercent !== null && $salvageRightsPercent > 0) {
+                    $mechan->setContract($contract);
+                    $mechan->setContractId($contract->getId());
+                    $mechan->setSalvageRightsPercent($salvageRightsPercent);
+
+                    // Add to contract's collection for bidirectional sync
+                    if ($contract->getSalvagedMechs()->contains($mechan)) {
+                        $mechan->setContract($contract);
+                    } else {
+                        $contract->getSalvagedMechs()->add($mechan);
+                    }
+
+                    // Calculate adjusted cost: max(0, baseSalvage - salvageRightsValue)
+                    $baseSalvage = $this->salvageCalc->calculateSalvageValue($mechan->getBvCost());
+                    $adjustedCost = $this->salvageCalc->calculateAcquisitionCost($baseSalvage, $salvageRightsPercent);
+
+                    $this->em->persist($contract);
+
+                    return [
+                        'contract' => $contract,
+                        'salvageRightsPercent' => $salvageRightsPercent,
+                        'adjustedCost' => $adjustedCost,
+                    ];
+                }
+                // Exchange or None: don't attach, but mech is still created
+            }
+            // No active contract: don't attach, but mech is still created
+        }
+
         $this->em->flush();
+        return null;
     }
 
     public function updateMech(SalvagedMech $mechan): void

@@ -36,6 +36,9 @@ class Pilot {
     #[ORM\Column]
     private int $pilotingXp = 0;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $wounded = false;
+
     public function getId(): ?int { return $this->id; }
 
     public function getCompany(): MercenaryCompany { return $this->company; }
@@ -60,4 +63,7 @@ class Pilot {
 
     public function getPilotingXp(): int { return $this->pilotingXp; }
     public function setPilotingXp(int $pilotingXp): static { $this->pilotingXp = $pilotingXp; return $this; }
+
+    public function isWounded(): bool { return $this->wounded; }
+    public function setWounded(bool $wounded): static { $this->wounded = $wounded; return $this; }
 }

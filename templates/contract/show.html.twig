@@ -88,7 +88,7 @@
     {% for mech in contract.salvagedMechs %}
     <tr{% if mech.isTrulyDestroyed %} class="table-danger"{% endif %}>
         <td>{{ mech.model }}</td>
-        <td>{{ mech.salvageValue ?? '—' }}</td>
+        <td>{{ mech.bvCost is not null ? (mech.bvCost // 2) : '—' }}</td>
         <td>{{ mech.salvageRightsPercent is null ? 'Exchange (25%)' : (mech.salvageRightsPercent ~ '%') }}</td>
         <td>
             {% if mech.isTrulyDestroyed %}

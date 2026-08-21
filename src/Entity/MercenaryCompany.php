@@ -5,6 +5,7 @@ use App\Entity\Dropship;
 use App\Repository\MercenaryCompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MercenaryCompanyRepository::class)]
@@ -101,20 +102,28 @@ class MercenaryCompany {
      * @param string $reason Description of why points were deducted
      * @throws \Exception if insufficient funds
      */
-    public function deductSupportPoints(int $amount, string $reason = 'General Deduction'): void {
+    public function deductSupportPoints(int $amount, string $reason = 'General Deduction', ?Connection $conn = null): void {
         if ($amount <= 0) {
             throw new \InvalidArgumentException('Deduction amount must be positive.');
         }
 
-        $currentBalance = $this->getSupportPointsBalance();
+        // When a Connection is provided, query the database directly for the balance.
+        // This handles the case where data was seeded via raw SQL (e.g. in acceptance tests)
+        // and the in-memory collection is stale or empty.
+        if ($conn !== null && $this->id !== null) {
+            $currentBalance = (int) $conn->fetchOne(
+                'SELECT COALESCE(SUM(amount), 0) FROM support_point_entry WHERE company_id = ?',
+                [$this->id]
+            );
+        } else {
+            $currentBalance = $this->getSupportPointsBalance();
+        }
         
         if ($currentBalance < $amount) {
             throw new \Exception("Insufficient support points. Current balance: {$currentBalance}, Requested deduction: {$amount}");
         }
 
         $entry = new SupportPointEntry();
-        // Assuming SupportPointEntry has setAmount, setCompany, and setDescription methods
-        // If description is not available, we might need to adjust this based on the actual entity structure
         if (method_exists($entry, 'setAmount')) {
             $entry->setAmount(-$amount);
         } else {
@@ -127,17 +136,12 @@ class MercenaryCompany {
             throw new \RuntimeException('SupportPointEntry does not have setCompany method.');
         }
 
-        // Optional: Set a description if the entity supports it
         if (method_exists($entry, 'setDescription')) {
             $entry->setDescription($reason);
         }
 
         $this->supportPointEntries->add($entry);
     }
-
-    /**
-     * Adds support points by creating a positive entry.
-     */
     public function addSupportPoints(int $amount, string $reason = 'General Credit'): void {
         if ($amount <= 0) {
             throw new \InvalidArgumentException('Added amount must be positive.');

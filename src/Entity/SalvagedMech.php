@@ -54,9 +54,6 @@ class SalvagedMech
     private ?int $spTaken = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $salvageValue = null;
-
-    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $salvageRightsPercent = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -188,17 +185,6 @@ class SalvagedMech
         return $this;
     }
 
-    public function getSalvageValue(): ?int
-    {
-        return $this->salvageValue;
-    }
-
-    public function setSalvageValue(?int $salvageValue): static
-    {
-        $this->salvageValue = $salvageValue;
-        return $this;
-    }
-
     public function getSalvageRightsPercent(): ?int
     {
         return $this->salvageRightsPercent;
@@ -253,4 +239,5 @@ class SalvagedMech
         $this->createdAt = $createdAt;
         return $this;
     }
+
 }

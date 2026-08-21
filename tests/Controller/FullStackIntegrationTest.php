@@ -584,7 +584,6 @@ class FullStackIntegrationTest extends WebTestCase
         $mechan->setModel('New Mech');
         $mechan->setTonnage(100);
         $mechan->setBvCost(400);
-        $mechan->setSalvageValue(200);
         $mechan->setSalvageRightsPercent(50);
         $this->em->flush();
 
@@ -593,7 +592,7 @@ class FullStackIntegrationTest extends WebTestCase
         $this->assertEquals('New Mech', $updatedMech->getModel());
         $this->assertEquals(100, $updatedMech->getTonnage());
         $this->assertEquals(400, $updatedMech->getBvCost());
-        $this->assertEquals(200, $updatedMech->getSalvageValue());
+
         $this->assertEquals(50, $updatedMech->getSalvageRightsPercent());
     }
 

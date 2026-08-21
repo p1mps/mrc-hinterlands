@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Unit;
 use App\Form\UnitFormType;
 use App\Service\DropshipService;
-use App\Service\SalvageCalculationService;
 use App\Service\RosterService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,19 +18,19 @@ class RosterController extends BaseController
     public function index(
         RosterService $rosterService,
         DropshipService $dropshipService,
-        SalvageCalculationService $salvageCalculationService,
     ): Response
     {
         $company = $this->getUser()->getCompany();
         $units = $rosterService->getUnits($company);
 
         $repairCosts = [];
+        $baseRepairCosts = [];
+        $supportPercentages = [];
         foreach ($units as $unit) {
-            $repairCosts[$unit->getId()] = $salvageCalculationService->calculateRepairCost(
-                $unit->getTonnage(),
-                $unit->getDamageState(),
-                $unit->getTechBase(),
-            );
+            $result = $rosterService->getDiscountedRepairCost($unit, $company);
+            $baseRepairCosts[$unit->getId()] = $result['baseCost'];
+            $repairCosts[$unit->getId()] = $result['cost'];
+            $supportPercentages[$unit->getId()] = $result['supportPercent'];
         }
 
         return $this->render('roster/index.html.twig', [
@@ -41,6 +40,8 @@ class RosterController extends BaseController
             'totalBv' => $company->getTotalBv(),
             'dropshipService' => $dropshipService,
             'repairCosts' => $repairCosts,
+            'baseRepairCosts' => $baseRepairCosts,
+            'supportPercentages' => $supportPercentages,
         ]);
     }
 
@@ -107,6 +108,20 @@ class RosterController extends BaseController
             $this->addFlash('danger', $error);
         } else {
             $this->addFlash('success', 'Unit repaired successfully.');
+        }
+
+        return $this->redirectToRoute('app_roster');
+    }
+
+    #[Route('/{id}/battlefield-lose', name: 'app_roster_battlefield_lose', methods: ['POST'])]
+    public function battlefieldLose(Unit $unit, RosterService $rosterService): Response
+    {
+        $company = $this->getUser()->getCompany();
+        $error = $rosterService->battlefieldLoseUnit($unit, $company);
+        if ($error) {
+            $this->addFlash('danger', $error);
+        } else {
+            $this->addFlash('success', 'Unit marked as battlefield loss. Support points credited.');
         }
 
         return $this->redirectToRoute('app_roster');
