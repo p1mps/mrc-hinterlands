@@ -39,10 +39,8 @@
             {% set srPct = salvageRightsPcts[salvaged_mech.id] %}
             {% if salvaged_mech.isScrapyard %}
                 <span class="text-muted">N/A (scrapyard)</span>
-            {% elseif srPct is not null %}
-                {{ srPct }}%
             {% else %}
-                <span class="text-muted">Exchange (25%)</span>
+                {{ srPct }}%
             {% endif %}
         </td>
         <td>{{ acquisitionCosts[salvaged_mech.id] ?? '-' }}</td>

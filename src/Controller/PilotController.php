@@ -105,7 +105,7 @@ class PilotController extends BaseController
             }
             $pilot->setWounded(false);
             $this->em->flush();
-            $this->addFlash('success', 'Pilot healed.');
+            $this->addFlash('success', "Pilot healed. SP: $healCost Contract's Support Term $supportType");
         } catch (\Exception $e) {
             $this->addFlash('danger', $e->getMessage());
         }

@@ -23,9 +23,9 @@ class MechAcquisitionService
      * For non-scrapyard mechs that have been attached to a contract, the acquisition
      * cost is adjusted by the contract's salvage rights percentage.
      *
-     * Scrapyard and non-scrapyard mechs both use floor(bvCost / 2) for BV assignment.
+     * Scrapyard and non-scrapyard mechs both use the full bvCost for BV assignment.
      * Includes repairCost in the total acquisition cost.
-     * The SalvagedMech entry for scrapyard mechs stays in the DB as a record.
+     * The SalvagedMech entry is always removed from the DB after acquisition (both scrapyard and non-scrapyard).
      *
      * @throws \InvalidArgumentException When BV cost is invalid
      * @throws \LogicException When mech has already been acquired
@@ -88,9 +88,10 @@ class MechAcquisitionService
         $newUnit->setName($salvagedMech->getModel() ?? 'Unknown Mech');
         $newUnit->setChassis($salvagedMech->getModel() ?? 'Unknown Chassis');
         $newUnit->setTonnage($salvagedMech->getTonnage() ?? 0);
+        $newUnit->setTechBase($salvagedMech->getTechBase());
 
-        // BV assignment: both scrapyard and non-scrapyard use floor(bvCost / 2)
-        $newUnit->setBv(floor($salvagedMech->getBvCost() / 2));
+        // BV assignment: both scrapyard and non-scrapyard use the full bvCost
+        $newUnit->setBv($salvagedMech->getBvCost());
         $newUnit->setDamageState(DamageState::None);
 
         try {
@@ -116,15 +117,12 @@ class MechAcquisitionService
 
         // Unassign from dropship if assigned (frees up capacity)
         if ($salvagedMech->getDropship() !== null) {
-            $salvagedMech->setDropship(null);
+            $newUnit->setDropship($salvagedMech->getDropship());
         }
 
         // Persist Changes
-        // Scrapyard mechs stay in DB (per docstring); non-scrapyard are removed
         $this->em->persist($newUnit);
-        if (!$salvagedMech->isScrapyard()) {
-            $this->em->remove($salvagedMech);
-        }
+        $this->em->remove($salvagedMech);
         $this->em->flush();
     }
 }

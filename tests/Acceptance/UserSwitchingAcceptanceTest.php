@@ -13,11 +13,13 @@ class UserSwitchingAcceptanceTest extends AcceptanceTestCase
         $adminRef = $this->seedUserAndCompany('Andrea', 'Admin Co', 'Inner Sphere');
         $this->seedUnit($adminRef['companyId'], 'Patrol Mech', 'Patrol', 45, 200, 'mech');
         $this->seedPilot($adminRef['companyId'], 'Pilot One', true);
+        $this->seedContract($adminRef['companyId'], ['status' => 'active']);
 
         // Create a second user to switch to
         $targetRef = $this->seedUserAndCompany('targetuser', 'Target Co', 'Clan');
         $this->seedUnit($targetRef['companyId'], 'Target Mech', 'Target', 55, 300, 'mech');
         $this->seedPilot($targetRef['companyId'], 'Target Pilot', true);
+        $this->seedContract($targetRef['companyId'], ['status' => 'active']);
 
         // Log in as admin (Andrea gets ROLE_ALLOWED_TO_SWITCH automatically)
         $client = $this->login('Andrea');
@@ -40,6 +42,7 @@ class UserSwitchingAcceptanceTest extends AcceptanceTestCase
         // Create a regular user (without ROLE_ALLOWED_TO_SWITCH)
         $regularRef = $this->seedUserAndCompany('regularuser', 'Regular Co', 'Inner Sphere');
         $this->seedUnit($regularRef['companyId'], 'Regular Mech', 'Regular', 50, 250, 'mech');
+        $this->seedContract($regularRef['companyId'], ['status' => 'active']);
 
         // Log in as regular user
         $client = $this->login('regularuser');
@@ -61,6 +64,7 @@ class UserSwitchingAcceptanceTest extends AcceptanceTestCase
         $this->seedUnit($adminRef['companyId'], 'Admin Mech', 'Admin', 50, 250, 'mech');
         $this->seedPilot($adminRef['companyId'], 'Admin Pilot', true);
         $this->seedSupportPoints($adminRef['companyId'], 1000, 'Funding');
+        $this->seedContract($adminRef['companyId'], ['status' => 'active']);
 
         // Create target user
         $targetRef = $this->seedUserAndCompany('targetuser2', 'Target Co 2', 'Clan');
@@ -68,6 +72,7 @@ class UserSwitchingAcceptanceTest extends AcceptanceTestCase
         $this->seedUnit($targetRef['companyId'], $targetMechName, 'Target', 60, 350, 'mech');
         $this->seedPilot($targetRef['companyId'], 'Target Pilot 2', true);
         $this->seedSupportPoints($targetRef['companyId'], 500, 'Funding');
+        $this->seedContract($targetRef['companyId'], ['status' => 'active']);
 
         // Log in as admin (Zidahya gets ROLE_ALLOWED_TO_SWITCH automatically)
         $client = $this->login('Zidahya');
@@ -108,12 +113,14 @@ class UserSwitchingAcceptanceTest extends AcceptanceTestCase
         $adminMechName = 'Admin Mech 3';
         $this->seedUnit($adminRef['companyId'], $adminMechName, 'Admin', 50, 250, 'mech');
         $this->seedPilot($adminRef['companyId'], 'Admin Pilot 3', true);
+        $this->seedContract($adminRef['companyId'], ['status' => 'active']);
 
         // Create target user
         $targetRef = $this->seedUserAndCompany('targetuser3', 'Target Co 3', 'Clan');
         $targetMechName = 'Target Mech 3';
         $this->seedUnit($targetRef['companyId'], $targetMechName, 'Target', 60, 350, 'mech');
         $this->seedPilot($targetRef['companyId'], 'Target Pilot 3', true);
+        $this->seedContract($targetRef['companyId'], ['status' => 'active']);
 
         // Log in as admin (MitchellWelsh gets ROLE_ALLOWED_TO_SWITCH automatically)
         $client = $this->login('MitchellWelsh');

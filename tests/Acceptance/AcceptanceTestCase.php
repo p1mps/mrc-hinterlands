@@ -39,6 +39,31 @@ abstract class AcceptanceTestCase extends WebTestCase
             self::$sharedEm = $container->get('doctrine')->getManager();
         }
 
+        // Drop ALL tables (not just those in the current schema) to prevent
+        // cross-test-class contamination. E.g. salvaged_mech from a previous
+        // test class would cause "table already exists" when the current class
+        // doesn't define that entity, or "no such table" when it does.
+        $conn = self::$sharedEm->getConnection();
+        $allTables = [
+            'salvaged_mech',
+            'support_point_entry',
+            'contract_log_entry',
+            'track_record',
+            'contract',
+            'dropship',
+            'pilot',
+            'unit',
+            'mercenary_company',
+            'user',
+        ];
+        foreach ($allTables as $table) {
+            try {
+                $conn->executeStatement('DROP TABLE IF EXISTS ' . $table);
+            } catch (\Throwable) {
+                // Table may not exist; ignore.
+            }
+        }
+
         $metadata = self::$sharedEm->getMetadataFactory()->getAllMetadata();
         $schemaTool = new \Doctrine\ORM\Tools\SchemaTool(self::$sharedEm);
         try {
@@ -64,6 +89,29 @@ abstract class AcceptanceTestCase extends WebTestCase
                 self::$sharedEm = $container->get(EntityManagerInterface::class);
             } catch (\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException) {
                 self::$sharedEm = $container->get('doctrine')->getManager();
+            }
+
+            // Drop ALL tables before creating the schema to prevent
+            // cross-test-class contamination.
+            $conn = self::$sharedEm->getConnection();
+            $allTables = [
+                'salvaged_mech',
+                'support_point_entry',
+                'contract_log_entry',
+                'track_record',
+                'contract',
+                'dropship',
+                'pilot',
+                'unit',
+                'mercenary_company',
+                'user',
+            ];
+            foreach ($allTables as $table) {
+                try {
+                    $conn->executeStatement('DROP TABLE IF EXISTS ' . $table);
+                } catch (\Throwable) {
+                    // Table may not exist; ignore.
+                }
             }
 
             $metadata = self::$sharedEm->getMetadataFactory()->getAllMetadata();

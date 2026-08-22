@@ -67,6 +67,7 @@ class RosterBattlefieldLossAcceptanceTest extends AcceptanceTestCase
         $companyId = $ref['companyId'];
 
         $unitId = $this->seedUnit($companyId, 'Mech', 'Mech', 50, 200, 'mech', 'none');
+        $this->seedContract($companyId, ['status' => 'active', 'support_terms' => 'None']);
 
         $client = $this->login('blnocontract');
 
@@ -75,7 +76,7 @@ class RosterBattlefieldLossAcceptanceTest extends AcceptanceTestCase
         $this->assertResponseRedirects('/roster');
 
         $crawler = $client->followRedirect();
-        $this->assertFlashMessage($crawler, 'No active contract found. Battlefield loss requires an active support contract.');
+        $this->assertFlashMessage($crawler, 'Your active contract does not include Battle support. Battlefield loss is not available.');
 
         // Verify unit still exists
         $conn = $client->getContainer()->get('doctrine')->getManager()->getConnection();
@@ -230,6 +231,9 @@ class RosterBattlefieldLossAcceptanceTest extends AcceptanceTestCase
 
         $unitId = $this->seedUnit($ref1['companyId'], 'Enemy Mech', 'Mech', 50, 200, 'mech', 'none');
 
+        // Seed a contract for the foreign company so GET /roster works
+        $this->seedContract($ref2['companyId'], ['status' => 'active']);
+
         // Try to mark as battlefield loss as the foreign company
         $client = $this->login('blforeign');
 
@@ -255,6 +259,7 @@ class RosterBattlefieldLossAcceptanceTest extends AcceptanceTestCase
     {
         $ref = $this->seedUserAndCompany('blbutton', 'Button Co', 'Inner Sphere');
         $this->seedUnit($ref['companyId'], 'Test Mech', 'Mech', 50, 200, 'mech', 'none');
+        $this->seedContract($ref['companyId'], ['status' => 'active']);
 
         $client = $this->login('blbutton');
         $crawler = $client->request('GET', '/roster');

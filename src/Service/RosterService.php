@@ -26,14 +26,11 @@ class RosterService
     {
         $activeContract = $this->contractRepo->findActiveContractByCompany($company);
 
-        if (!$activeContract || $activeContract->getSupportType() !== 'Straight') {
+        if (!$activeContract) {
             return 1.0;
         }
 
         $supportPercent = $activeContract->parseSupportPercent();
-        if ($supportPercent <= 0) {
-            return 1.0;
-        }
 
         return 1.0 - ($supportPercent / 100.0);
     }

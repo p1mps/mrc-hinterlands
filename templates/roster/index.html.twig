@@ -18,7 +18,7 @@
     <th>Tech Base</th>
     <th>Base Repair Cost</th>
     <th>Discounted Repair Cost</th>
-    <th>Support %</th>
+    <th>Support Terms</th>
     <th>Pilot</th>
     <!-- Set the min-width here for the button column -->
     <th style="min-width: 250px;">Actions</th>
@@ -35,7 +35,7 @@
     <td>{{ unit.techBase ? unit.techBase.value : "-" }}</td>
     <td>{{ baseRepairCosts[unit.id] ?? "-" }}</td>
     <td>{{ repairCosts[unit.id] ?? "-" }}</td>
-    <td>{{ supportPercentages[unit.id] ?? 0 }}%</td>
+    <td>{{ supportTerms[unit.id] }}</td>
     <td>
         <form method="post" action="{{ path('app_roster_assign_pilot', {id: unit.id}) }}" class="d-flex gap-1">
             <select name="pilot_id" class="form-select form-select-sm">

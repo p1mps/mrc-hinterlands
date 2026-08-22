@@ -69,7 +69,7 @@ Every action (acquisition, repair, transport, maintenance, base pay) deducts/cre
 - `MercenaryCompany` has `cascade: ['persist', 'remove']` on `units`, `pilots`, `supportPointEntries` (with `orphanRemoval`)
 
 ### DB dump caveat
-`dump.sql` is **outdated** vs. entity definitions. `SalvagedMech` entity has fields (`damageState`, `techBase`, `salvageValue`, `salvageRightsPercent`, `scrapyard`, `isTrulyDestroyed`, `spTaken`) not in the dump. Trust entity annotations over `dump.sql`.
+`dump.sql` is **outdated** vs. entity definitions. `SalvagedMech` entity has fields (`damageState`, `techBase`, `salvageRightsPercent`, `scrapyard`, `isTrulyDestroyed`, `spTaken`) not in the dump. Trust entity annotations over `dump.sql`.
 
 ### Contracts: `salvageRights` string parsing
 Entity stores `?int $salvageRightsPercent`, but user-facing value is a string like `"3"`, `"Exchange"`, `"Exchange/50%"`. Parse accordingly.

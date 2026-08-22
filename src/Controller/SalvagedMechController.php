@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\SalvagedMech;
+use App\Entity\Unit;
 use App\Form\BattlefieldSalvageMechType;
 use App\Form\SalvagedMechType;
 use App\Form\ScrapyardMechType;
@@ -307,6 +308,7 @@ class SalvagedMechController extends BaseController
         int $id,
         Request $request,
         SalvagedMechService $salvagedMechService,
+        ContractRepository $contractRepository
     ): Response {
         $company = $this->getUser()->getCompany();
 
@@ -372,12 +374,7 @@ class SalvagedMechController extends BaseController
 
         // Apply the sale: add SP to company, update mech
         $company->addSupportPoints($sellingPrice, "Salvage selling price for {$mechan->getModel()}");
-        $mechan->setSpTaken($sellingPrice);
-        $mechan->setContractId(null);
-        $mechan->setIsTrulyDestroyed(true);
-
-        $this->em->persist($company);
-        $salvagedMechService->updateMech($mechan);
+        $this->em->remove($mechan);
         $this->em->flush();
 
         $this->addFlash('success', "Sold {$mechan->getModel()} for {$sellingPrice} SP.");

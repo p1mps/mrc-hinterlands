@@ -343,6 +343,192 @@
         </div>
     </div>
 
+    {# Command Complications #}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Command Complications</h5></div>
+            <div class="card-body">
+                <p>At the start of each track, the primary player rolls <strong>1d6</strong> to determine possible complications. Add <strong>+1</strong> if the player has <em>Liaison Command</em>, <strong>+2</strong> for <em>House Command</em>, and <strong>+3</strong> for <em>Integrated Command</em>.</p>
+
+                <div class="alert alert-info mb-3">
+                    <strong>Roll Mechanic:</strong> <code>1d6 + commandRightsBonus (0–3)</code>. Results 1–4 are typically "No Complication." A total of <strong>9 or higher</strong> means <em>Roll Twice</em> — apply both complications, rerolling any "No Complication" or duplicate results.
+                </div>
+
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary">
+                            <tr><th style="width:50px">1D6 + Bonus</th><th>Effect</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>1–4</strong></td><td>No Complication.</td></tr>
+                            <tr><td><strong>9+</strong></td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate results.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Desert #}
+                <h6 class="mt-3 mb-2">Desert</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>The desert sun is reducing the efficacy of your heatsinks. All heat-tracking units suffer from +2 heat every turn.</td></tr>
+                            <tr><td>6</td><td>The desert winds have kicked up a sandstorm. All units' DE and P weapons suffer from +1 to hit this track.</td></tr>
+                            <tr><td>7</td><td>Maintenance was rushed, and desert sand has found its way into one of your mech's actuators. Roll 1d6 to select your right or left arm, then roll on each arm's crit table, rerolling any result that is not an actuator. Mark off that actuator as damaged on the unit's data sheet.</td></tr>
+                            <tr><td>8</td><td>The sand has heatsinks working overtime. Any time a unit has 5 or more heat after the heat phase, reduce the heat dissipation capacity of the mech by 1. This is not a critical hit to the heatsink of the mech, so needs separate tracking. A coolant truck can be used to replace any cooling capacity lost mid-battle if the mech and coolant truck end the movement phase in the same turn and neither unit makes any attacks.</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Grasslands #}
+                <h6 class="mb-2">Grasslands</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>All the mechanics went out drinking the night before, and ran into a bad batch of local beer, so no vehicular support is available. When the player picks support/BSP units, any unit with tracked, wheeled, or hover MP may not be selected.</td></tr>
+                            <tr><td>6</td><td>A point of Elementals has joined the battle on your opponent's side, seeking honor and glory in battle. Add a 3/4 Elemental III Battle Armor [Flamer] (Sqd5) to your opponent's force (this unit does not count toward their support unit limit). If you destroy this unit using only a single one of your units, you may acquire it for 500 SP at the conclusion of this track. If the squad takes damage from a second unit, you lose the ability to acquire this unit. If using BSPs, add 1 Veteran Elemental III unit to the opponent's support for this track.</td></tr>
+                            <tr><td>7</td><td>Overcast conditions have worsened as light rainfall has continued and increased. Your units (not the opponent's) suffer from a +1 to hit with all weapon attacks.</td></tr>
+                            <tr><td>8</td><td>Local air support has been scrambled against you. Give your opponent 1d2 Light Strike BSPs this track (Page 76 Battlemech Manual).</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Hills #}
+                <h6 class="mb-2">Hills</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>News choppers have arrived to cover the battle. Whichever side is successful in this track will gain +1 reputation. Destroying one of the VTOLs will result in an immediate −1 reputation to whichever player destroyed the VTOL (accidental crashes or skidding off the map will cause no effect unless caused by intentional damage). Add two tokens to the map at elevation 6 to represent the VTOLs. Use the Warrior Attack Helicopter BSP or Sprint Scout Helicopter datasheet.</td></tr>
+                            <tr><td>6</td><td>The mission was set for dawn. Add +1 to hit with all weapon attacks.</td></tr>
+                            <tr><td>7</td><td>Infiltration by enemy forces has resulted in target beacons being placed in all of your units. All missile attacks by the opponent have a −1 to hit against your Mech units.</td></tr>
+                            <tr><td>8</td><td>Support was delayed for this mission, so they sent a messenger ahead to alert you. For support units you receive a single 4/5 Savannah Master Hovercraft this track (do not select any other units with your remaining BV). If using BSPs, you receive a single Savannah Master Hovercraft BSP.</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Light Industrial #}
+                <h6 class="mb-2">Light Industrial</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>Your presence has been noted by local security forces. Reduce the turn limit on this track by 1d3 to avoid entanglements.</td></tr>
+                            <tr><td>6</td><td>The industry in the area is playing havoc with target locks. Your Missile weapons suffer from a −1 to cluster rolls at medium range, and a −2 to cluster rolls at long range.</td></tr>
+                            <tr><td>7</td><td>This site has been marked as strategically important by your employers. If any buildings take damage from your mechs (either as a result of your weapons fire or your mechs taking cover using said buildings) then you will receive a −100 VP penalty for this track. This penalty will not apply if you are forced to attack a building with an enemy mech inside it, but will apply if you fire at a mech with partial cover and hit the building instead.</td></tr>
+                            <tr><td>8</td><td><strong>(Attacker Only)</strong> In the process of preparing to defend the area, the locals have found a Schrek PPC Carrier in functional order. Add a 5/6 Schrek PPC Carrier to your opponent's force as a support unit this track (this does not count toward their support unit limit). If using BSPs, add one BSP Schrek PPC Carrier. <strong>| (Defender Only)</strong> The opponent's employer has scraped together additional forces to take this crucial industrial plant. Add a 5/6 LRM Carrier to your opponent's force as a support unit this track (this does not count toward their support unit limit). If using BSPs, add one BSP LRM Carrier.</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Mountains #}
+                <h6 class="mb-2">Mountains</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>High mountain passes cause issues for some vehicles. All units with Hover or VTOL MP reduce their cruising MP by 2 due to the thin atmosphere. BSPs with hover or VTOL movement reduce their total MP by 2.</td></tr>
+                            <tr><td>6</td><td>The attack has conceded with a poor forecast in the mountains. A snowstorm applies a +1 to all weapon attacks, and all heat-tracking units may sink 1 more heat this track.</td></tr>
+                            <tr><td>7</td><td>Storms have delayed the deployment of some support assets, and grounded others. The player may not select units or BSPs with WiGE or VTOL MP, and all support units or BSPs deploy on Round 2 from the player's home edge.</td></tr>
+                            <tr><td>8</td><td>A bad illness has brought down your best MechWarrior. The MechWarrior with the lowest total skill on your roster may not be deployed on this track (if there is a tie then determine randomly which one is incapacitated. Total skill may be determined by adding the piloting skill to the gunnery skill and comparing the totals).</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Savannahs #}
+                <h6 class="mb-2">Savannahs</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>A local farmer was incensed at the discount your procurement officer insisted on purchasing his livestock at. He has decided to make this a problem for you. Give your opponent 1 Thumper Artillery Strike BSP this track (Page 77 BattleMech Manual).</td></tr>
+                            <tr><td>6</td><td>An ambush has allowed the opponent to flank you in a pincer movement, taking you off guard. The opponent may opt to deploy their support units/BSPs from any board edge except yours. (Only support units mechs or other full units must still deploy from the standard edge).</td></tr>
+                            <tr><td>7</td><td>Poor navigation took you through a patch of rough terrain. Randomly assign a foot critical to one of your mechs and mark it on that mech's datasheet.</td></tr>
+                            <tr><td>8</td><td>A bad lightning storm has taken you by surprise enroute. At the End Phase of every round, roll 1d6. If the result is 5 or higher, apply 5 damage to one randomly determined unit and resolve any consequences of that damage. This damage is a single grouping of 5 applied to the front arc, though conventional infantry take the damage as though the damage originated from another infantry unit.</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Urban #}
+                <h6 class="mb-2">Urban</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>Civilians and noncombatants that failed to evacuate the area are on the field. Add 4 unarmed infantry units or 4 infantry BSPs to your opponent's force. These units may not attack, and move as one initiative activation. Any player that destroys one of these units will suffer an immediate −1 penalty to their reputation for each unit destroyed.</td></tr>
+                            <tr><td>6</td><td>Ammo caches have been located. Pick three building hexes on the map and mark them on the map with the note tool. If you are the attacker for this track, then you must destroy these hexes or suffer a −50 VP to your score per hex you failed to destroy (up to −150). If you are the defender this track, then your opponent successfully destroying all three hexes will result in +100 VP for them on this track.</td></tr>
+                            <tr><td>7</td><td>Haste in deploying assets has left intel on this area spotty. All opponent Support vehicles may be deployed as Hidden Units anywhere on their half of the map. Refer to page 82 of BattleMech Manual or page 259 of Total Warfare to find the Hidden Unit rules.</td></tr>
+                            <tr><td>8</td><td>Local insurgents have thrown their lot in with your opponent. Give your opponent 2 Veteran Jump Infantry BSPs.</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Wetlands #}
+                <h6 class="mb-2">Wetlands</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>The muck of the wetlands is fouling up vehicle systems. Reduce all your units with either Wheeled or Tracked MP by 1 for the first three rounds of combat.</td></tr>
+                            <tr><td>6</td><td>Local support was limited at best. All your support units are 5/6. This does not affect the BV of selected support units and give you more to select. If using BSPs, then you may not purchase any Veteran Assets.</td></tr>
+                            <tr><td>7</td><td>The opposition has managed to obtain scans of the AO and understands how to optimize their route through the mire. All opponent Mechs subtract 1 MP from all movement costs through swamp hexes and do not need to make bog down checks for moving through this type of terrain.</td></tr>
+                            <tr><td>8</td><td>The terrain of the AO has your force off balance. Roll 3d6 and drop the highest number for your initiative for this track.</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Wooded #}
+                <h6 class="mb-2">Wooded</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>Local bandit forces sweep through the battlefield. Your opponent gains an additional 3 4/4 Beast Infantry (Tariq) (Auto-rifle) for this track. If playing with BSPs, the opponent gains 4 <infantry> BSPs.</td></tr>
+                            <tr><td>6</td><td>It has been a dry season for the woods, and fire danger is at its peak. Triple any damage dealt to woods hexes with H, DE, or P weapons. Any destroyed hexes should be marked by a token, and any standing in that hex for the rest of the track will receive 5 heat that heat phase if they track heat, or 5 damage to their front arc if not. Alternatively, if players wish to use the fire rules, then refer to page 62 of the BattleMech Manual for the simplified rules, or page 41 of Tactical Operations: Advanced Rules for the full rules.</td></tr>
+                            <tr><td>7</td><td>Local forces have come out in opposition to you. Add 1 4/5 Myrmidon Medium Tanks to your opponent's team. If using BSPs, add 1 Manticore Heavy Tank instead.</td></tr>
+                            <tr><td>8</td><td>The opponent is being supported by artillery. Give your opponent 1 Long Tom Artillery Strike BSP. (Page 77 Battlemech Manual).</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Alien #}
+                <h6 class="mb-2">Alien</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary"><tr><th style="width:50px">1D6</th><th>Complication</th></tr></thead>
+                        <tbody>
+                            <tr><td>1–4</td><td>No Complication.</td></tr>
+                            <tr><td>5</td><td>The local environment is dangerous to human life. Any conventional infantry fielded must be XCT troopers, and any vehicles fielded must have the Environmental Sealing chassis modification. If using BSPs, then conventional infantry may not be selected.</td></tr>
+                            <tr><td>6</td><td>An eccentric professor has insisted on hijacking one of your units to aid him in a study and he has paid command enough to make it happen. You must bring a unit with a Remote Sensor Dispenser, and must use said Remote Sensor Dispenser in all 4 quadrants of the map this round. Failing to deploy any sensors will net you −1 reputation at the end of the track, deploying at least 3 will gain you 100 SP, and deploying all 4 will gain you +1 reputation. If none of your company units have a remote sensor dispenser, then you will have to bring a support unit for the task. If using BSPs, then designate one (only 1) unit as carrying a remote sensor dispenser. Sensors may be deployed in the movement phase anywhere along the path of the unit for the cost of 1 MP per sensor.</td></tr>
+                            <tr><td>7</td><td>Sensor issues due to the oddities of this planet are making it hard for your astechs to adjust the targeting software, so they chose to just tune it for one instead. Choose one type of weapon — DE, DB, or M. All weapons with that type of damage gain −1 to hit, all other weapon types gain +1 to hit (NB Pulse lasers are not DE, and as such receive a +1 always).</td></tr>
+                            <tr><td>8</td><td>Magnetic field fluctuations play havoc with system capacitors. Your Gauss Rifles may not be fired for 1d4 rounds, though if crit, said gauss rifle does not explode during this duration. In addition, all PPCs (Both yours and the opponent's) run the risk of exploding due to the entire track to difficulties with their field inhibitors — on a to-hit roll of 2, the PPC will detonate for their damage value as an ammunition explosion. If players wish, they may refer to page 101 in Tactical Operation: Advanced Rules and use the rules for Disengaging Inhibitor instead, though note that disengaging the inhibitor is mandatory for every shot during this track.</td></tr>
+                            <tr><td>9+</td><td>Roll twice and apply both effects. Do not reroll "No Complication," but reroll any other duplicate effects.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {# Contract Structure #}
     <div class="col-12">
         <div class="card">

@@ -335,7 +335,7 @@ class SeedDatabaseCommand extends Command
             ->setEmployerAffiliation('Canopian Commonwealth')
             ->setDescription('Secure and hold key infrastructure on planet Vermeer-4. Establish forward operating base.')
             ->setScale(2)
-            ->setDurationMonths(12)
+            ->setDurationMonths(6)
             ->setBasePayPercent(75)
             ->setCommandRights(CommandRights::Integrated)
             ->setSupportTerms('Battle/50%')
@@ -381,7 +381,7 @@ class SeedDatabaseCommand extends Command
             ->setEmployerAffiliation('Lyran Alliance')
             ->setDescription('Garrison and defend the city of New Glasgow against possible raids.')
             ->setScale(3)
-            ->setDurationMonths(24)
+            ->setDurationMonths(6)
             ->setBasePayPercent(50)
             ->setCommandRights(CommandRights::Liaison)
             ->setSupportTerms('Straight/100%')
@@ -431,7 +431,7 @@ class SeedDatabaseCommand extends Command
             ->setEmployerAffiliation('Cloud Cobra')
             ->setDescription('Invasion force opposing Hinterlands MC defense.')
             ->setScale(3)
-            ->setDurationMonths(18)
+            ->setDurationMonths(6)
             ->setBasePayPercent(60)
             ->setCommandRights(CommandRights::House)
             ->setSupportTerms('Battle/50%')
@@ -478,7 +478,7 @@ class SeedDatabaseCommand extends Command
             ->setEmployerAffiliation('Lyran Alliance')
             ->setDescription('Diplomatic escort and liaison duties with AFFS forces.')
             ->setScale(1)
-            ->setDurationMonths(4)
+            ->setDurationMonths(3)
             ->setBasePayPercent(null)
             ->setCommandRights(CommandRights::Liaison)
             ->setSupportTerms('None')
@@ -668,6 +668,7 @@ class SeedDatabaseCommand extends Command
                 'tonnage' => 90,
                 'bvCost' => 850,
                 'damageState' => DamageState::Crippled,
+                'techBase' => TechBase::IS,
                 'salvageRightsPercent' => 50,
                 'spTaken' => 212,
                 'scrapyard' => false,
@@ -695,6 +696,7 @@ class SeedDatabaseCommand extends Command
             [
                 'model' => 'Warhammer WHM-A',
                 'tonnage' => 80,
+                'bvCost' => 2000,
                 'damageState' => DamageState::Structural,
                 'techBase' => TechBase::Clan,
                 'salvageRightsPercent' => 50,

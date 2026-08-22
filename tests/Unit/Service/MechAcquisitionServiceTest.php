@@ -75,9 +75,12 @@ class MechAcquisitionServiceTest extends TestCase
         $mechan = $this->makeSalvagedMech();
         $company = $this->makeCompany();
 
-        // persist() is called once for the new Unit; SalvagedMech is NOT removed
+        // persist() is called once for the new Unit; SalvagedMech is also removed
         $this->em->expects($this->once())
             ->method('persist');
+
+        $this->em->expects($this->once())
+            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -104,6 +107,9 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
+            ->method('remove');
+
+        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -114,7 +120,8 @@ class MechAcquisitionServiceTest extends TestCase
         $this->assertEquals('Gravino GRV-NI1', $unit->getName());
         $this->assertEquals('Gravino GRV-NI1', $unit->getChassis());
         $this->assertEquals(35, $unit->getTonnage());
-        $this->assertEquals(75, $unit->getBv());
+        // Unit.bv is set to the full bvCost (no halving)
+        $this->assertEquals(150, $unit->getBv());
         $this->assertEquals(UnitType::Mech, $unit->getUnitType());
     }
 
@@ -125,6 +132,9 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->em->expects($this->once())
             ->method('persist');
+
+        $this->em->expects($this->once())
+            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -147,6 +157,9 @@ class MechAcquisitionServiceTest extends TestCase
                     $captured[] = $obj;
                 }
             });
+
+        $this->em->expects($this->once())
+            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -201,6 +214,9 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->em->expects($this->once())
             ->method('persist');
+
+        $this->em->expects($this->once())
+            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -262,6 +278,9 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
+            ->method('remove');
+
+        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -284,6 +303,9 @@ class MechAcquisitionServiceTest extends TestCase
                     $captured[] = $obj;
                 }
             });
+
+        $this->em->expects($this->once())
+            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -312,6 +334,9 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
+            ->method('remove');
+
+        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -336,12 +361,16 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
+            ->method('remove');
+
+        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
 
         $this->assertCount(1, $captured);
-        $this->assertEquals(499, $captured[0]->getBv());
+        // Unit.bv is set to the full bvCost (no halving)
+        $this->assertEquals(999, $captured[0]->getBv());
     }
 
     public function testAcquireMechSetsUnitTypeToMech(): void
@@ -357,6 +386,9 @@ class MechAcquisitionServiceTest extends TestCase
                     $captured[] = $obj;
                 }
             });
+
+        $this->em->expects($this->once())
+            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -384,6 +416,9 @@ class MechAcquisitionServiceTest extends TestCase
             ->method('persist');
 
         $this->em->expects($this->never())
+            ->method('remove');
+
+        $this->em->expects($this->never())
             ->method('flush');
     }
 
@@ -396,6 +431,9 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->em->expects($this->once())
             ->method('persist');
+
+        $this->em->expects($this->once())
+            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -453,7 +491,8 @@ class MechAcquisitionServiceTest extends TestCase
                 }
             });
 
-        $this->em->expects($this->never())
+        // Scrapyard mechs are always removed (same as non-scrapyard)
+        $this->em->expects($this->once())
             ->method('remove');
 
         $this->em->expects($this->once())
@@ -481,7 +520,8 @@ class MechAcquisitionServiceTest extends TestCase
                 }
             });
 
-        $this->em->expects($this->never())
+        // Scrapyard mechs are always removed (same as non-scrapyard)
+        $this->em->expects($this->once())
             ->method('remove');
 
         $this->em->expects($this->once())
@@ -490,20 +530,22 @@ class MechAcquisitionServiceTest extends TestCase
         $this->service->acquireMech($mechan, $company);
 
         $this->assertCount(1, $captured);
-        $this->assertEquals(200, $captured[0]->getBv());
+        // Unit.bv is set to the full bvCost (no halving, no salvage value lookup)
+        $this->assertEquals(400, $captured[0]->getBv());
     }
 
-    public function testAcquireMechScrapyardDoesNotRemoveSalvagedMech(): void
+    public function testAcquireMechScrapyardRemovesSalvagedMech(): void
     {
         $mechan = $this->makeScrapyardMech();
         $company = $this->makeCompany();
 
         $this->salvageCalc->method('calculateSalvageValue')->willReturn(150);
 
+        // Scrapyard mechs are always removed (same as non-scrapyard)
         $this->em->expects($this->once())
             ->method('persist');
 
-        $this->em->expects($this->never())
+        $this->em->expects($this->once())
             ->method('remove');
 
         $this->em->expects($this->once())
@@ -549,6 +591,9 @@ class MechAcquisitionServiceTest extends TestCase
             ->method('persist');
 
         $this->em->expects($this->once())
+            ->method('remove');
+
+        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
@@ -571,12 +616,16 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
+            ->method('remove');
+
+        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
 
         $this->assertCount(1, $captured);
-        $this->assertEquals(250, $captured[0]->getBv());
+        // Unit.bv is set to the full bvCost (no halving)
+        $this->assertEquals(500, $captured[0]->getBv());
     }
 
     public function testAcquireMechNonScrapyardFallsBackToBvCostWhenNoSalvageValue(): void
@@ -594,12 +643,16 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
+            ->method('remove');
+
+        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
 
         $this->assertCount(1, $captured);
-        $this->assertEquals(200, $captured[0]->getBv());
+        // Unit.bv is set to the full bvCost (no halving)
+        $this->assertEquals(400, $captured[0]->getBv());
     }
 
     public function testAcquireMechNonScrapyardSetsNoneDamageState(): void
@@ -615,6 +668,9 @@ class MechAcquisitionServiceTest extends TestCase
                     $captured[] = $obj;
                 }
             });
+
+        $this->em->expects($this->once())
+            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -641,7 +697,8 @@ class MechAcquisitionServiceTest extends TestCase
                 }
             });
 
-        $this->em->expects($this->never())
+        // Scrapyard mechs are always removed (same as non-scrapyard)
+        $this->em->expects($this->once())
             ->method('remove');
 
         $this->em->expects($this->once())
@@ -674,13 +731,16 @@ class MechAcquisitionServiceTest extends TestCase
             });
 
         $this->em->expects($this->once())
+            ->method('remove');
+
+        $this->em->expects($this->once())
             ->method('flush');
 
         $this->service->acquireMech($mechan, $company);
 
-        // Unit.bv should be base cost (300), NOT base + repair (350)
+        // Unit.bv is set to the full bvCost (no halving, repair cost doesn't affect BV)
         $this->assertCount(1, $captured);
-        $this->assertEquals(150, $captured[0]->getBv());
+        $this->assertEquals(300, $captured[0]->getBv());
     }
 
     public function testAcquireMechDeductsRepairCostFromSupportPoints(): void
@@ -700,6 +760,9 @@ class MechAcquisitionServiceTest extends TestCase
                     $captured[] = $obj;
                 }
             });
+
+        $this->em->expects($this->once())
+            ->method('remove');
 
         $this->em->expects($this->once())
             ->method('flush');
@@ -731,7 +794,8 @@ class MechAcquisitionServiceTest extends TestCase
                 }
             });
 
-        $this->em->expects($this->never())
+        // Scrapyard mechs are always removed (same as non-scrapyard)
+        $this->em->expects($this->once())
             ->method('remove');
 
         $this->em->expects($this->once())
@@ -739,9 +803,9 @@ class MechAcquisitionServiceTest extends TestCase
 
         $this->service->acquireMech($mechan, $company);
 
-        // Unit.bv should be base cost (200 = half of 400), NOT base + repair (300)
+        // Unit.bv is set to the full bvCost (no halving, repair cost doesn't affect BV)
         $this->assertCount(1, $captured);
-        $this->assertEquals(200, $captured[0]->getBv());
+        $this->assertEquals(400, $captured[0]->getBv());
     }
 
     public function testAcquireMechDeductsScrapyardBasePlusRepairFromSupportPoints(): void
@@ -764,7 +828,8 @@ class MechAcquisitionServiceTest extends TestCase
                 }
             });
 
-        $this->em->expects($this->never())
+        // Scrapyard mechs are always removed (same as non-scrapyard)
+        $this->em->expects($this->once())
             ->method('remove');
 
         $this->em->expects($this->once())

@@ -8,6 +8,7 @@ class RosterAcceptanceTest extends AcceptanceTestCase
     {
         $ref = $this->seedUserAndCompany('rosteruser', 'Roster Co', 'Inner Sphere');
         $this->seedUnit($ref['companyId'], 'Gravino GRV-NI1', 'Gravino GRV-NI1', 35, 150, 'mech');
+        $this->seedContract($ref['companyId'], ['status' => 'active']);
 
         $client = $this->login('rosteruser');
         $crawler = $client->request('GET', '/roster');
@@ -19,6 +20,7 @@ class RosterAcceptanceTest extends AcceptanceTestCase
     public function testCreateUnitSucceeds(): void
     {
         $ref = $this->seedUserAndCompany('addunit', 'Add Unit Co', 'Clan');
+        $this->seedContract($ref['companyId'], ['status' => 'active']);
 
         $client = $this->login('addunit');
 
@@ -43,6 +45,7 @@ class RosterAcceptanceTest extends AcceptanceTestCase
     {
         $ref = $this->seedUserAndCompany('editunit', 'Edit Unit Co', 'Inner Sphere');
         $unitId = $this->seedUnit($ref['companyId'], 'Old Mech', 'Old Chassis', 50, 200, 'mech');
+        $this->seedContract($ref['companyId'], ['status' => 'active']);
 
         $client = $this->login('editunit');
 
@@ -68,6 +71,7 @@ class RosterAcceptanceTest extends AcceptanceTestCase
         $ref = $this->seedUserAndCompany('assignuser', 'Assign Co', 'Inner Sphere');
         $pilotId = $this->seedPilot($ref['companyId'], 'Ace', true);
         $unitId = $this->seedUnit($ref['companyId'], 'Mech', 'Mech', 50, 200, 'mech');
+        $this->seedContract($ref['companyId'], ['status' => 'active']);
 
         $client = $this->login('assignuser');
 
@@ -84,6 +88,7 @@ class RosterAcceptanceTest extends AcceptanceTestCase
     {
         $ref = $this->seedUserAndCompany('delunit', 'Del Unit Co', 'Clan');
         $unitId = $this->seedUnit($ref['companyId'], 'ToDelete', 'ToDelete', 50, 200, 'mech');
+        $this->seedContract($ref['companyId'], ['status' => 'active']);
 
         $client = $this->login('delunit');
 
@@ -98,6 +103,7 @@ class RosterAcceptanceTest extends AcceptanceTestCase
         $ref = $this->seedUserAndCompany('repairuser', 'Repair Co', 'Inner Sphere');
         $this->seedSupportPoints($ref['companyId'], 500, 'Funding');
         $unitId = $this->seedUnit($ref['companyId'], 'Damaged Mech', 'Mech', 50, 200, 'mech', 'structural');
+        $this->seedContract($ref['companyId'], ['status' => 'active']);
 
         $client = $this->login('repairuser');
 

@@ -23,6 +23,7 @@ class RosterServiceTest extends TestCase
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->salvageCalc = $this->createStub(\App\Service\SalvageCalculationService::class);
         $this->contractRepo = $this->createStub(\App\Repository\ContractRepository::class);
+        $this->contractRepo->method('findActiveContractByCompany')->willReturn($this->makeContract(0));
         $this->service = new \App\Service\RosterService($this->em, $this->salvageCalc, $this->contractRepo);
     }
 
@@ -50,6 +51,14 @@ class RosterServiceTest extends TestCase
         $unit->method('setPilot')->willReturnSelf();
 
         return $unit;
+    }
+
+    private function makeContract(int $supportPercent = 0): object
+    {
+        $contract = $this->createStub(\App\Entity\Contract::class);
+        $contract->method('parseSupportPercent')->willReturn($supportPercent);
+
+        return $contract;
     }
 
     // ── getUnits ──────────────────────────────────────────────────────────

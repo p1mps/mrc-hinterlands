@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Unit;
 use App\Form\UnitFormType;
+use App\Repository\ContractRepository;
 use App\Service\DropshipService;
 use App\Service\RosterService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +19,7 @@ class RosterController extends BaseController
     public function index(
         RosterService $rosterService,
         DropshipService $dropshipService,
+        ContractRepository $contractRepository
     ): Response
     {
         $company = $this->getUser()->getCompany();
@@ -25,12 +27,12 @@ class RosterController extends BaseController
 
         $repairCosts = [];
         $baseRepairCosts = [];
-        $supportPercentages = [];
+        $supportTerms = [];
         foreach ($units as $unit) {
             $result = $rosterService->getDiscountedRepairCost($unit, $company);
             $baseRepairCosts[$unit->getId()] = $result['baseCost'];
             $repairCosts[$unit->getId()] = $result['cost'];
-            $supportPercentages[$unit->getId()] = $result['supportPercent'];
+            $supportTerms[$unit->getId()] = $contractRepository->findActiveContractByCompany($company)->getSupportTerms();
         }
 
         return $this->render('roster/index.html.twig', [
@@ -41,7 +43,7 @@ class RosterController extends BaseController
             'dropshipService' => $dropshipService,
             'repairCosts' => $repairCosts,
             'baseRepairCosts' => $baseRepairCosts,
-            'supportPercentages' => $supportPercentages,
+            'supportTerms' => $supportTerms,
         ]);
     }
 

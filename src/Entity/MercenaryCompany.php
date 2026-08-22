@@ -97,7 +97,7 @@ class MercenaryCompany {
 
     /**
      * Deducts support points by creating a negative entry.
-     * 
+     *
      * @param int $amount The amount to deduct (must be positive)
      * @param string $reason Description of why points were deducted
      * @throws \Exception if insufficient funds
@@ -118,7 +118,7 @@ class MercenaryCompany {
         } else {
             $currentBalance = $this->getSupportPointsBalance();
         }
-        
+
         if ($currentBalance < $amount) {
             throw new \Exception("Insufficient support points. Current balance: {$currentBalance}, Requested deduction: {$amount}");
         }
@@ -129,7 +129,7 @@ class MercenaryCompany {
         } else {
             throw new \RuntimeException('SupportPointEntry does not have setAmount method.');
         }
-        
+
         if (method_exists($entry, 'setCompany')) {
             $entry->setCompany($this);
         } else {
@@ -142,6 +142,7 @@ class MercenaryCompany {
 
         $this->supportPointEntries->add($entry);
     }
+
     public function addSupportPoints(int $amount, string $reason = 'General Credit'): void {
         if ($amount <= 0) {
             throw new \InvalidArgumentException('Added amount must be positive.');
