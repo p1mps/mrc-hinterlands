@@ -5,7 +5,7 @@
     <a href="{{ path('app_contracts_show', {id: contract.id}) }}" class="btn btn-outline-secondary mb-3">Back to Contract</a>
 
     {% set transportPct = contract.parseTransportPercent() %}
-    {% set transportPay = transportPct > 0 ? 300 * transportPct / 100: 0 %}
+    {% set transportPay = transportPct > 0 ? 300 * transportPct / 100: 300 %}
     {% set supportPct = contract.parseSupportPercent() %}
     {% set supportType = contract.getSupportType() %}
 
@@ -157,55 +157,55 @@
     </div>
 
     <script>
-        function calcTransport(rawValue) {
-            const jumps = parseInt(rawValue) || 0;
-            const pct = {{ transportPct }};
-            const full = 50 + 50 * jumps;
-            const employerCovers = Math.round(full * pct / 100);
-            const playerPays = full - employerCovers;
-            const el = document.getElementById('transportBreakdown');
-            el.innerHTML =
-                '<table class="table table-sm table-bordered mb-0 small">' +
-                '<tr><td>Flat fee</td><td class="text-end">50 SP</td></tr>' +
-                '<tr><td>Jump cost (' + jumps + ' × 50)</td><td class="text-end">' + (jumps * 50) + ' SP</td></tr>' +
-                '<tr><td><strong>Total</strong></td><td class="text-end"><strong>' + full + ' SP</strong></td></tr>' +
-                (pct > 0 ? '<tr class="table-success"><td>Employer covers (' + pct + '%)</td><td class="text-end">+' + employerCovers + ' SP</td></tr>' : '') +
-                '<tr class="table-warning fw-bold"><td>You pay</td><td class="text-end">-' + playerPays + ' SP</td></tr>' +
-                '</table>';
-        }
+        {#function calcTransport(rawValue) {#}
+        {#    const jumps = parseInt(rawValue) || 0;#}
+        {#    const pct = {{ transportPct }};#}
+        {#    const full = 50 + 50 * jumps;#}
+        {#    const employerCovers = Math.round(full * pct / 100);#}
+        {#    const playerPays = full - employerCovers;#}
+        {#    const el = document.getElementById('transportBreakdown');#}
+        {#    el.innerHTML =#}
+        {#        '<table class="table table-sm table-bordered mb-0 small">' +#}
+        {#        '<tr><td>Flat fee</td><td class="text-end">50 SP</td></tr>' +#}
+        {#        '<tr><td>Jump cost (' + jumps + ' × 50)</td><td class="text-end">' + (jumps * 50) + ' SP</td></tr>' +#}
+        {#        '<tr><td><strong>Total</strong></td><td class="text-end"><strong>' + full + ' SP</strong></td></tr>' +#}
+        {#        (pct > 0 ? '<tr class="table-success"><td>Employer covers (' + pct + '%)</td><td class="text-end">+' + employerCovers + ' SP</td></tr>' : '') +#}
+        {#        '<tr class="table-warning fw-bold"><td>You pay</td><td class="text-end">-' + playerPays + ' SP</td></tr>' +#}
+        {#        '</table>';#}
+        {#}#}
 
-        function calcDowntime(rawValue) {
-            const gross = parseInt(rawValue) || 0;
-            const supportPct = {{ supportPct }};
-            const supportType = '{{ supportType }}';
-            const el = document.getElementById('downtimeBreakdown');
-            const netField = document.getElementById('netAmount');
+        {#function calcDowntime(rawValue) {#}
+        {#    const gross = parseInt(rawValue) || 0;#}
+        {#    const supportPct = {{ supportPct }};#}
+        {#    const supportType = '{{ supportType }}';#}
+        {#    const el = document.getElementById('downtimeBreakdown');#}
+        {#    const netField = document.getElementById('netAmount');#}
 
-            if (gross === 0) {
-                el.innerHTML = '';
-                netField.value = 0;
-                return;
-            }
+        {#    if (gross === 0) {#}
+        {#        el.innerHTML = '';#}
+        {#        netField.value = 0;#}
+        {#        return;#}
+        {#    }#}
 
-            if (supportType === 'Straight' && supportPct > 0 && gross > 0) {
-                const employerCovers = Math.round(gross * supportPct / 100);
-                const playerPays = gross - employerCovers;
-                el.innerHTML =
-                    '<table class="table table-sm table-bordered mb-0 small">' +
-                    '<tr><td>Gross cost</td><td class="text-end">' + gross + ' SP</td></tr>' +
-                    '<tr class="table-success"><td>Employer covers (' + supportPct + '%)</td><td class="text-end">+' + employerCovers + ' SP</td></tr>' +
-                    '<tr class="table-warning fw-bold"><td>You pay</td><td class="text-end">-' + playerPays + ' SP</td></tr>' +
-                    '</table>';
-                netField.value = -playerPays;
-            } else {
-                const sign = gross > 0 ? '-' : '+';
-                const abs = Math.abs(gross);
-                el.innerHTML =
-                    '<table class="table table-sm table-bordered mb-0 small">' +
-                    '<tr class="fw-bold"><td>SP change</td><td class="text-end">' + sign + abs + ' SP</td></tr>' +
-                    '</table>';
-                netField.value = gross > 0 ? -gross : gross;
-            }
-        }
+        {#    if (supportType === 'Straight' && supportPct > 0 && gross > 0) {#}
+        {#        const employerCovers = Math.round(gross * supportPct / 100);#}
+        {#        const playerPays = gross - employerCovers;#}
+        {#        el.innerHTML =#}
+        {#            '<table class="table table-sm table-bordered mb-0 small">' +#}
+        {#            '<tr><td>Gross cost</td><td class="text-end">' + gross + ' SP</td></tr>' +#}
+        {#            '<tr class="table-success"><td>Employer covers (' + supportPct + '%)</td><td class="text-end">+' + employerCovers + ' SP</td></tr>' +#}
+        {#            '<tr class="table-warning fw-bold"><td>You pay</td><td class="text-end">-' + playerPays + ' SP</td></tr>' +#}
+        {#            '</table>';#}
+        {#        netField.value = -playerPays;#}
+        {#    } else {#}
+        {#        const sign = gross > 0 ? '-' : '+';#}
+        {#        const abs = Math.abs(gross);#}
+        {#        el.innerHTML =#}
+        {#            '<table class="table table-sm table-bordered mb-0 small">' +#}
+        {#            '<tr class="fw-bold"><td>SP change</td><td class="text-end">' + sign + abs + ' SP</td></tr>' +#}
+        {#            '</table>';#}
+        {#        netField.value = gross > 0 ? -gross : gross;#}
+        {#    }#}
+        {#}#}
     </script>
 {% endblock %}

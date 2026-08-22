@@ -63,7 +63,7 @@ class ContractLogService
     public function calculateCurrentMonth(Contract $contract): int
     {
         $lastMaintenance = $this->em->getRepository(ContractLogEntry::class)->findOneBy(
-            ['contract' => $contract, 'entryType' => ContractLogEntryType::Maintenance],
+            ['contract' => $contract, 'entryType' => ContractLogEntryType::PostTrack],
             ['createdAt' => 'DESC']
         );
 
