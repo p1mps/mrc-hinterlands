@@ -39,6 +39,9 @@ class Pilot {
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $wounded = false;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private int $edgeTokens = 0;
+
     public function getId(): ?int { return $this->id; }
 
     public function getCompany(): MercenaryCompany { return $this->company; }
@@ -66,4 +69,7 @@ class Pilot {
 
     public function isWounded(): bool { return $this->wounded; }
     public function setWounded(bool $wounded): static { $this->wounded = $wounded; return $this; }
+
+    public function getEdgeTokens(): int { return $this->edgeTokens; }
+    public function setEdgeTokens(int $edgeTokens): static { $this->edgeTokens = $edgeTokens; return $this; }
 }
