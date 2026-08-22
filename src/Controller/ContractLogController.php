@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DataTables\ContractTrackTable;
 use App\Entity\Contract;
 use App\Entity\ContractLogEntry;
 use App\Service\ContractLogService;
