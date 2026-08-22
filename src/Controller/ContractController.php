@@ -22,9 +22,14 @@ class ContractController extends BaseController
     #[Route('/contract', name: 'app_contracts')]
     public function index(EntityManagerInterface $em): Response
     {
-        $contracts = $em->getRepository(Contract::class)->findAllOrderedByConnections();
+        $acceptedContracts = $em->getRepository(Contract::class)->findAllOrderedByConnections(ContractStatus::Accepted);
+        $availableContracts = $em->getRepository(Contract::class)->findAllOrderedByConnections(ContractStatus::Available);
+        $completedContracts = $em->getRepository(Contract::class)->findAllOrderedByConnections(ContractStatus::Completed);
+
         return $this->render('contract/index.html.twig', [
-            'contracts' => $contracts,
+            'acceptedContracts' => $acceptedContracts,
+            'availableContracts' => $availableContracts,
+            'completedContracts' => $completedContracts,
         ]);
     }
 

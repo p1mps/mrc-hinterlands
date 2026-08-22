@@ -1,6 +1,7 @@
 <?php
 namespace App\Repository;
 use App\Entity\Contract;
+use App\Enum\ContractStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
@@ -9,12 +10,14 @@ class ContractRepository extends ServiceEntityRepository {
         parent::__construct($registry, Contract::class);
     }
 
-    public function findAllOrderedByConnections(): array
+    public function findAllOrderedByConnections(ContractStatus $status): array
     {
         return $this->createQueryBuilder('c')
             ->leftJoin('c.linkedContract', 'lc')
             ->leftJoin('c.opposingContracts', 'oc')
             ->addSelect('lc', 'oc')
+            ->where('c.status = :status')
+            ->setParameter('status', $status->value)
             ->orderBy('c.createdAt', 'DESC')
             ->addOrderBy('c.isOpposing', 'ASC')
             ->addOrderBy('CASE WHEN lc.id IS NULL THEN c.id ELSE lc.id END', 'ASC')
@@ -31,17 +34,17 @@ class ContractRepository extends ServiceEntityRepository {
     public function findActiveContractByCompany(\App\Entity\MercenaryCompany $company): ?\App\Entity\Contract
     {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = "SELECT * FROM contract 
-                WHERE company_id = ? 
-                AND status IN ('accepted', 'active') 
-                ORDER BY created_at DESC 
+        $sql = "SELECT * FROM contract
+                WHERE company_id = ?
+                AND status IN ('accepted', 'active')
+                ORDER BY created_at DESC
                 LIMIT 1";
         $row = $conn->fetchAssociative($sql, [$company->getId()]);
-        
+
         if (!$row) {
             return null;
         }
-        
+
         // Reconstruct entity from raw data using reflection (Contract has no setters for most fields)
         $contract = new \App\Entity\Contract();
         $ref = new \ReflectionProperty(\App\Entity\Contract::class, 'id');
@@ -103,7 +106,7 @@ class ContractRepository extends ServiceEntityRepository {
         $ref->setValue($contract, new \DateTimeImmutable($row['created_at']));
         $ref = new \ReflectionProperty(\App\Entity\Contract::class, 'acceptedAt');
         $ref->setValue($contract, $row['accepted_at'] !== null ? new \DateTimeImmutable($row['accepted_at']) : null);
-        
+
         return $contract;
     }
 

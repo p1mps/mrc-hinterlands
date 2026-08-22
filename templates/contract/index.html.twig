@@ -5,7 +5,163 @@
     <a href="{{ path('app_contracts_generate') }}" class="btn btn-primary align-self-start align-self-sm-auto">Generate Contract</a>
 </div>
 
+
+
+    <div class="table-responsive">
+        <h3>Accepted Contracts</h3>
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Employer</th>
+                <th>Scale</th>
+                <th>Reputation</th>
+                <th>Status</th>
+                <th>Tracks</th>
+                <th>Claimed By</th>
+                <th>Linked</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in acceptedContracts %}
+                <tr>
+                    <td>{{ c.name ?? c.type.value | capitalize }}</td>
+                    <td>{{ c.employer }}</td>
+                    <td>{{ c.scale }}</td>
+                    <td>
+                        {% if c.company %}
+                            <span class="badge bg-secondary">{{ c.company.reputation }}</span>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
+                    <td>{{ c.tracksCompleted }}/{{ c.numberOfTracks }}</td>
+                    <td>{{ c.company ? c.company.name : '—' }}</td>
+                    <td>
+                        {% set linked = [] %}
+                        {% if c.opposingContracts|length > 0 %}
+                            {% for oc in c.opposingContracts %}
+                                {% set linked = linked|merge([oc]) %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if c.linkedContract %}
+                            {% set linked = linked|merge([c.linkedContract]) %}
+                        {% endif %}
+                        {% if linked|length > 0 %}
+                            {% for l in linked %}
+                                <a href="{{ path('app_contracts_show', {'id': l.id}) }}">{{ l.name ?? '(no name)' }}</a>{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td class="text-nowrap">
+                        <a href="{{ path('app_contracts_show', {id: c.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
+                        {% if c.linkedContract is null and c.opposingContracts|length == 0 and c.status.value != 'completed' %}
+                            <form method="post" action="{{ path('app_contracts_generate_opposing', {id: c.id}) }}" class="d-inline"
+                                  onsubmit="return confirm('Generate an opposing contract for this one?')">
+                                <button class="btn btn-sm btn-outline-warning">Gen Opposing</button>
+                            </form>
+                        {% endif %}
+                        {% if c.status.value == 'available' and not c.company %}
+                            <form method="post" action="{{ path('app_contract_accept', {id: c.id}) }}" class="d-inline">
+                                <button class="btn btn-sm btn-success">Claim</button>
+                            </form>
+                        {% endif %}
+                        <form method="post" action="{{ path('app_contracts_delete', {id: c.id}) }}" class="d-inline"
+                              onsubmit="return confirm('Delete this contract?')">
+                            <button class="btn btn-sm btn-danger">Del</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="9" class="text-muted">No contracts yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="table-responsive">
+        <h3>Available Contracts</h3>
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Employer</th>
+                <th>Scale</th>
+                <th>Reputation</th>
+                <th>Status</th>
+                <th>Tracks</th>
+                <th>Claimed By</th>
+                <th>Linked</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in availableContracts %}
+                <tr>
+                    <td>{{ c.name ?? c.type.value | capitalize }}</td>
+                    <td>{{ c.employer }}</td>
+                    <td>{{ c.scale }}</td>
+                    <td>
+                        {% if c.company %}
+                            <span class="badge bg-secondary">{{ c.company.reputation }}</span>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td><span class="badge bg-{{ c.status.value == 'active' ? 'success' : 'secondary' }}">{{ c.status.value }}</span></td>
+                    <td>{{ c.tracksCompleted }}/{{ c.numberOfTracks }}</td>
+                    <td>{{ c.company ? c.company.name : '—' }}</td>
+                    <td>
+                        {% set linked = [] %}
+                        {% if c.opposingContracts|length > 0 %}
+                            {% for oc in c.opposingContracts %}
+                                {% set linked = linked|merge([oc]) %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if c.linkedContract %}
+                            {% set linked = linked|merge([c.linkedContract]) %}
+                        {% endif %}
+                        {% if linked|length > 0 %}
+                            {% for l in linked %}
+                                <a href="{{ path('app_contracts_show', {'id': l.id}) }}">{{ l.name ?? '(no name)' }}</a>{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td class="text-nowrap">
+                        <a href="{{ path('app_contracts_show', {id: c.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
+                        {% if c.linkedContract is null and c.opposingContracts|length == 0 and c.status.value != 'completed' %}
+                            <form method="post" action="{{ path('app_contracts_generate_opposing', {id: c.id}) }}" class="d-inline"
+                                  onsubmit="return confirm('Generate an opposing contract for this one?')">
+                                <button class="btn btn-sm btn-outline-warning">Gen Opposing</button>
+                            </form>
+                        {% endif %}
+                        {% if c.status.value == 'available' and not c.company %}
+                            <form method="post" action="{{ path('app_contract_accept', {id: c.id}) }}" class="d-inline">
+                                <button class="btn btn-sm btn-success">Claim</button>
+                            </form>
+                        {% endif %}
+                        <form method="post" action="{{ path('app_contracts_delete', {id: c.id}) }}" class="d-inline"
+                              onsubmit="return confirm('Delete this contract?')">
+                            <button class="btn btn-sm btn-danger">Del</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="9" class="text-muted">No contracts yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 <div class="table-responsive">
+    <h3>Completed Contracts</h3>
 <table class="table table-striped align-middle">
     <thead>
         <tr>
@@ -21,7 +177,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for c in contracts %}
+    {% for c in completedContracts %}
     <tr>
         <td>{{ c.name ?? c.type.value | capitalize }}</td>
         <td>{{ c.employer }}</td>

@@ -19,7 +19,8 @@ class PilotFormType extends AbstractType {
             ->add('gunneryXp', IntegerType::class)
             ->add('pilotingXp', IntegerType::class)
             ->add('wounded', CheckboxType::class, ['required' => false])
-            ->add('edgeTokens', IntegerType::class, ['required' => false]);
+            ->add('edgeTokens', IntegerType::class, ['required' => false])
+            ->add('special_abilities', TextType::class, ['required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void {

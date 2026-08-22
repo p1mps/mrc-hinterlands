@@ -1,11 +1,13 @@
 <?php
+
 namespace App\Entity;
 
 use App\Repository\PilotRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PilotRepository::class)]
-class Pilot {
+class Pilot
+{
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -42,34 +44,126 @@ class Pilot {
     #[ORM\Column(options: ['default' => 0])]
     private int $edgeTokens = 0;
 
-    public function getId(): ?int { return $this->id; }
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $special_abilities = null;
 
-    public function getCompany(): MercenaryCompany { return $this->company; }
-    public function setCompany(MercenaryCompany $company): static { $this->company = $company; return $this; }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
-    public function getUnit(): ?Unit { return $this->unit; }
+    public function getCompany(): MercenaryCompany
+    {
+        return $this->company;
+    }
 
-    public function getName(): string { return $this->name; }
-    public function setName(string $name): static { $this->name = $name; return $this; }
+    public function setCompany(MercenaryCompany $company): static
+    {
+        $this->company = $company;
+        return $this;
+    }
 
-    public function isNamed(): bool { return $this->isNamed; }
-    public function setIsNamed(bool $isNamed): static { $this->isNamed = $isNamed; return $this; }
+    public function getUnit(): ?Unit
+    {
+        return $this->unit;
+    }
 
-    public function getGunnery(): int { return $this->gunnery; }
-    public function setGunnery(int $gunnery): static { $this->gunnery = $gunnery; return $this; }
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
-    public function getPiloting(): int { return $this->piloting; }
-    public function setPiloting(int $piloting): static { $this->piloting = $piloting; return $this; }
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+        return $this;
+    }
 
-    public function getGunneryXp(): int { return $this->gunneryXp; }
-    public function setGunneryXp(int $gunneryXp): static { $this->gunneryXp = $gunneryXp; return $this; }
+    public function isNamed(): bool
+    {
+        return $this->isNamed;
+    }
 
-    public function getPilotingXp(): int { return $this->pilotingXp; }
-    public function setPilotingXp(int $pilotingXp): static { $this->pilotingXp = $pilotingXp; return $this; }
+    public function setIsNamed(bool $isNamed): static
+    {
+        $this->isNamed = $isNamed;
+        return $this;
+    }
 
-    public function isWounded(): bool { return $this->wounded; }
-    public function setWounded(bool $wounded): static { $this->wounded = $wounded; return $this; }
+    public function getGunnery(): int
+    {
+        return $this->gunnery;
+    }
 
-    public function getEdgeTokens(): int { return $this->edgeTokens; }
-    public function setEdgeTokens(int $edgeTokens): static { $this->edgeTokens = $edgeTokens; return $this; }
+    public function setGunnery(int $gunnery): static
+    {
+        $this->gunnery = $gunnery;
+        return $this;
+    }
+
+    public function getPiloting(): int
+    {
+        return $this->piloting;
+    }
+
+    public function setPiloting(int $piloting): static
+    {
+        $this->piloting = $piloting;
+        return $this;
+    }
+
+    public function getGunneryXp(): int
+    {
+        return $this->gunneryXp;
+    }
+
+    public function setGunneryXp(int $gunneryXp): static
+    {
+        $this->gunneryXp = $gunneryXp;
+        return $this;
+    }
+
+    public function getPilotingXp(): int
+    {
+        return $this->pilotingXp;
+    }
+
+    public function setPilotingXp(int $pilotingXp): static
+    {
+        $this->pilotingXp = $pilotingXp;
+        return $this;
+    }
+
+    public function isWounded(): bool
+    {
+        return $this->wounded;
+    }
+
+    public function setWounded(bool $wounded): static
+    {
+        $this->wounded = $wounded;
+        return $this;
+    }
+
+    public function getEdgeTokens(): int
+    {
+        return $this->edgeTokens;
+    }
+
+    public function setEdgeTokens(int $edgeTokens): static
+    {
+        $this->edgeTokens = $edgeTokens;
+        return $this;
+    }
+
+    public function getSpecialAbilities(): ?string
+    {
+        return $this->special_abilities;
+    }
+
+    public function setSpecialAbilities(?string $special_abilities): static
+    {
+        $this->special_abilities = $special_abilities;
+        return $this;
+    }
 }
