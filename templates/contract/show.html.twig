@@ -32,8 +32,6 @@
     </div>
 </div>
 
-{% if contract.description %}<div class="contract-description">{{ contract.description|markdown_to_html }}</div>{% endif %}
-
 {% set currentMonth = 0 %}
 {% for entry in contract.logEntries %}
     {% if entry.month != currentMonth %}
@@ -107,4 +105,5 @@
 </table>
 </div>
 {% endif %}
+    {% if contract.description %}<div class="contract-description">{{ contract.description|markdown_to_html }}</div>{% endif %}
 {% endblock %}
