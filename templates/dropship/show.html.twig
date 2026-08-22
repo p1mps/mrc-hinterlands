@@ -30,7 +30,6 @@
     <td>{{ unit.name }}</td>
     <td>{{ unit.tonnage }}</td>
     <td>{{ unit.damageState.value }}</td>
-    <td>—</td>
     <td>
         <form method="post" action="{{ path('app_dropship_unassign_unit', {id: dropship.id, unitId: unit.id}) }}" onsubmit="return confirm('Remove {{ unit.name }} from dropship?');">
             <input type="hidden" name="_token" value="csrf_unassign_unit_{{ unit.id }}">
