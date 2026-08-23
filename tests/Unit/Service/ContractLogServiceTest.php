@@ -691,6 +691,72 @@ class ContractLogServiceTest extends TestCase
         $this->service->handleTrackSetup($contract, 1, true);
     }
 
+    public function testHandleTrackSetupOpposingInheritsFromLinkedContract(): void
+    {
+        $linkedContract = $this->createStub(\App\Entity\Contract::class);
+        $linkedContract->method('getTrackRecords')->willReturn(
+            new \Doctrine\Common\Collections\ArrayCollection([
+                $this->makeTrackRecord(['trackNumber' => 1, 'missionType' => 'Assault', 'terrain' => 'Forest']),
+            ])
+        );
+        $linkedContract->method('getType')->willReturn(\App\Enum\ContractType::Raid);
+
+        $contract = $this->makeContract([
+            'isOpposing' => true,
+            'linkedContract' => $linkedContract,
+        ]);
+        $contract->method('isOpposing')->willReturn(true);
+        $contract->method('getLinkedContract')->willReturn($linkedContract);
+
+        $this->generator->method('rollOpposingTrackSetup')->willReturn([
+            'missionType' => 'Assault',
+            'terrain' => 'Forest',
+            'complication' => 'Rockslide',
+            'terrainSetting' => 'Dense',
+            'inherited' => true,
+        ]);
+
+        $this->em->expects($this->exactly(2))
+            ->method('persist');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->handleTrackSetup($contract, 1, false);
+    }
+
+    public function testHandleTrackSetupOpposingFallsBackWhenNoLinkedTracks(): void
+    {
+        $linkedContract = $this->createStub(\App\Entity\Contract::class);
+        $linkedContract->method('getTrackRecords')->willReturn(
+            new \Doctrine\Common\Collections\ArrayCollection([])
+        );
+        $linkedContract->method('getType')->willReturn(\App\Enum\ContractType::Raid);
+
+        $contract = $this->makeContract([
+            'isOpposing' => true,
+            'linkedContract' => $linkedContract,
+        ]);
+        $contract->method('isOpposing')->willReturn(true);
+        $contract->method('getLinkedContract')->willReturn($linkedContract);
+
+        $this->generator->method('rollOpposingTrackSetup')->willReturn([
+            'missionType' => 'Raid',
+            'terrain' => 'Wasteland',
+            'complication' => 'None',
+            'terrainSetting' => 'Standard',
+            'inherited' => false,
+        ]);
+
+        $this->em->expects($this->exactly(2))
+            ->method('persist');
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->handleTrackSetup($contract, 1, true);
+    }
+
     // ── handlePostTrack ───────────────────────────────────────────────────
 
     public function testHandlePostTrackCompletesPendingTrackAndUpdatesContract(): void

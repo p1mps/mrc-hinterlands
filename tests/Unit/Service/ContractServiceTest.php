@@ -42,6 +42,7 @@ class ContractServiceTest extends TestCase
             'transportTerms' => '—',
             'basePay' => 500,
             'company' => null,
+            'isOpposing' => false,
         ];
         $merged = array_merge($defaults, $overrides);
 
@@ -61,6 +62,8 @@ class ContractServiceTest extends TestCase
             new \Doctrine\Common\Collections\ArrayCollection()
         );
         $contract->method('getCompany')->willReturn($merged['company'] ?? null);
+        $contract->method('isOpposing')->willReturn($merged['isOpposing']);
+        $contract->method('getLinkedContract')->willReturn($merged['linkedContract'] ?? null);
 
         return $contract;
     }
@@ -193,6 +196,71 @@ class ContractServiceTest extends TestCase
         $this->em->expects($this->once())->method('flush');
 
         $this->service->handleTrackSetup($contract, 1);
+    }
+
+    public function testHandleTrackSetupOpposingInheritsFromLinkedContract(): void
+    {
+        $linkedContract = $this->createStub(\App\Entity\Contract::class);
+        $linkedContract->method('getTrackRecords')->willReturn(
+            new \Doctrine\Common\Collections\ArrayCollection([
+                $this->makeTrackRecordStub(1, 'Assault', 'Forest'),
+            ])
+        );
+        $linkedContract->method('getType')->willReturn(\App\Enum\ContractType::Raid);
+
+        $contract = $this->makeContract([
+            'isOpposing' => true,
+            'linkedContract' => $linkedContract,
+        ]);
+
+        $this->generator->method('rollOpposingTrackSetup')->willReturn([
+            'missionType' => 'Assault',
+            'terrain' => 'Forest',
+            'complication' => 'Rockslide',
+            'terrainSetting' => 'Dense',
+            'inherited' => true,
+        ]);
+
+        $this->em->expects($this->exactly(2))->method('persist');
+        $this->em->expects($this->once())->method('flush');
+
+        $this->service->handleTrackSetup($contract, 1);
+    }
+
+    public function testHandleTrackSetupOpposingFallsBackWhenNoLinkedTracks(): void
+    {
+        $linkedContract = $this->createStub(\App\Entity\Contract::class);
+        $linkedContract->method('getTrackRecords')->willReturn(
+            new \Doctrine\Common\Collections\ArrayCollection([])
+        );
+        $linkedContract->method('getType')->willReturn(\App\Enum\ContractType::Raid);
+
+        $contract = $this->makeContract([
+            'isOpposing' => true,
+            'linkedContract' => $linkedContract,
+        ]);
+
+        $this->generator->method('rollOpposingTrackSetup')->willReturn([
+            'missionType' => 'Raid',
+            'terrain' => 'Wasteland',
+            'complication' => 'None',
+            'terrainSetting' => 'Standard',
+            'inherited' => false,
+        ]);
+
+        $this->em->expects($this->exactly(2))->method('persist');
+        $this->em->expects($this->once())->method('flush');
+
+        $this->service->handleTrackSetup($contract, 1);
+    }
+
+    private function makeTrackRecordStub(int $trackNumber, string $missionType, string $terrain): \App\Entity\TrackRecord
+    {
+        $track = $this->createStub(\App\Entity\TrackRecord::class);
+        $track->method('getTrackNumber')->willReturn($trackNumber);
+        $track->method('getMissionType')->willReturn($missionType);
+        $track->method('getTerrain')->willReturn($terrain);
+        return $track;
     }
 
     // ── handlePostTrack ──────────────────────────────────────────────────

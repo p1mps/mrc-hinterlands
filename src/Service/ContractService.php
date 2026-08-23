@@ -88,7 +88,18 @@ class ContractService
 
     public function handleTrackSetup(Contract $contract, int $month): void
     {
-        $result = $this->generator->rollTrackSetup($contract->getType(), $contract->getCommandRights());
+        if ($contract->isOpposing()) {
+            $linked = $contract->getLinkedContract();
+            $result = $this->generator->rollOpposingTrackSetup(
+                $linked,
+                $contract->getCommandRights()
+            );
+        } else {
+            $result = $this->generator->rollTrackSetup(
+                $contract->getType(),
+                $contract->getCommandRights()
+            );
+        }
 
         $track = (new TrackRecord())
             ->setContract($contract)

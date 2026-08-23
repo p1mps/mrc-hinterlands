@@ -309,6 +309,44 @@ class ContractGeneratorService {
         ];
     }
 
+    /**
+     * Roll track setup for an opposing contract: inherits mission type and terrain
+     * from the linked contract's most recent track, but rolls a fresh complication
+     * using the opposing contract's own command rights.
+     *
+     * Falls back to a full random roll if the linked contract has no tracks yet.
+     */
+    public function rollOpposingTrackSetup(Contract $linkedContract, CommandRights $commandRights): array {
+        $linkedTracks = $linkedContract->getTrackRecords();
+        $lastLinkedTrack = null;
+        foreach ($linkedTracks as $t) {
+            if ($lastLinkedTrack === null || $t->getTrackNumber() > $lastLinkedTrack->getTrackNumber()) {
+                $lastLinkedTrack = $t;
+            }
+        }
+
+        if (!$lastLinkedTrack) {
+            // Fallback: full random roll if linked contract has no tracks yet
+            return $this->rollTrackSetup($linkedContract->getType(), $commandRights);
+        }
+
+        // Roll a fresh complication using the opposing contract's command rights
+        $compRoll = $this->dice->roll(1, 6) + $commandRights->complicationBonus();
+        $complication = CommandComplicationTable::lookup(
+            $lastLinkedTrack->getTerrain(),
+            $compRoll
+        );
+
+        return [
+            'missionType'      => $lastLinkedTrack->getMissionType(),
+            'terrain'          => $lastLinkedTrack->getTerrain(),
+            'terrainSetting'   => TerrainTable::getSettingByTerrain($lastLinkedTrack->getTerrain()),
+            'complication'     => $complication,
+            'complicationRoll' => $compRoll,
+            'inherited'        => true,
+        ];
+    }
+
     private function rollAffiliation(string $employer, array &$rolls): string {
         for ($i = 0; $i < 5; $i++) {
             $affRoll    = $this->dice->roll(2, 6);
