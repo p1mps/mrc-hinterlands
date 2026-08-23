@@ -10,6 +10,7 @@ use App\Enum\ContractType;
 use App\Form\ContractEditFormType;
 use App\Form\PostTrackFormType;
 use App\Service\ContractGeneratorService;
+use App\Service\ContractLogService;
 use App\Service\ContractService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -326,5 +327,19 @@ return $this->redirectToRoute('app_contracts');
         $this->addFlash('success', 'Salvage recorded.');
 
         return $this->redirectToRoute('app_contracts');
+    }
+
+    #[Route('/contract/{id}/advance-month', name: 'app_contract_advance_month', methods: ['POST'])]
+    public function advanceMonth(Contract $contract, EntityManagerInterface $em, ContractLogService $logService): Response
+    {
+        try {
+            $logService->advanceMonth($contract);
+            $em->flush();
+            $this->addFlash('success', 'Month advanced.');
+        } catch (\RuntimeException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_contracts_show', ['id' => $contract->getId()]);
     }
 }

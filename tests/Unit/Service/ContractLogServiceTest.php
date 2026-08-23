@@ -412,13 +412,13 @@ class ContractLogServiceTest extends TestCase
 
     // ── calculateCurrentMonth ────────────────────────────────────────────
 
-    public function testCalculateCurrentMonthReturnsOneWhenNoMaintenanceExists(): void
+    public function testCalculateCurrentMonthReturnsOneWhenNoEntriesExist(): void
     {
         $contract = $this->makeContract();
         $repo = $this->createStub(EntityRepository::class);
         $repo->method('findOneBy')->willReturn(null);
 
-        $this->em->expects($this->once())
+        $this->em->expects($this->exactly(2))
             ->method('getRepository')
             ->with(ContractLogEntry::class)
             ->willReturn($repo);
@@ -426,21 +426,99 @@ class ContractLogServiceTest extends TestCase
         $this->assertEquals(1, $this->service->calculateCurrentMonth($contract));
     }
 
-    public function testCalculateCurrentMonthReturnsNextMonthAfterLastMaintenance(): void
+    public function testCalculateCurrentMonthReturnsNextMonthAfterLastPostTrack(): void
     {
         $contract = $this->makeContract();
-        $lastMaintenance = $this->createStub(ContractLogEntry::class);
-        $lastMaintenance->method('getMonth')->willReturn(5);
+        $lastPostTrack = $this->createStub(ContractLogEntry::class);
+        $lastPostTrack->method('getMonth')->willReturn(5);
 
         $repo = $this->createStub(EntityRepository::class);
-        $repo->method('findOneBy')->willReturn($lastMaintenance);
+        $repo->method('findOneBy')->willReturnCallback(function(array $criteria, ?array $orderBy) use ($lastPostTrack) {
+            return $criteria['entryType'] === ContractLogEntryType::PostTrack ? $lastPostTrack : null;
+        });
 
-        $this->em->expects($this->once())
+        $this->em->expects($this->exactly(2))
             ->method('getRepository')
             ->with(ContractLogEntry::class)
             ->willReturn($repo);
 
         $this->assertEquals(6, $this->service->calculateCurrentMonth($contract));
+    }
+
+    public function testCalculateCurrentMonthConsidersMonthAdvanceEntries(): void
+    {
+        $contract = $this->makeContract();
+        $lastMonthAdvance = $this->createStub(ContractLogEntry::class);
+        $lastMonthAdvance->method('getMonth')->willReturn(3);
+
+        $repo = $this->createStub(EntityRepository::class);
+        $repo->method('findOneBy')->willReturnCallback(function(array $criteria) use ($lastMonthAdvance) {
+            return $criteria['entryType'] === ContractLogEntryType::MonthAdvance ? $lastMonthAdvance : null;
+        });
+
+        $this->em->expects($this->exactly(2))
+            ->method('getRepository')
+            ->with(ContractLogEntry::class)
+            ->willReturn($repo);
+
+        // Only MonthAdvance entries exist, no PostTrack → returns max(0, 3) + 1 = 4
+        $this->assertEquals(4, $this->service->calculateCurrentMonth($contract));
+    }
+
+    public function testCalculateCurrentMonthUsesMaxOfMonthAdvanceAndPostTrack(): void
+    {
+        $contract = $this->makeContract();
+        $lastMonthAdvance = $this->createStub(ContractLogEntry::class);
+        $lastMonthAdvance->method('getMonth')->willReturn(3);
+        $lastPostTrack = $this->createStub(ContractLogEntry::class);
+        $lastPostTrack->method('getMonth')->willReturn(5);
+
+        $repo = $this->createStub(EntityRepository::class);
+        $repo->method('findOneBy')->willReturnCallback(function (array $criteria) use ($lastMonthAdvance, $lastPostTrack) {
+            if ($criteria['entryType'] === ContractLogEntryType::MonthAdvance) {
+                return $lastMonthAdvance;
+            }
+            if ($criteria['entryType'] === ContractLogEntryType::PostTrack) {
+                return $lastPostTrack;
+            }
+            return null;
+        });
+
+        $this->em->expects($this->exactly(2))
+            ->method('getRepository')
+            ->with(ContractLogEntry::class)
+            ->willReturn($repo);
+
+        // max(3, 5) + 1 = 6
+        $this->assertEquals(6, $this->service->calculateCurrentMonth($contract));
+    }
+
+    public function testCalculateCurrentMonthPrefersMonthAdvanceWhenHigherThanPostTrack(): void
+    {
+        $contract = $this->makeContract();
+        $lastMonthAdvance = $this->createStub(ContractLogEntry::class);
+        $lastMonthAdvance->method('getMonth')->willReturn(10);
+        $lastPostTrack = $this->createStub(ContractLogEntry::class);
+        $lastPostTrack->method('getMonth')->willReturn(5);
+
+        $repo = $this->createStub(EntityRepository::class);
+        $repo->method('findOneBy')->willReturnCallback(function (array $criteria) use ($lastMonthAdvance, $lastPostTrack) {
+            if ($criteria['entryType'] === ContractLogEntryType::MonthAdvance) {
+                return $lastMonthAdvance;
+            }
+            if ($criteria['entryType'] === ContractLogEntryType::PostTrack) {
+                return $lastPostTrack;
+            }
+            return null;
+        });
+
+        $this->em->expects($this->exactly(2))
+            ->method('getRepository')
+            ->with(ContractLogEntry::class)
+            ->willReturn($repo);
+
+        // max(10, 5) + 1 = 11
+        $this->assertEquals(11, $this->service->calculateCurrentMonth($contract));
     }
 
     // ── handleTransport ───────────────────────────────────────────────────
@@ -893,5 +971,160 @@ class ContractLogServiceTest extends TestCase
             ->method('flush');
 
         $this->service->handleDowntime($contract, $company, 1, 'Penalty', -100);
+    }
+
+    // ── advanceMonth ──────────────────────────────────────────────────────
+
+    public function testAdvanceMonthInitialCallSetsMonthToOne(): void
+    {
+        $contract = $this->makeContract();
+        // No log entries exist yet → first advance should set month to 1
+        $collection = new \Doctrine\Common\Collections\ArrayCollection();
+        $contract->method('getLogEntries')->willReturn($collection);
+
+        $persistedObjects = [];
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$persistedObjects) {
+                $persistedObjects[] = $obj;
+            });
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $result = $this->service->advanceMonth($contract);
+
+        $this->assertEquals(1, $result);
+        $this->assertCount(1, $persistedObjects);
+        $this->assertInstanceOf(ContractLogEntry::class, $persistedObjects[0]);
+    }
+
+    public function testAdvanceMonthSubsequentCallAdvancesFromMaxExistingMonth(): void
+    {
+        $contract = $this->makeContract();
+
+        // Create mock log entries simulating two existing MonthAdvance entries (months 1 and 3)
+        $existingEntry1 = $this->createStub(ContractLogEntry::class);
+        $existingEntry1->method('getEntryType')->willReturn(ContractLogEntryType::MonthAdvance);
+        $existingEntry1->method('getMonth')->willReturn(1);
+
+        $existingEntry2 = $this->createStub(ContractLogEntry::class);
+        $existingEntry2->method('getEntryType')->willReturn(ContractLogEntryType::MonthAdvance);
+        $existingEntry2->method('getMonth')->willReturn(3);
+
+        $logCollection = new \Doctrine\Common\Collections\ArrayCollection();
+        $logCollection->add($existingEntry1);
+        $logCollection->add($existingEntry2);
+
+        // Filter returns only MonthAdvance entries
+        $contract->method('getLogEntries')->willReturnCallback(
+            fn() => $logCollection->filter(
+                fn(ContractLogEntry $e): bool => $e->getEntryType() === ContractLogEntryType::MonthAdvance
+            )
+        );
+
+        $persistedObjects = [];
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$persistedObjects) {
+                $persistedObjects[] = $obj;
+            });
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $result = $this->service->advanceMonth($contract);
+
+        // Should advance to max(1, 3) + 1 = 4
+        $this->assertEquals(4, $result);
+    }
+
+    public function testAdvanceMonthOnCompletedContractThrowsException(): void
+    {
+        $contract = $this->makeContract([
+            'status' => ContractStatus::Completed,
+        ]);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot advance month on a completed');
+
+        $this->service->advanceMonth($contract);
+    }
+
+    public function testAdvanceMonthOnBrokenContractThrowsException(): void
+    {
+        $contract = $this->makeContract([
+            'status' => ContractStatus::Broken,
+        ]);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot advance month on a broken');
+
+        $this->service->advanceMonth($contract);
+    }
+
+    public function testAdvanceMonthCreatesLogEntryWithCorrectProperties(): void
+    {
+        $contract = $this->makeContract();
+        $collection = new \Doctrine\Common\Collections\ArrayCollection();
+        $contract->method('getLogEntries')->willReturn($collection);
+
+        $persistedObjects = [];
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->willReturnCallback(function ($obj) use (&$persistedObjects) {
+                $persistedObjects[] = $obj;
+            });
+
+        $this->em->expects($this->once())
+            ->method('flush');
+
+        $this->service->advanceMonth($contract);
+
+        // Verify the persisted object is a ContractLogEntry with correct properties
+        $this->assertCount(1, $persistedObjects);
+        $logEntry = $persistedObjects[0];
+        $this->assertInstanceOf(ContractLogEntry::class, $logEntry);
+    }
+
+    public function testAdvanceMonthMultipleCallsProgressSequentially(): void
+    {
+        // First call: no existing entries → month 1
+        $contract1 = $this->makeContract();
+        $contract1->method('getLogEntries')->willReturn(new \Doctrine\Common\Collections\ArrayCollection());
+        $this->em->expects($this->any())->method('persist');
+        $this->em->expects($this->any())->method('flush');
+        $this->assertEquals(1, $this->service->advanceMonth($contract1));
+
+        // Second call: one existing MonthAdvance entry (month 1) → month 2
+        $contract2 = $this->makeContract();
+        $entry1 = $this->createStub(ContractLogEntry::class);
+        $entry1->method('getEntryType')->willReturn(ContractLogEntryType::MonthAdvance);
+        $entry1->method('getMonth')->willReturn(1);
+        $logEntries2 = new \Doctrine\Common\Collections\ArrayCollection();
+        $logEntries2->add($entry1);
+        $contract2->method('getLogEntries')->willReturn($logEntries2);
+        $this->em->expects($this->any())->method('persist');
+        $this->em->expects($this->any())->method('flush');
+        $this->assertEquals(2, $this->service->advanceMonth($contract2));
+
+        // Third call: two existing MonthAdvance entries (months 1, 2) → month 3
+        $contract3 = $this->makeContract();
+        $entryA = $this->createStub(ContractLogEntry::class);
+        $entryA->method('getEntryType')->willReturn(ContractLogEntryType::MonthAdvance);
+        $entryA->method('getMonth')->willReturn(1);
+        $entryB = $this->createStub(ContractLogEntry::class);
+        $entryB->method('getEntryType')->willReturn(ContractLogEntryType::MonthAdvance);
+        $entryB->method('getMonth')->willReturn(2);
+        $logEntries3 = new \Doctrine\Common\Collections\ArrayCollection();
+        $logEntries3->add($entryA);
+        $logEntries3->add($entryB);
+        $contract3->method('getLogEntries')->willReturn($logEntries3);
+        $this->em->expects($this->any())->method('persist');
+        $this->em->expects($this->any())->method('flush');
+        $this->assertEquals(3, $this->service->advanceMonth($contract3));
     }
 }

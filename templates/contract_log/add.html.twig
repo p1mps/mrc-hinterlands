@@ -154,6 +154,18 @@
             </div>
         </div>
 
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-warning">Advance Month</div>
+                <div class="card-body">
+                    <p class="text-muted small">Advances the contract to the next month and records a month advance log entry. Cannot be done on completed or broken contracts.</p>
+                    <form method="post" action="{{ path('app_contract_advance_month', {id: contract.id}) }}">
+                        <button class="btn btn-warning">Advance Month</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>

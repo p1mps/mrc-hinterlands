@@ -13,4 +13,5 @@ enum ContractLogEntryType: string
       case Maintenance = 'maintenance';
       case Breach = 'breach';
       case Negotiation = 'negotiation';
+      case MonthAdvance = 'month_advance';
 }

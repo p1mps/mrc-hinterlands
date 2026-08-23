@@ -62,16 +62,79 @@ class ContractLogService
 
     public function calculateCurrentMonth(Contract $contract): int
     {
-        $lastMaintenance = $this->em->getRepository(ContractLogEntry::class)->findOneBy(
+        // Find the most recent MonthAdvance entry
+        $lastMonthAdvance = $this->em->getRepository(ContractLogEntry::class)->findOneBy(
+            ['contract' => $contract, 'entryType' => ContractLogEntryType::MonthAdvance],
+            ['createdAt' => 'DESC']
+        );
+
+        // Find the most recent PostTrack entry
+        $lastPostTrack = $this->em->getRepository(ContractLogEntry::class)->findOneBy(
             ['contract' => $contract, 'entryType' => ContractLogEntryType::PostTrack],
             ['createdAt' => 'DESC']
         );
 
-        if (!$lastMaintenance) {
-            return 1;
+        $maxMonth = 0;
+
+        if ($lastMonthAdvance !== null) {
+            $maxMonth = max($maxMonth, $lastMonthAdvance->getMonth());
         }
 
-        return $lastMaintenance->getMonth() + 1;
+        if ($lastPostTrack !== null) {
+            $maxMonth = max($maxMonth, $lastPostTrack->getMonth());
+        }
+
+        return $maxMonth + 1;
+    }
+
+    /**
+     * Advance the contract to the next month by creating a "Month advance" log entry.
+     *
+     * If no MonthAdvance entry exists, initializes month to 1 (first month).
+     * If one or more exist, advances to the next month after the highest existing value.
+     *
+     * Prevents infinite loops by rejecting calls on completed contracts.
+     * Returns the new month value.
+     */
+    public function advanceMonth(Contract $contract): int
+    {
+        // Guard: do not advance a contract that is already completed or discarded
+        if (in_array($contract->getStatus(), [ContractStatus::Completed, ContractStatus::Broken], true)) {
+            throw new \RuntimeException('Cannot advance month on a ' . $contract->getStatus()->value . ' contract.');
+        }
+
+        // 1. Check for existing MonthAdvance entries in the log collection
+        $existingMonthAdvanceEntries = $contract->getLogEntries()->filter(
+            fn(ContractLogEntry $entry): bool => $entry->getEntryType() === ContractLogEntryType::MonthAdvance
+        );
+
+        // 2. Determine the new month value
+        if ($existingMonthAdvanceEntries->isEmpty()) {
+            // First month advance: initialize to month 1
+            $newMonth = 1;
+        } else {
+            // Subsequent: advance to the next month after the highest existing month
+            $maxExistingMonth = 0;
+            foreach ($existingMonthAdvanceEntries as $entry) {
+                $entryMonth = $entry->getMonth();
+                if ($entryMonth > $maxExistingMonth) {
+                    $maxExistingMonth = $entryMonth;
+                }
+            }
+            $newMonth = $maxExistingMonth + 1;
+        }
+
+        // 3. Create and persist the new log entry
+        $logEntry = (new ContractLogEntry())
+            ->setContract($contract)
+            ->setMonth($newMonth)
+            ->setEntryType(ContractLogEntryType::MonthAdvance)
+            ->setDescription('Month advance');
+
+        $this->em->persist($logEntry);
+        $this->em->flush();
+
+        return $newMonth;
     }
 
     public function handleTransport(Contract $contract, $company): void
