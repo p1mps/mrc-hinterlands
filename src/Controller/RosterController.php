@@ -128,4 +128,18 @@ class RosterController extends BaseController
 
         return $this->redirectToRoute('app_roster');
     }
+
+    #[Route('/{id}/rearm', name: 'app_roster_rearm', methods: ['POST'])]
+    public function rearm(Unit $unit, RosterService $rosterService): Response
+    {
+        $company = $this->getUser()->getCompany();
+        [$cost, $error] = $rosterService->rearmUnit($unit, $company);
+        if ($error) {
+            $this->addFlash('danger', $error);
+        } else {
+            $this->addFlash('success', "Unit rearmed. {$cost} SP deducted.");
+        }
+
+        return $this->redirectToRoute('app_roster');
+    }
 }

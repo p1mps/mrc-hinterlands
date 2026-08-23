@@ -156,7 +156,9 @@ class RosterService
         }
 
         if ($repairCost === 0) {
-            return 'Unit is already fully repaired.';
+            $unit->setDamageState(DamageState::None);
+            $this->em->flush();
+            return null;
         }
 
         try {
@@ -221,5 +223,30 @@ class RosterService
         $this->em->flush();
 
         return null;
+    }
+
+    /**
+     * Rearsms a unit by deducting 10 SP for 1 ton of ammo.
+     * If the active contract has Straight support, the rearm cost is reduced by the support percentage.
+     * Returns [cost, errorMessage] — cost is null on error, errorMessage is null on success.
+     */
+    public function rearmUnit(Unit $unit, MercenaryCompany $company): array
+    {
+        if ($unit->getCompany() !== $company) {
+            return [null, 'You do not own this unit.'];
+        }
+
+        $baseRearmCost = 10;
+        $discount = $this->getSupportDiscount($company);
+        $rearmCost = (int) floor($baseRearmCost * $discount);
+
+        try {
+            $company->deductSupportPoints($rearmCost, 'Rearm of ' . $unit->getName() . ' (' . $unit->getChassis() . ')', $this->em->getConnection());
+        } catch (\Exception $e) {
+            return [null, $e->getMessage()];
+        }
+
+        $this->em->flush();
+        return [$rearmCost, null];
     }
 }

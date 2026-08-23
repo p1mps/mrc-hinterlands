@@ -75,6 +75,12 @@
                   class="flex-fill">
                 <button class="btn btn-sm btn-warning w-100">Battlefield Loss</button>
             </form>
+
+            <form method="post" action="{{ path('app_roster_rearm', {id: unit.id}) }}"
+                  onsubmit="return confirm('Rearm \'{{ unit.name }}\'? This will deduct SP % Support terms.');"
+                  class="flex-fill">
+                <button class="btn btn-sm btn-success w-100">Rearm</button>
+            </form>
         </div>
     </td>
 
