@@ -24,7 +24,7 @@
 </div>
 
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
-    <h4 class="mb-0">Monthly Log</h4>
+    <h4 class="mb-0">Monthly Log —(Month {{ currentMonth }})</h4>
     <div class="d-flex gap-2">
         <a href="{{ path('app_contracts_edit', {id: contract.id}) }}" class="btn btn-outline-secondary">Edit Contract</a>
         <a href="{{ path('app_contracts_negotiate_view', {id: contract.id}) }}" class="btn btn-outline-info">Negotiate</a>

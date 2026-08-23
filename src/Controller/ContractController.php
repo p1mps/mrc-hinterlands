@@ -98,10 +98,13 @@ class ContractController extends BaseController
     }
 
     #[Route('/contract/{id}', name: 'app_contracts_show')]
-    public function show(Contract $contract): Response
+    public function show(Contract $contract, ContractLogService $logService): Response
     {
+        $currentMonth = $logService->calculateCurrentMonth($contract);
+
         return $this->render('contract/show.html.twig', [
-            'contract' => $contract,
+            'contract'      => $contract,
+            'currentMonth'  => $currentMonth,
         ]);
     }
 
