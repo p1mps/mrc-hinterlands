@@ -623,7 +623,7 @@ Roll 1D6 on the Track Intensity Table to determine the sequence of numbers separ
 
 Generate one random contract offer per month at the Almotacen Hiring Hall.
 
-### 18.1 Jumping Between Systems
+### 18.1 Jumping Between Systems (Deprecated)
 
 Roll 1D6 for the number of jumps from Almotacen, then 1D6 for the specific system:
 
