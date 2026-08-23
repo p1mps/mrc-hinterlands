@@ -56,6 +56,40 @@
         </div>
     </div>
 
+    {# Salvaged Mechs #}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Salvaged Mechs</h5></div>
+            <div class="card-body">
+                <p>Salvaged mechs come from two sources: the <strong>scrapyard</strong> and <strong>battlefield salvage</strong>. Both pay repair costs in SP but differ in acquisition, condition, and contract interaction.</p>
+
+                <h6 class="mt-3 mb-2">Scrapyard Mechs</h6>
+                <p>When purchasing from the scrapyard, you pay <strong>half the mech's Battle Value (BV/2)</strong> as the acquisition cost. Scrapyard mechs always arrive in <strong>Crippled</strong> condition — they cannot be repaired to better than Crippled.</p>
+                <ul>
+                    <li><strong>Acquisition cost:</strong> BV ÷ 2 (in SP)</li>
+                    <li><strong>Repair cost:</strong> Tonnage × 3 (IS) or × 4.5 (Mixed/Clan) — since they're always Crippled</li>
+                    <li><strong>BV for assignment:</strong> Full BV (as if undamaged)</li>
+                    <li><strong>No contract attachment:</strong> Scrapyard mechs do not attach to active contracts, so salvage rights percentages are irrelevant</li>
+                </ul>
+
+                <h6 class="mb-2">Battlefield Salvage</h6>
+                <p>After a track, the victor may attempt to salvage enemy units left on the field. A <strong>salvage check</strong> is made by rolling 2d6 with thresholds based on unit type: <strong>Mech: 4+</strong>, <strong>Vehicle: 6+</strong>, <strong>Battle Armor: 7+</strong>. Failure means the mech is destroyed — no salvage.</p>
+
+                <p>If successful, the mech is acquired in its <strong>end-of-battle condition</strong>. The actual cost depends on your active contract's <strong>salvage rights</strong> terms:</p>
+
+                <h6 class="mt-3 mb-2">Understanding Salvage Rights</h6>
+                <p>Salvage rights is a contract term that determines how the cost of acquiring a salvaged mech is split between you and the employer:</p>
+                <ul>
+                    <li><strong>Percentage (e.g., 50%, 75%, 100%):</strong> You keep that percentage of the salvage value. The acquisition cost is: <code>floor(BV/2) × (1 − salvageRightsPercent/100)</code>. A 50% salvage rights means you pay half the salvage value; 100% means you pay the full salvage value.</li>
+                    <li><strong>Exchange:</strong> The employer covers all repair costs. You receive a payout of <strong>25% of the salvage value</strong> (floor(BV/2) × 0.25) as your share.</li>
+                    <li><strong>None (0%):</strong> Acquisition is <strong>not allowed</strong> — you cannot claim the mech.</li>
+                </ul>
+
+                <p><strong>Salvage value</strong> (the base reference for all calculations) = <code>floor(BV ÷ 2)</code>. <strong>Repair cost</strong> is calculated separately based on the mech's damage state: Tonnage × 3 (Crippled, IS) or × 4.5 (Mixed/Clan), Tonnage × 5 (Destroyed, IS) or × 7.5 (Mixed/Clan), etc. Both the acquisition cost and repair cost must be paid in SP to bring the mech into your roster.</p>
+            </div>
+        </div>
+    </div>
+
     {# Scale Limitations & Combat Pay #}
     <div class="col-md-6">
         <div class="card h-100">
