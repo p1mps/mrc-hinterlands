@@ -130,7 +130,19 @@
 
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">Step 5 — Downtime / Activity</div>
+                <div class="card-header bg-warning">Step 5 — Advance Month</div>
+                <div class="card-body">
+                    <p class="text-muted small">Advances the contract to the next month and records a month advance log entry. Cannot be done on completed or broken contracts.</p>
+                    <form method="post" action="{{ path('app_contract_advance_month', {id: contract.id}) }}">
+                        <button class="btn btn-warning">Advance Month</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Step 6 — Downtime / Activity</div>
                 <div class="card-body">
                     <form method="post">
                         <input type="hidden" name="action" value="downtime">
@@ -149,18 +161,6 @@
                             <textarea name="note" class="form-control" rows="3"></textarea>
                         </div>
                         <button class="btn btn-secondary">Add Note</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-warning">Advance Month</div>
-                <div class="card-body">
-                    <p class="text-muted small">Advances the contract to the next month and records a month advance log entry. Cannot be done on completed or broken contracts.</p>
-                    <form method="post" action="{{ path('app_contract_advance_month', {id: contract.id}) }}">
-                        <button class="btn btn-warning">Advance Month</button>
                     </form>
                 </div>
             </div>
