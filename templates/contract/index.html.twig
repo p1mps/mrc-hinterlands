@@ -13,6 +13,7 @@
             <thead>
             <tr>
                 <th>Name</th>
+                <th>Type</th>
                 <th>Employer</th>
                 <th>Scale</th>
                 <th>Reputation</th>
@@ -27,6 +28,7 @@
             {% for c in acceptedContracts %}
                 <tr>
                     <td>{{ c.name ?? c.type.value | capitalize }}</td>
+                    <td><span class="badge bg-info text-dark">{{ c.type.value | capitalize }}</span></td>
                     <td>{{ c.employer }}</td>
                     <td>{{ c.scale }}</td>
                     <td>
@@ -77,7 +79,7 @@
                     </td>
                 </tr>
             {% else %}
-                <tr><td colspan="9" class="text-muted">No contracts yet.</td></tr>
+                <tr><td colspan="10" class="text-muted">No contracts yet.</td></tr>
             {% endfor %}
             </tbody>
         </table>
@@ -90,6 +92,7 @@
             <thead>
             <tr>
                 <th>Name</th>
+                <th>Type</th>
                 <th>Employer</th>
                 <th>Scale</th>
                 <th>Reputation</th>
@@ -104,6 +107,7 @@
             {% for c in availableContracts %}
                 <tr>
                     <td>{{ c.name ?? c.type.value | capitalize }}</td>
+                    <td><span class="badge bg-info text-dark">{{ c.type.value | capitalize }}</span></td>
                     <td>{{ c.employer }}</td>
                     <td>{{ c.scale }}</td>
                     <td>
@@ -154,7 +158,7 @@
                     </td>
                 </tr>
             {% else %}
-                <tr><td colspan="9" class="text-muted">No contracts yet.</td></tr>
+                <tr><td colspan="10" class="text-muted">No contracts yet.</td></tr>
             {% endfor %}
             </tbody>
         </table>
@@ -166,6 +170,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Type</th>
             <th>Employer</th>
             <th>Scale</th>
             <th>Reputation</th>
@@ -180,6 +185,7 @@
     {% for c in completedContracts %}
     <tr>
         <td>{{ c.name ?? c.type.value | capitalize }}</td>
+        <td><span class="badge bg-info text-dark">{{ c.type.value | capitalize }}</span></td>
         <td>{{ c.employer }}</td>
         <td>{{ c.scale }}</td>
         <td>
@@ -230,7 +236,7 @@
         </td>
     </tr>
     {% else %}
-    <tr><td colspan="9" class="text-muted">No contracts yet.</td></tr>
+    <tr><td colspan="10" class="text-muted">No contracts yet.</td></tr>
     {% endfor %}
     </tbody>
 </table>

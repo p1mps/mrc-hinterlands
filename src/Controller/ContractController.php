@@ -234,7 +234,7 @@ class ContractController extends BaseController
         return $this->redirectToRoute('app_contracts');
     }
 
-    #[Route('/contract/{id}/generate-opposing', name: 'app_contracts_generate_opposing', methods: ['POST'])]
+    #[Route("/contract/{id}/generate-opposing", name: "app_contracts_generate_opposing", methods: ["POST"])]
     public function generateOpposing(Contract $contract, EntityManagerInterface $em, ContractService $contractService, ContractGeneratorService $generator): Response
     {
         if ($contract->isOpposing()) {
@@ -242,9 +242,8 @@ class ContractController extends BaseController
             return $this->redirectToRoute('app_contracts');
         }
 
-        $opposingData = $generator->generateOpposing($contract->getType(), $contract->getScale(), $contract->getNumberOfTracks());
+        $opposingData = $generator->generateOpposing($contract->getType(), $contract->getScale(), $contract->getNumberOfTracks(), $contract->getPlanet(), $contract->getIntensity());
         $opposing = $contractService->createContract($opposingData);
-        $opposing->setPlanet(PlanetTable::randomPlanet());
         $opposing->setLinkedContract($contract);
         $contract->getOpposingContracts()->add($opposing);
         $em->persist($opposing);

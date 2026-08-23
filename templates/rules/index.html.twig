@@ -439,6 +439,54 @@
         </div>
     </div>
 
+    {# Mission Types Per Contract Type #}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Mission Types Per Contract Type</h5></div>
+            <div class="card-body">
+                <p>When generating a contract, a 1d6 roll on the <em>Track Intensity Table</em> determines the mission type for each track. Different contract types offer different mission pools:</p>
+
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary">
+                            <tr><th style="width:50px">1d6</th><th>Raid</th><th>Expedition</th><th>Garrison</th><th>Invasion</th><th>Retainer</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>1</strong></td><td>Crush the Head</td><td>Ambush</td><td>Straight Fight</td><td>Straight Fight</td><td>Straight Fight</td></tr>
+                            <tr><td><strong>2</strong></td><td>Secure</td><td>Evacuation</td><td>Secure</td><td>Crush the Head</td><td>Evacuation</td></tr>
+                            <tr><td><strong>3</strong></td><td>Ambush</td><td>Reconnaissance</td><td>Secure</td><td>Secure</td><td>Reinforce</td></tr>
+                            <tr><td><strong>4</strong></td><td>Reconnaissance</td><td>Reconnaissance</td><td>Reconnaissance</td><td>Reinforce</td><td>Reinforce</td></tr>
+                            <tr><td><strong>5</strong></td><td>Bounding Retreat</td><td>Bounding Retreat</td><td>Duel</td><td>Calamity</td><td>Duel</td></tr>
+                            <tr><td><strong>6</strong></td><td>Demolition</td><td>Calamity</td><td>Calamity</td><td>Demolition</td><td>Demolition</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="mt-3 mb-2">Quick Reference by Mission Type</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-secondary">
+                            <tr><th>Mission</th><th>Available On</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Straight Fight</strong></td><td>Garrison, Invasion, Retainer</td><td>Destroy &gt;50% of the opponent's force. Classic engagement.</td></tr>
+                            <tr><td><strong>Crush the Head</strong></td><td>Raid, Invasion</td><td>Target the enemy commander. Capture for maximum VP.</td></tr>
+                            <tr><td><strong>Secure</strong></td><td>Raid, Garrison, Invasion</td><td>Control the central objective point.</td></tr>
+                            <tr><td><strong>Ambush</strong></td><td>Raid, Expedition</td><td>Defender hides units; attacker must scan objective hexes.</td></tr>
+                            <tr><td><strong>Evacuation</strong></td><td>Expedition, Retainer</td><td>Attacker extracts VIPs; Defender holds the line.</td></tr>
+                            <tr><td><strong>Reconnaissance</strong></td><td>Raid, Expedition, Garrison</td><td>Attacker scans enemy units and withdraws.</td></tr>
+                            <tr><td><strong>Reinforce</strong></td><td>Invasion, Retainer</td><td>Attacker must break through and exit the Defender's edge.</td></tr>
+                            <tr><td><strong>Duel</strong></td><td>Garrison, Retainer</td><td>One-on-one fight; interference by other units is penalised.</td></tr>
+                            <tr><td><strong>Bounding Retreat</strong></td><td>Raid, Expedition</td><td>Defender holds then withdraws in good order; Attacker routs them.</td></tr>
+                            <tr><td><strong>Calamity</strong></td><td>Expedition, Garrison, Invasion</td><td>Both sides deploy hidden; ECM is doubled, active probes disabled.</td></tr>
+                            <tr><td><strong>Demolition</strong></td><td>Raid, Invasion, Retainer</td><td>Attacker plants demolition charges on objective buildings.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {# Tracks Summary #}
     <div class="col-md-6">
         <div class="card h-100">

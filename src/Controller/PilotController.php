@@ -87,6 +87,7 @@ class PilotController extends BaseController
         // Apply active contract support terms to healing cost
         $activeContract = $this->contractRepository->findActiveContractByCompany($company);
         $healCost = 30; // default base cost
+        $supportType = null;
         if ($activeContract !== null) {
             $supportType = $activeContract->getSupportType();
             if ($supportType === 'Battle') {
