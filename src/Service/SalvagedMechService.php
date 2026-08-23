@@ -45,49 +45,37 @@ class SalvagedMechService
      */
     public function createMech(
         SalvagedMech $mechan,
-        MercenaryCompany $company,
-        bool $attachToContract = true,
-        ?string $techBase = null,
-        ?string $damageState = null,
+        MercenaryCompany $company
     ): ?array {
         $mechan->setCompany($company);
         $this->em->persist($mechan);
 
         // For non-scrapyard mechs, attempt to attach to active contract
-        if ($attachToContract && !$mechan->isScrapyard() && $this->contractResolver !== null && $this->salvageRightsParser !== null) {
+        if (!$mechan->isScrapyard() && $this->contractResolver !== null && $this->salvageRightsParser !== null) {
             $contract = $this->contractResolver->resolveActiveContract($company);
 
             if ($contract !== null) {
                 $salvageRightsPercent = $this->salvageRightsParser->parse($contract->getSalvageRights());
 
                 // Only attach if salvage rights allow it (not Exchange/None)
-                if ($salvageRightsPercent !== null && $salvageRightsPercent > 0) {
-                    $mechan->setContract($contract);
-                    $mechan->setContractId($contract->getId());
-                    $mechan->setSalvageRightsPercent($salvageRightsPercent);
+                $mechan->setContract($contract);
+                $mechan->setSalvageRightsPercent($salvageRightsPercent);
+                // Add to contract's collection for bidirectional sync
+                $contract->getSalvagedMechs()->add($mechan);
 
-                    // Add to contract's collection for bidirectional sync
-                    if ($contract->getSalvagedMechs()->contains($mechan)) {
-                        $mechan->setContract($contract);
-                    } else {
-                        $contract->getSalvagedMechs()->add($mechan);
-                    }
+                // Calculate adjusted cost: max(0, baseSalvage - salvageRightsValue)
+                $baseSalvage = $this->salvageCalc->calculateSalvageValue($mechan->getBvCost());
+                $adjustedCost = $this->salvageCalc->calculateAcquisitionCost($baseSalvage, $salvageRightsPercent);
 
-                    // Calculate adjusted cost: max(0, baseSalvage - salvageRightsValue)
-                    $baseSalvage = $this->salvageCalc->calculateSalvageValue($mechan->getBvCost());
-                    $adjustedCost = $this->salvageCalc->calculateAcquisitionCost($baseSalvage, $salvageRightsPercent);
+                $this->em->persist($contract);
+                $this->em->persist($mechan);
 
-                    $this->em->persist($contract);
-
-                    return [
-                        'contract' => $contract,
-                        'salvageRightsPercent' => $salvageRightsPercent,
-                        'adjustedCost' => $adjustedCost,
-                    ];
-                }
-                // Exchange or None: don't attach, but mech is still created
+                return [
+                    'contract' => $contract,
+                    'salvageRightsPercent' => $salvageRightsPercent,
+                    'adjustedCost' => $adjustedCost,
+                ];
             }
-            // No active contract: don't attach, but mech is still created
         }
 
         $this->em->flush();
