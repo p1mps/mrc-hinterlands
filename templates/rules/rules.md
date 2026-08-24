@@ -133,7 +133,7 @@ The force scale determines the maximum force size and associated costs:
 
 ## 7. Optional Rules
 
-Used by mutual agreement. Veteran players should defer to less experienced players. Assumed active for MRC games:
+Used by mutual agreement. Veteran players should defer to less experienced players. Assumed active for MRC games using Total Warfare:
 
 * Floating Critical Hits (BMM p. 45 / TO:AR p. 75)
 * Careful Stand (BMM p. 19 / TO:AR p. 22)
@@ -467,7 +467,7 @@ Name one surviving pilot who participated as the MVP. The MVP receives a bonus o
 * **Reroll Critical Hit:** Spend one Edge token to completely reroll a Determining Critical Hits Table result.
 * **Activate Edge Abilities:** Spend Edge tokens to trigger unlocked special Edge Abilities.
 
-### 12.7 Edge Abilities (SPAs)
+### 12.7 Edge Abilities (SPAs) - Total Warfare Rules
 
 A pilot unlocks a new ability slot when their allocated SP reaches 60, 180, 360, 600, and 900 SP.
 
@@ -477,17 +477,17 @@ A pilot unlocks a new ability slot when their allocated SP reaches 60, 180, 360,
   </thead>
   <tbody>
     <tr><td>Assassin</td><td>1 Edge</td><td>Increase rear-arc damage rating by 1, or adjust hit location roll by 1 to try and strike rear torso armor.</td></tr>
-    <tr><td>Bulwark</td><td>1 Edge</td><td>Reduce physical attack damage received by 1 (or by 5 in Total Warfare).</td></tr>
+    <tr><td>Bulwark</td><td>1 Edge</td><td>Reduce physical attack damage received by 5.</td></tr>
     <tr><td>Cautious</td><td>1 Edge</td><td>Instantly change facing to any direction at the start of Combat Phase.</td></tr>
-    <tr><td>Coolant Flush</td><td>Up to 2 Edge</td><td>Reduce heat by amount spent (or by 4 per token in Total Warfare).</td></tr>
+    <tr><td>Coolant Flush</td><td>Up to 2 Edge</td><td>Reduce heat by 4 per token spent.</td></tr>
     <tr><td>Forward Observer</td><td>1 Edge</td><td>Make your own attack this Combat Phase without suffering the +1 Target Number penalty when spotting.</td></tr>
-    <tr><td>Jumping Jack</td><td>1 Edge</td><td>Reduce short-range jumping Target Number penalty to +1 (or to +2 in Total Warfare).</td></tr>
-    <tr><td>Marksman</td><td>1 Edge</td><td>Automatically inflict a critical hit on a roll of 11 (or add 1 to Crit Table roll in Total Warfare).</td></tr>
+    <tr><td>Jumping Jack</td><td>1 Edge</td><td>Reduce short-range jumping Target Number penalty to +2.</td></tr>
+    <tr><td>Marksman</td><td>1 Edge</td><td>Add 1 to Crit Table roll.</td></tr>
     <tr><td>Melee Specialist</td><td>1 Edge</td><td>Completely reroll a Physical or Melee attack.</td></tr>
     <tr><td>Nimble</td><td>1–2 Edge</td><td>Gain +1 TMM and move through enemy units. Costs 2 Edge if sprinted TMM is 3+ or Walking MP is 7+.</td></tr>
     <tr><td>Patient</td><td>1 Edge</td><td>Completely reroll all attacks if your unit used Standstill movement.</td></tr>
-    <tr><td>Protector</td><td>1 Edge</td><td>Prevent 1 damage to a friendly, smaller unit within 2 inches or 1 hex (or prevent entire damage from one weapon in TW).</td></tr>
-    <tr><td>Speed Demon</td><td>1 Edge</td><td>Gain +2 inches of movement, or +4 if sprinting (or +1 MP / +2 MP sprinting in Total Warfare).</td></tr>
+    <tr><td>Protector</td><td>1 Edge</td><td>Prevent entire damage from one weapon to a friendly, smaller unit within 1 hex.</td></tr>
+    <tr><td>Speed Demon</td><td>1 Edge</td><td>Gain +1 MP, or +2 MP if sprinting.</td></tr>
   </tbody>
 </table>
 
@@ -625,21 +625,7 @@ Generate one random contract offer per month at the Almotacen Hiring Hall.
 
 ### 18.1 Jumping Between Systems (Deprecated)
 
-Roll 1D6 for the number of jumps from Almotacen, then 1D6 for the specific system:
-
-<table class="table table-sm table-bordered mb-0">
-  <thead class="table-secondary">
-    <tr><th>1D6</th><th>Number of Jumps to Contract System</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>1</td><td>1: Zoetermeer, 2: Baker 3, 3: Leskovik, 4: Dompaire, 5: Devin, 6: Antares</td></tr>
-    <tr><td>2</td><td>1: Babaeski, 2: Morges, 3: A Place, 4: Vulcan, 5: Parakoila, 6: Matteo</td></tr>
-    <tr><td>3</td><td>1: Bountiful Harvest, 2: Colmar, 3: Koniz, 4: Twycross, 5: Waldorff, 6: Romulus</td></tr>
-    <tr><td>4</td><td>1: New Exford, 2: Ballynure, 3: Zanderij, 4: Trell I, 5: Deia, 6: Great X</td></tr>
-    <tr><td>5</td><td>1: Santana, 2: Blumenort, 3: Kooken's Pleasure Pit, 4: Hot Springs, 5: Derf, 6: Timkovichi</td></tr>
-    <tr><td>6</td><td>1: Biuque, 2: Roadside, 3: Clermont, 4: Black Earth, 5: Golandrinas, 6: Sargasso</td></tr>
-  </tbody>
-</table>
+Roll 1D6 for the number of jumps from Almotacen, then 1D6 for the specific system.
 
 ### 18.2 Contract Generator
 
