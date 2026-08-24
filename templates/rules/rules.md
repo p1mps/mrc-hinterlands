@@ -516,6 +516,18 @@ The player with the lower average handicap earns a BSP bonus equal to the handic
   </tbody>
 </table>
 
+#### Edge tokens handicap
+* Edge Tokens: 2 Handicap
+* Edge Tokens: 5 Handicap
+* Edge Tokens: 8 Handicap
+* Edge Tokens: 12 Handicap
+* Edge Tokens: 17 Handicap
+* Edge Tokens: 22 Handicap
+* Edge Tokens: 29 Handicap
+* Edge Tokens: 36 Handicap
+* Edge Tokens: 44 Handicap
+
+
 ---
 
 ## 13. Dropship Mechanics
