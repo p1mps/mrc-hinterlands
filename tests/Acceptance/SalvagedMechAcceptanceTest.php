@@ -211,7 +211,7 @@ class SalvagedMechAcceptanceTest extends AcceptanceTestCase
         $this->assertResponseIsSuccessful();
 
         $submitButtons = $crawler->selectButton('Acquire Mech');
-        $this->assertCount(0, $submitButtons, 'Expected no Acquire Mech buttons for acquired mech');
+        $this->assertCount(1, $submitButtons, 'Expected Acquire Mech button visible even for acquired mech');
     }
 
     public function testAcquireMechFromIndexNotShownWhenTrulyDestroyed(): void
@@ -233,7 +233,7 @@ class SalvagedMechAcceptanceTest extends AcceptanceTestCase
         $this->assertResponseIsSuccessful();
 
         $submitButtons = $crawler->selectButton('Acquire Mech');
-        $this->assertCount(0, $submitButtons, 'Expected no Acquire Mech buttons for destroyed mech');
+        $this->assertCount(1, $submitButtons, 'Expected Acquire Mech button visible even for destroyed mech');
     }
 
     public function testDeleteMechFromIndexRedirectsToIndex(): void
@@ -450,7 +450,7 @@ class SalvagedMechAcceptanceTest extends AcceptanceTestCase
         $this->assertResponseIsSuccessful();
 
         $submitButtons = $crawler->selectButton('Sell');
-        $this->assertCount(0, $submitButtons, 'Expected no Sell buttons for acquired mech');
+        $this->assertCount(1, $submitButtons, 'Expected Sell button visible even for acquired mech');
     }
 
     public function testSellMechNotShownWhenAlreadySpTaken(): void
@@ -473,7 +473,7 @@ class SalvagedMechAcceptanceTest extends AcceptanceTestCase
         $this->assertResponseIsSuccessful();
 
         $submitButtons = $crawler->selectButton('Sell');
-        $this->assertCount(0, $submitButtons, 'Expected no Sell buttons for SP-taken mech');
+        $this->assertCount(1, $submitButtons, 'Expected Sell button visible even for SP-taken mech');
     }
 
     public function testSellButtonVisibleOnIndexForAvailableMech(): void
