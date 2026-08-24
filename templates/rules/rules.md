@@ -527,7 +527,6 @@ The player with the lower average handicap earns a BSP bonus equal to the handic
 * 9 Edge Tokens: 36 Handicap
 * 10 Edge Tokens: 44 Handicap
 
-
 ---
 
 ## 13. Dropship Mechanics
@@ -654,11 +653,10 @@ Contracts are generated in order: contract type → employer → pay rate → sa
 ---
 
 #### 19.1 Battlefield Support Table
-
 <table class="table table-sm table-bordered mb-0">
   <thead class="table-secondary text-center">
     <tr>
-      <th class="text-start">Support Type</th>
+      <th>Support Type</th>
       <th>Target Number*</th>
       <th>Damage Value Groupings**</th>
       <th>Damage Type</th>
@@ -666,182 +664,174 @@ Contracts are generated in order: contract type → employer → pay rate → sa
     </tr>
   </thead>
   <tbody class="text-center">
-    <!-- Offensive Aerospace Support -->
     <tr>
-      <td class="text-start" colspan="5"><strong>Offensive Aerospace Support</strong></td>
+      <td colspan="5"><strong>Offensive Aerospace Support</strong></td>
     </tr>
     <tr>
-      <td class="text-start">Light Strike</td>
-      <td>5 [2]</td>
-      <td>2 [2]</td>
+      <td>Light Strike</td>
+      <td>5</td>
+      <td>2</td>
       <td>N/A</td>
-      <td>2 [2]</td>
+      <td>2</td>
     </tr>
     <tr>
-      <td class="text-start">Light Bombing&dagger;</td>
-      <td>5 [2]</td>
-      <td>3 [2]</td>
-      <td>AE [2]</td>
-      <td>3 [2]</td>
+      <td>Light Bombing&dagger;</td>
+      <td>5</td>
+      <td>3</td>
+      <td>AE</td>
+      <td>3</td>
     </tr>
     <tr>
-      <td class="text-start">Heavy Strike</td>
-      <td>6 [2]</td>
-      <td>4 [2]</td>
+      <td>Heavy Strike</td>
+      <td>6</td>
+      <td>4</td>
       <td>N/A</td>
-      <td>3 [2]</td>
+      <td>3</td>
     </tr>
     <tr>
-      <td class="text-start">Heavy Bombing&dagger;</td>
-      <td>7 [2]</td>
-      <td>6 [2]</td>
-      <td>AE [2]</td>
-      <td>4 [2]</td>
+      <td>Heavy Bombing&dagger;</td>
+      <td>7</td>
+      <td>6</td>
+      <td>AE</td>
+      <td>4</td>
     </tr>
     <tr>
-      <td class="text-start">Strafing</td>
-      <td>7 [2]</td>
-      <td>3 [2]</td>
+      <td>Strafing</td>
+      <td>7</td>
+      <td>3</td>
       <td>N/A</td>
-      <td>5 [2]</td>
-    </tr>
-
-    <!-- Defensive Aerospace Support -->
-    <tr>
-      <td class="text-start" colspan="5"><strong>Defensive Aerospace Support</strong></td>
+      <td>5</td>
     </tr>
     <tr>
-      <td class="text-start">Light Air Cover</td>
+      <td colspan="5"><strong>Defensive Aerospace Support</strong></td>
+    </tr>
+    <tr>
+      <td>Light Air Cover</td>
       <td>&mdash;</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>1 [2]</td>
+      <td>1</td>
     </tr>
     <tr>
-      <td class="text-start"><em>&mdash; Light Strike</em></td>
-      <td>3 [2]</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td class="text-start"><em>&mdash; Light Bombing</em></td>
-      <td>4 [2]</td>
+      <td><em>&mdash; Light Strike</em></td>
+      <td>3</td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="text-start"><em>&mdash; Heavy Strike</em></td>
-      <td>9 [2]</td>
+      <td><em>&mdash; Light Bombing</em></td>
+      <td>4</td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="text-start"><em>&mdash; Strafing/Heavy Bombing</em></td>
-      <td>11 [2]</td>
+      <td><em>&mdash; Heavy Strike</em></td>
+      <td>9</td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="text-start">Heavy Air Cover</td>
+      <td><em>&mdash; Strafing/Heavy Bombing</em></td>
+      <td>11</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Heavy Air Cover</td>
       <td>&mdash;</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>2 [2]</td>
+      <td>2</td>
     </tr>
     <tr>
-      <td class="text-start"><em>&mdash; Light Strike/Bombing</em></td>
-      <td>9 [2]</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td class="text-start"><em>&mdash; Heavy Strike</em></td>
-      <td>5 [2]</td>
+      <td><em>&mdash; Light Strike/Bombing</em></td>
+      <td>9</td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="text-start"><em>&mdash; Strafing/Heavy Bombing</em></td>
-      <td>6 [2]</td>
+      <td><em>&mdash; Heavy Strike</em></td>
+      <td>5</td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
-
-    <!-- Artillery Support -->
     <tr>
-      <td class="text-start" colspan="5"><strong>Artillery Support&dagger;</strong></td>
+      <td><em>&mdash; Strafing/Heavy Bombing</em></td>
+      <td>6</td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
-      <td class="text-start">Thumper</td>
-      <td>8 [2]</td>
-      <td>3/1&dagger;&dagger; [2]</td>
-      <td>AE [2]</td>
-      <td>3 [2]</td>
+      <td colspan="5"><strong>Artillery Support&dagger;</strong></td>
     </tr>
     <tr>
-      <td class="text-start">Sniper</td>
-      <td>8 [2]</td>
-      <td>4/2&dagger;&dagger; [2]</td>
-      <td>AE [2]</td>
-      <td>4 [2]</td>
+      <td>Thumper</td>
+      <td>8</td>
+      <td>3/1&dagger;&dagger;</td>
+      <td>AE</td>
+      <td>3</td>
     </tr>
     <tr>
-      <td class="text-start">Long Tom</td>
-      <td>8 [2]</td>
-      <td>5/3/1&dagger;&dagger; [2]</td>
-      <td>AE [2]</td>
-      <td>6 [2]</td>
+      <td>Sniper</td>
+      <td>8</td>
+      <td>4/2&dagger;&dagger;</td>
+      <td>AE</td>
+      <td>4</td>
     </tr>
     <tr>
-      <td class="text-start"><em>(Copperhead)</em></td>
-      <td>&Dagger; [2]</td>
-      <td>&Dagger; [2]</td>
+      <td>Long Tom</td>
+      <td>8</td>
+      <td>5/3/1&dagger;&dagger;</td>
+      <td>AE</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td><em>(Copperhead)</em></td>
+      <td>&Dagger;</td>
+      <td>&Dagger;</td>
       <td>N/A</td>
-      <td>&Dagger; [2]</td>
+      <td>&Dagger;</td>
     </tr>
     <tr>
-      <td class="text-start"><em>(Illumination/Smoke)</em></td>
-      <td>8 [2]</td>
-      <td>&Dagger;&Dagger; [2]</td>
+      <td><em>(Illumination/Smoke)</em></td>
+      <td>8</td>
+      <td>&Dagger;&Dagger;</td>
       <td>N/A</td>
-      <td>&Dagger;&Dagger; [2]</td>
-    </tr>
-
-    <!-- Minefield Support -->
-    <tr>
-      <td class="text-start" colspan="5"><strong>Minefield Support</strong></td>
+      <td>&Dagger;&Dagger;</td>
     </tr>
     <tr>
-      <td class="text-start">Light Density</td>
-      <td>9 [2]</td>
-      <td>2 [2]</td>
-      <td>AE [2]</td>
-      <td>0.5 [2]</td>
+      <td colspan="5"><strong>Minefield Support</strong></td>
     </tr>
     <tr>
-      <td class="text-start">Medium Density</td>
-      <td>8 [2]</td>
-      <td>4 [2]</td>
-      <td>AE [2]</td>
-      <td>2 [2]</td>
+      <td>Light Density</td>
+      <td>9</td>
+      <td>2</td>
+      <td>AE</td>
+      <td>0.5</td>
     </tr>
     <tr>
-      <td class="text-start">Heavy Density</td>
-      <td>7 [2]</td>
-      <td>6 [2]</td>
-      <td>AE [2]</td>
-      <td>4 [2]</td>
+      <td>Medium Density</td>
+      <td>8</td>
+      <td>4</td>
+      <td>AE</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Heavy Density</td>
+      <td>7</td>
+      <td>6</td>
+      <td>AE</td>
+      <td>4</td>
     </tr>
   </tbody>
 </table>
-
 
 *\* No modifiers are applied to this Target Number, except for standard Artillery Support [7].*
 *\*\* All Damage Value groupings represent 5 points of damage each [7].*
