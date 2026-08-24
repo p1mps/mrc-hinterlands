@@ -127,7 +127,7 @@ The force scale determines the maximum force size and associated costs:
 * **Commander:** Each force designates one Commander unit per track (written down, not revealed). No initiative penalty if the Commander is destroyed.
 * **Forced Withdrawal:** Not in effect for player-generated forces. Crippled units may not perform pickup or scan actions. Forces without a company roster (opposing force table units) do use Forced Withdrawal.
 * **Raid:** Mechs carrying Jump MP components must make a PSR at +3 or lose the components. All units carrying components have Run/Flank MP reduced by 1.
-* **Scanning:** A unit within 2 hexes (AS 4") may declare a scan instead of firing. Roll 2d6 in the End Phase — 7+ succeeds. Modifiers: +2 (no physical attack), +2 (Active Probe within 2 hexes), +2 (started within 2 hexes), –2 (used jump/VTOL MP), –2 (fired weapons, unless carrying unjammed Active Probe). A successful scan forces the defender to reveal relevant unit information.
+* **Scanning:** A unit within 2 hexes may declare a scan instead of firing. Roll 2d6 in the End Phase — 7+ succeeds. Modifiers: +2 (no physical attack), +2 (Active Probe within 2 hexes), +2 (started within 2 hexes), –2 (used jump/VTOL MP), –2 (fired weapons, unless carrying unjammed Active Probe). A successful scan forces the defender to reveal relevant unit information.
 
 ---
 
@@ -424,12 +424,12 @@ At the start of each track, the primary player rolls 1d6 to determine possible c
     <tr><td>Repair (Crippled)</td><td>Tonnage × 3 (IS) / × 4.5 (Mixed/Clan)</td></tr>
     <tr><td>Repair (Destroyed)</td><td>Tonnage × 5 (IS) / × 7.5 (Mixed/Clan)</td></tr>
     <tr><td>Reconfigure Unit</td><td>Tonnage / 2</td></tr>
-    <tr><td>Purchase Mech</td><td>Battle Value (Point Value × 40)</td></tr>
-    <tr><td>Sell a Mech</td><td>Battle Value / 2 (Point Value × 20)</td></tr>
+    <tr><td>Purchase Mech</td><td>Battle Value</td></tr>
+    <tr><td>Sell a Mech</td><td>Battle Value / 2</td></tr>
     <tr><td>Rearm (per ton of ammo)</td><td>10 (20 for special ammo)</td></tr>
     <tr><td>Hire Unnamed MechWarrior/Crew</td><td>100</td></tr>
     <tr><td>Hire Named MechWarrior/Crew</td><td>150</td></tr>
-    <tr><td>Heal Pilot</td><td>30 per Wound box (2 per month for AS)</td></tr>
+    <tr><td>Heal Pilot</td><td>30 per Wound box</td></tr>
     <tr><td>Heal/Replace BA Trooper</td><td>20 per trooper lost</td></tr>
     <tr><td>Clan Doctrine Training</td><td>200</td></tr>
   </tbody>
@@ -595,7 +595,7 @@ Big Leagues lets you join special mercenary commands with unique requirements, b
 
 Regular military commands (House/Clan) can also use this option instead of standard mercenary play:
 
-* **Reserve Forces:** House/Clan forces get +50% BV/PV for reserve forces.
+* **Reserve Forces:** House/Clan forces get +50% BV for reserve forces.
 * **Support Points:** Regular military commands get 300 SP per Scale.
 * **No Negotiation:** Regular military commands have no contract terms or negotiation.
 * **Promotion:** 0–2 Reputation = Scale 1 (Sergeant); 3–10 = Scale 2 (Lieutenant); 11–20 = Scale 3 (Captain).
