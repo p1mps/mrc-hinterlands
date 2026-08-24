@@ -617,6 +617,12 @@ Roll 1D6 on the Track Intensity Table to determine the sequence of numbers separ
 * **No automatic full recovery:** Standard rules state that any repaired unit is unavailable for the next track in that same month.
 * **Repair Time Rolls:** Roll 2D6 on the Repair Time Table between the two tracks to determine if you have time for Hasty Repairs, Standard Repairs, Extended Repairs, or All the Time in the World.
 
+#### Repair Time Rolls
+* **Roll of 2 (Hasty Repairs):** Your techs are completely rushed. There is only enough time to perform armor repairs and rearm your ammunition. Both you and your opponent are forced to use the exact same units from the previous track where possible (though truly destroyed units can be replaced up to your campaign's Scale limits).
+* **Roll of 3–9 (Standard Repairs):** You must abide by the standard repair time rules. Any of your units undergoing structure, critical, or crippling repairs are unavailable for the second track. Only Mechs undergoing armor-only repairs or rearming can deploy.
+* **Roll of 10–11 (Extended Repairs):** Your techs catch a break. In addition to standard armor repairs, any non-crippled and non-destroyed unit repairs (such as fixing structure damage or critical hits) can be fully completed before the second track begins. This allows those repaired units to deploy immediately instead of sitting out.
+* **Roll of 12 (All the Time in the World):** The ultimate stroke of logistical luck. Your techs have unlimited time: all non-destroyed unit repairs (even repairing heavily crippled Mechs) and all MechWarrior wounds healed for that month are fully resolved before the next track begins.
+
 ---
 
 ## 18. Random Contracts (Dobless Information Services)
