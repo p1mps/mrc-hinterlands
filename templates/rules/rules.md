@@ -517,15 +517,15 @@ The player with the lower average handicap earns a BSP bonus equal to the handic
 </table>
 
 #### Edge tokens handicap
-* Edge Tokens: 2 Handicap
-* Edge Tokens: 5 Handicap
-* Edge Tokens: 8 Handicap
-* Edge Tokens: 12 Handicap
-* Edge Tokens: 17 Handicap
-* Edge Tokens: 22 Handicap
-* Edge Tokens: 29 Handicap
-* Edge Tokens: 36 Handicap
-* Edge Tokens: 44 Handicap
+* 2 Edge Tokens: 2 Handicap
+* 3 Edge Tokens: 5 Handicap
+* 4 Edge Tokens: 8 Handicap
+* 5 Edge Tokens: 12 Handicap
+* 6 Edge Tokens: 17 Handicap
+* 7 Edge Tokens: 22 Handicap
+* 8 Edge Tokens: 29 Handicap
+* 9 Edge Tokens: 36 Handicap
+* 10 Edge Tokens: 44 Handicap
 
 
 ---
