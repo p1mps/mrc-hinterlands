@@ -648,3 +648,259 @@ Roll 1D6 for the number of jumps from Almotacen, then 1D6 for the specific syste
 ### 18.2 Contract Generator
 
 Contracts are generated in order: contract type → employer → pay rate → salvage rights → support terms → transportation → command rights. The employer type adds or subtracts steps from the rolled result.
+
+### 19 BSP
+
+---
+
+#### 19.1 Battlefield Support Table
+
+<table class="table table-sm table-bordered mb-0">
+  <thead class="table-secondary text-center">
+    <tr>
+      <th class="text-start">Support Type</th>
+      <th>Target Number*</th>
+      <th>Damage Value Groupings**</th>
+      <th>Damage Type</th>
+      <th>BSP Cost</th>
+    </tr>
+  </thead>
+  <tbody class="text-center">
+    <!-- Offensive Aerospace Support -->
+    <tr>
+      <td class="text-start" colspan="5"><strong>Offensive Aerospace Support</strong></td>
+    </tr>
+    <tr>
+      <td class="text-start">Light Strike</td>
+      <td>5 [2]</td>
+      <td>2 [2]</td>
+      <td>N/A</td>
+      <td>2 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start">Light Bombing&dagger;</td>
+      <td>5 [2]</td>
+      <td>3 [2]</td>
+      <td>AE [2]</td>
+      <td>3 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start">Heavy Strike</td>
+      <td>6 [2]</td>
+      <td>4 [2]</td>
+      <td>N/A</td>
+      <td>3 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start">Heavy Bombing&dagger;</td>
+      <td>7 [2]</td>
+      <td>6 [2]</td>
+      <td>AE [2]</td>
+      <td>4 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start">Strafing</td>
+      <td>7 [2]</td>
+      <td>3 [2]</td>
+      <td>N/A</td>
+      <td>5 [2]</td>
+    </tr>
+
+    <!-- Defensive Aerospace Support -->
+    <tr>
+      <td class="text-start" colspan="5"><strong>Defensive Aerospace Support</strong></td>
+    </tr>
+    <tr>
+      <td class="text-start">Light Air Cover</td>
+      <td>&mdash;</td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>1 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start"><em>&mdash; Light Strike</em></td>
+      <td>3 [2]</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="text-start"><em>&mdash; Light Bombing</em></td>
+      <td>4 [2]</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="text-start"><em>&mdash; Heavy Strike</em></td>
+      <td>9 [2]</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="text-start"><em>&mdash; Strafing/Heavy Bombing</em></td>
+      <td>11 [2]</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="text-start">Heavy Air Cover</td>
+      <td>&mdash;</td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>2 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start"><em>&mdash; Light Strike/Bombing</em></td>
+      <td>9 [2]</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="text-start"><em>&mdash; Heavy Strike</em></td>
+      <td>5 [2]</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="text-start"><em>&mdash; Strafing/Heavy Bombing</em></td>
+      <td>6 [2]</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <!-- Artillery Support -->
+    <tr>
+      <td class="text-start" colspan="5"><strong>Artillery Support&dagger;</strong></td>
+    </tr>
+    <tr>
+      <td class="text-start">Thumper</td>
+      <td>8 [2]</td>
+      <td>3/1&dagger;&dagger; [2]</td>
+      <td>AE [2]</td>
+      <td>3 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start">Sniper</td>
+      <td>8 [2]</td>
+      <td>4/2&dagger;&dagger; [2]</td>
+      <td>AE [2]</td>
+      <td>4 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start">Long Tom</td>
+      <td>8 [2]</td>
+      <td>5/3/1&dagger;&dagger; [2]</td>
+      <td>AE [2]</td>
+      <td>6 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start"><em>(Copperhead)</em></td>
+      <td>&Dagger; [2]</td>
+      <td>&Dagger; [2]</td>
+      <td>N/A</td>
+      <td>&Dagger; [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start"><em>(Illumination/Smoke)</em></td>
+      <td>8 [2]</td>
+      <td>&Dagger;&Dagger; [2]</td>
+      <td>N/A</td>
+      <td>&Dagger;&Dagger; [2]</td>
+    </tr>
+
+    <!-- Minefield Support -->
+    <tr>
+      <td class="text-start" colspan="5"><strong>Minefield Support</strong></td>
+    </tr>
+    <tr>
+      <td class="text-start">Light Density</td>
+      <td>9 [2]</td>
+      <td>2 [2]</td>
+      <td>AE [2]</td>
+      <td>0.5 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start">Medium Density</td>
+      <td>8 [2]</td>
+      <td>4 [2]</td>
+      <td>AE [2]</td>
+      <td>2 [2]</td>
+    </tr>
+    <tr>
+      <td class="text-start">Heavy Density</td>
+      <td>7 [2]</td>
+      <td>6 [2]</td>
+      <td>AE [2]</td>
+      <td>4 [2]</td>
+    </tr>
+  </tbody>
+</table>
+
+
+*\* No modifiers are applied to this Target Number, except for standard Artillery Support [7].*
+*\*\* All Damage Value groupings represent 5 points of damage each [7].*
+*† Scatters if the attack roll misses [7].*
+*†† Affects multiple hexes (Target / Adjacent / Radius-2) [7].*
+*‡ See Copperhead special rules [7].*
+*‡‡ See Illumination/Smoke special rules [7].*
+
+---
+
+#### 19.3 Core Support Mechanics
+
+##### 19.4 Force Construction and Scaling
+*   **BSP Allotments:** If a scenario does not define support budgets, players select one of the following starting tiers by mutual agreement [1]:
+    *   *Extraction Raid Support:* 5 BSPs [8]
+    *   *Objective Raid Support:* 12 BSPs [8]
+    *   *Diversionary Raid Support:* 20 BSPs [8]
+    *   *Planetary Assault Support:* 35 BSPs [8]
+*   **Acreage Scaling:** These rules are designed for a standard four-mapsheet playing area (31 x 35 hexes) [9]. For every two additional mapsheets added to the play area, increase each player's starting BSP budget by 50% [9].
+*   **One-Time Use:** Each purchased instance of a support type is usable exactly once per game, whether it hits or misses (with the exception of minefields, which remain active until depleted) [9]. Unspent BSPs are discarded once play begins [10].
+*   **Damage Resolution:** All damage value groupings consist of 5 points of damage each [11]. If an attack hits, a separate hit location roll is made for each individual grouping [11].
+*   **Attack Direction:** For successful aerospace strikes and direct artillery hits, roll 1D6 to determine the direction of impact: a result of 1–4 strikes the target's front armor, while 5–6 strikes the rear armor [12].
+*   **Environmental Restrictions:** Units completely submerged in Depth 2+ water cannot be targeted by any battlefield support attacks [13]. Any scattered hits or area-effect damage that lands on submerged units is ignored [13]. Standing targets in Depth 1 water resolve hits using the Punch Hit Location Table [14].
+
+---
+
+#### 19.5. Support Category Rules
+
+##### 1. Offensive Aerospace Support (Strikes, Bombings, and Strafing)
+*   **Strikes (Light/Heavy):** Successful attacks directly strike the targeted hex [14]. Unsuccessful attacks have no effect [15].
+*   **Bombings (Light/Heavy) [AE]:** Area-effect damage [15]. If the target hex is a building currently occupied by a 'Mech, the full damage is applied simultaneously to both the building and the unit [15].
+    *   *Scattering on Miss:* If the attack roll fails, calculate the Margin of Failure (MoF) [15]. The bomb scatters a number of hexes equal to the MoF [15]. Roll 1D6 and consult the Scatter Diagram to determine the direction of the scatter [16]. Any unit occupying the scatter destination hex (friendly or enemy) is automatically hit, with the attack direction treated as originating from the originally targeted hex [16].
+*   **Strafing:** The attacker designates a straight line of 1 to 5 consecutive hexes [16]. The attacker makes a separate attack roll against TN 7 for every unit currently occupying those designated hexes [16]. If successful, the target takes 3 groupings of 5 damage each [11, 17]. Misses in any single hex do not affect attacks in other hexes along the strafing line [18].
+
+##### 2. Defensive Aerospace Support (Air Cover)
+Defensive Air Cover is used to intercept and nullify declared enemy Offensive Aerospace attacks before they resolve [18, 19].
+*   **Resolution Sequence:** After the attacker declares all Offensive Aerospace attacks for the turn, the defender may reveal their Air Cover selection [18, 19]. Before the attacker makes any rolls, the defender rolls 2D6 against the target number corresponding to the declared attack type [18, 19].
+*   **Successful Roll:** The target Offensive Aerospace attack is completely nullified and discarded with no effect [20, 21].
+*   **Unsuccessful Roll:** The attacker resolves their Offensive Aerospace attack as normal [20, 22]. Multiple air covers can be assigned to a single attack to maximize the chance of interception, but all assignments must be declared before rolling [20, 21].
+
+##### 3. Artillery Support [AE]
+*   **Pre-Designated Hexes:** Before the game begins, each player secretly selects up to 5 pre-plotted target hexes for each purchased Artillery Support selection [22]. Artillery attacks launched against these pre-plotted hexes hit automatically without requiring an attack roll [22]. No player may place more than 5 pre-plotted target hexes on any single mapsheet [23].
+*   **Off-Target Firing:** To target a non-pre-designated hex, the player must secretly write down the target hex during the Weapon Attack Phase [24]. The shells arrive during the following turn's Weapon Attack Phase [24].
+*   **Spotting:** If a friendly unit spots the target hex on both the turn of declaration and the turn of arrival, apply a -2 Target Number modifier to the attack [24]. If the spotter fires its own weapons during the turn the artillery arrives, the spotter suffers a +1 attack penalty, and the artillery only receives a -1 modifier [25].
+*   **Area-Effect Resolution:**
+    *   *Thumper:* Applies 3 groupings to the target hex, and 1 grouping to all adjacent hexes [2, 25].
+    *   *Sniper:* Applies 4 groupings to the target hex, and 2 groupings to adjacent hexes [2, 25].
+    *   *Long Tom:* Applies 5 groupings to the target hex, 3 groupings to adjacent hexes, and 1 grouping to hexes at Radius-2 [2, 25].
+    *   *Adjacent Damage Direction:* Damage applied to adjacent and Radius-2 hexes resolves its hit direction as originating from the central target hex [26]. If a targeted building contains 'Mechs, the full damage is applied simultaneously to both the building and the units [26].
+*   **Scattering on Miss:** Fails scatter one hex per point of Margin of Failure (MoF) [27]. Roll 1D6 and compare to the Scatter Diagram to determine the direction of scatter [27]. Any units, buildings, or terrain in the final hex are automatically hit [27].
+*   **Variant Munitions:**
+    *   *Copperhead:* Functions as an Arrow IV homing missile [28]. It automatically hits any target successfully designated by a friendly Target Acquisition Gear (TAG) system [28, 29]. Damage groupings are reduced to: Thumper (1), Sniper (2), Long Tom (3) [28].
+    *   *Illumination:* Purchased at half BSP cost (rounding down) [7]. Instead of damage, it negates all light-based targeting modifiers in its area of effect for the remainder of the battle [7].
+    *   *Smoke:* Purchased at half BSP cost (rounding down) [7]. Instead of damage, it fills the target and adjacent hexes with heavy smoke rising 2 levels high [30]. The smoke remains in play for the remainder of the battle [30].
+
+##### 4. Minefield Support [AE]
+*   **Deployment:** Written down secretly before the game begins [30]. A player can designate any full hex on the map (excluding water) [30]. A maximum of 6 Damage groupings (30 damage) can be placed in a single hex by a single player [31]. Both players can have active minefields in the same hex [31].
+*   **Triggering:** Minefields detonate immediately when a unit enters the hex along the ground (including skidding, displacement, or landing a combat drop) [32, 33]. Jumping units only trigger minefields if they end their movement phase in the mined hex [32].
+*   **Resolution:** Upon triggering, the controlling player rolls 2D6 against the minefield's density TN [31]. If successful, damage is resolved using the front column of the Kick Location Table [32].
+*   **Depletion and Persistence:** Each time a minefield hits a target, its strength is permanently reduced by 1 grouping [32]. If its groupings are reduced to 0, the minefield is removed [32]. If the minefield attack misses, it does not deplete and remains active in the hex [34].
+*   **Detection:** A unit mounting an active probe that passes within the probe's radius of an active enemy minefield forces a detection roll [34]. On a result of 10+, the minefield is permanently revealed [34].
+*   **Clearing:** A player can intentionally attempt to clear a minefield hex using direct fire from an LRM-20, Rocket Launcher 20, MRM-20/30/40, ATM 9/12, or Artillery [35]. On a 2D6 roll of 5+, the minefield's strength is reduced to 0 [35]. If standard artillery attacks hit a mined hex (even if not declared as a clearing attempt), roll 2D6; on a 10+, the minefield is cleared [35]. Cleared minefields do not detonate [35].
