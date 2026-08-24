@@ -46,6 +46,7 @@ class SalvagedMechController extends BaseController
         $basePrices = [];
         $salvageRightsPcts = [];
         $acquisitionCosts = [];
+        $sellValues = [];
         foreach ($mechanList as $mechan) {
             $bvCost = $mechan->getBvCost() ?? 0;
 
@@ -64,6 +65,10 @@ class SalvagedMechController extends BaseController
             }
             $adjustedCost += $mechan->getRepairCost() ?? 0;
             $acquisitionCosts[$mechan->getId()] = $adjustedCost;
+
+            // Sell value: floor(bvCost / 2) * (salvageRightsPercent / 100)
+            // Only positive salvage rights allow selling
+            $sellValues[$mechan->getId()] = $salvageCalc->calculateSpPayout($basePrice, $salvageRightsPct);
         }
 
         return $this->render('salvaged_mech/index.html.twig', [
@@ -73,6 +78,7 @@ class SalvagedMechController extends BaseController
             'basePrices' => $basePrices,
             'salvageRightsPcts' => $salvageRightsPcts,
             'acquisitionCosts' => $acquisitionCosts,
+            'sellValues' => $sellValues,
         ]);
     }
 
@@ -321,12 +327,6 @@ class SalvagedMechController extends BaseController
 
         if (!$mechan) {
             throw $this->createNotFoundException('Salvaged Mech not found.');
-        }
-
-        // Check if the mech is already acquired, sold, or taken SP
-        if ($mechan->getContractId() !== null) {
-            $this->addFlash('error', 'Cannot sell: This mech has already been acquired.');
-            return $this->redirectToRoute('app_salvaged_mech_index');
         }
 
         if ($mechan->getSpTaken() !== null) {
