@@ -27,31 +27,42 @@ class SalvagedMechService
         return $this->em->getRepository(SalvagedMech::class)->find($id);
     }
 
-    /**
-     * Create a SalvagedMech and optionally attach it to the active contract.
-     *
-     * For non-scrapyard mechs, if an active contract exists, the mech is attached
-     * to that contract and its salvageRightsPercent is set based on the contract's
-     * salvage rights terms.
-     *
-     * @param SalvagedMech $mechan The mech to create
-     * @param MercenaryCompany $company The company that owns the mech
-     * @param bool $attachToContract Whether to attempt attachment to active contract (default: true for non-scrapyard)
-     * @param ?string $techBase Optional tech base override (defaults to IS)
-     * @param ?string $damageState Optional damage state override (defaults to Crippled)
-     *
-     * @return ?array Resolved contract info if attached, null otherwise
-     *   ['contract' => Contract, 'salvageRightsPercent' => int|null, 'adjustedCost' => int]
-     */
     public function createMech(
         SalvagedMech $mechan,
-        MercenaryCompany $company
+        MercenaryCompany $company,
+        bool $attachToContract = true,
+        ?string $techBase = null,
+        ?string $damageState = null,
     ): ?array {
         $mechan->setCompany($company);
+
+        // Normalize: strip non-alphanumeric, uppercase → match backed enum values
+        $normalize = fn(string $s): string => strtoupper(preg_replace('/[^a-zA-Z0-9]/', '', $s));
+
+        // Apply optional overrides from controller
+        if ($techBase !== null) {
+            $mechan->setTechBase(match($normalize($techBase)) {
+                'IS' => \App\Enum\TechBase::IS,
+                'CLAN' => \App\Enum\TechBase::Clan,
+                'MIXED' => \App\Enum\TechBase::Mixed,
+                default => null,
+            });
+        }
+
+        if ($damageState !== null) {
+            $mechan->setDamageState(match($normalize($damageState)) {
+                'ARMORONLY' => \App\Enum\DamageState::ArmorOnly,
+                'STRUCTURAL' => \App\Enum\DamageState::Structural,
+                'CRIPPLED' => \App\Enum\DamageState::Crippled,
+                'DESTROYED' => \App\Enum\DamageState::Destroyed,
+                default => null,
+            });
+        }
+
         $this->em->persist($mechan);
 
         // For non-scrapyard mechs, attempt to attach to active contract
-        if (!$mechan->isScrapyard() && $this->contractResolver !== null && $this->salvageRightsParser !== null) {
+        if (!$mechan->isScrapyard() && $attachToContract && $this->contractResolver !== null && $this->salvageRightsParser !== null) {
             $contract = $this->contractResolver->resolveActiveContract($company);
 
             if ($contract !== null) {
@@ -68,7 +79,8 @@ class SalvagedMechService
                 $adjustedCost = $this->salvageCalc->calculateAcquisitionCost($baseSalvage, $salvageRightsPercent);
 
                 $this->em->persist($contract);
-                $this->em->persist($mechan);
+
+                $this->em->flush();  // Flush BEFORE returning so the mech is saved to DB
 
                 return [
                     'contract' => $contract,
