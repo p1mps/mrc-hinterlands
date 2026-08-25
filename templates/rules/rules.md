@@ -1016,7 +1016,11 @@ While not fully independent hiring halls, both the upstart Tamar Pact and the se
 
 ---
 
+---
+
 ## Rolling Opposing Forces
+
+---
 
 # Hinterlands Campaign: Complete Opposing Force (OpFor) & Arena Generation Rules
 
@@ -1030,8 +1034,8 @@ This section provides the definitive mechanical framework for generating randomi
 ### 1. Opposing Force Type Modifiers
 *When generating an OpFor, roll 1D6 and apply the following modifiers based on the force type. This determines the baseline weight and capability of the deployed unit.*
 
-<table class="table">
-  <thead>
+<table class="table table-bordered">
+  <thead class="table-secondary">
     <tr><th>Modifier</th><th>Force Type</th></tr>
   </thead>
   <tbody>
@@ -1049,8 +1053,8 @@ This section provides the definitive mechanical framework for generating randomi
 *These tables are used to randomly generate a Mercenary Opposing Force's formation type and skill ratings.*
 
 **Random Formation Type Table**
-<table class="table">
-  <thead>
+<table class="table table-bordered">
+  <thead class="table-secondary">
     <tr><th>2D6 Roll</th><th>Formation</th><th>2D6 Roll</th><th>Formation</th></tr>
   </thead>
   <tbody>
@@ -1062,8 +1066,8 @@ This section provides the definitive mechanical framework for generating randomi
 </table>
 
 **Random Skill Rating Table**
-<table class="table">
-  <thead>
+<table class="table table-bordered">
+  <thead class="table-secondary">
     <tr><th>Experience Base</th><th>1D6 Roll Result: Unit Experience Rating (Skill Rating)</th></tr>
   </thead>
   <tbody>
@@ -1081,7 +1085,7 @@ This section provides the definitive mechanical framework for generating randomi
 
 ### Mercenary / Pirate (Draconis Reach)
 **Scale 1**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>MON-96 Mongoose (3/4), SDR-9KA Venom (3/4), 2x J. Edgar X-Pulse Vet, 2x Hover APC, 2x Foot Infantry Vet, SDR-8X Spider (3/4), Light Bombing.</td></tr>
     <tr><td><strong>2</strong></td><td>NX-100 Nyx (4/5), CVR-A1 Cadaver (4/5), 2x H-8 Warrior, LCT-7V2 Locust (4/5), Hawk Moth II, ALM-10D Fireball (4/5), 2x Marten, 2x Jump Infantry, 2x Light Bombing.</td></tr>
@@ -1093,7 +1097,7 @@ This section provides the definitive mechanical framework for generating randomi
 </table>
 
 **Scale 2**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>BLD-XX Blade (3/4), RD-1R Road Runner (3/4), Baboon (Howler) (3/4), 2x Scimitar Mk II Vet, V4-LNT-J3 Valiant (3/4), 2x Harasser Vet, HM-1 Hitman (3/4), Maxim (BA Factory) Vet, 2x IS Standard BA Vet, Sniper, Heavy Bombing, Light Bombing.</td></tr>
     <tr><td><strong>2</strong></td><td>ROLL x2 Scale 1.</td></tr>
@@ -1104,7 +1108,7 @@ This section provides the definitive mechanical framework for generating randomi
 </table>
 
 **Scale 3**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>ABS-3T Anubis (3/4), BLD-XL Blade (3/4), Locust IIC 3 (3/4), 2x Condor (Ultra) Vet, STL-2D Stealth (3/4), 2x J. Edgar (Light PPC) Vet, Maxim (BA Factory) Vet, MON-96 Mongoose (3/4), CLN-7V Chameleon (3/4), 2x Marten Vet, 2x IS Standard BA Vet, 2x Jump Infantry Vet, Long Tom, Sniper, 4x Light Air Cover, SDR-9KC Venom (3/4).</td></tr>
     <tr><td><strong>2</strong></td><td>ROLL x1 Scale 2, ROLL x1 Scale 1.</td></tr>
@@ -1117,7 +1121,7 @@ This section provides the definitive mechanical framework for generating randomi
 
 ### Mercenary / Pirate (Hinterlands)
 **Scale 1**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>FLE-17 Flea (4/5), STG-6G Stinger (4/5), CDA-3M Cicada (4/5), GAL-102 Galleon, JVN-11D Javelin (4/5), COM-2Dr Commando (4/5), 2x APC Tracked, 2x Foot Infantry, Light Airstrike, Heavy Airstrike.</td></tr>
     <tr><td><strong>2</strong></td><td>COM-8S Commando (4/5), SDR-7K Spider (4/5), CN9-Da Centurion (4/5), HER-5SA Hermes II (4/5), 3x APC Tracked, 3x IS Battle Armor Squad, Light Bombing, 2x Light Air Cover.</td></tr>
@@ -1130,7 +1134,7 @@ This section provides the definitive mechanical framework for generating randomi
 
 ### Capellan Confederation
 **Scale 1**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>DOL-1A1 Dola (3/4), WSP-8T Wasp (3/4), STG-6G Stinger (3/4), Hawk Moth II Vet, MEB-13 Ebony (3/4), Hover APC, IS Standard BA Vet, Light Airstrike, Light Air Cover.</td></tr>
     <tr><td><strong>2</strong></td><td>FLE-21 Flea (4/5), LCT-7V2 Locust (4/5), DOL-1A1 Dola (4/5), 2x Pegasus (Upgrade), MEB-9 Ebony (4/5), Hover APC, IS Standard BA, 2x Light Bombing.</td></tr>
@@ -1142,7 +1146,7 @@ This section provides the definitive mechanical framework for generating randomi
 
 ### Draconis Combine
 **Scale 1**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>RJN301-F Fujin (3/4), NX-80C Nyx (3/4), 2x Hawk Moth II Vet, Light Bombing.</td></tr>
     <tr><td><strong>2</strong></td><td>HM-1r Hitman (4/5), SDR-9K Venom, KBO-7A Kabuto (4/5), 2x J. Edgar (Light PPC), JR7-N Jenner (4/5), 2x APC Hover, 2x Foot Infantry, 2x Light Air Cover.</td></tr>
@@ -1155,7 +1159,7 @@ This section provides the definitive mechanical framework for generating randomi
 
 ### Federated Suns
 **Scale 1**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>RSN-2 Rattlesnake II (3/4), H-8 Warrior Vet, OSR-3D Osiris (3/4), Pegasus (Upgrade) Vet, 2x Light Airstrike, 2x Light Air Cover.</td></tr>
     <tr><td><strong>2</strong></td><td>ALM-10D Fireball (4/5), JVN-12N Javelin (4/5), 2x Fox Armored Car, Marten, PY-SR10 Preyseeker (4/5), OSR-3D Osiris (4/5), IS Standard BA, Light Bombing, Light Airstrike.</td></tr>
@@ -1167,7 +1171,7 @@ This section provides the definitive mechanical framework for generating randomi
 
 ### Raven Alliance
 **Scale 1**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>Baboon (Howler) (3/4), 2x Enyo Vet, CVR-A1 Cadaver (3/4), NTK-2Q Night Hawk (3/4), 2x Light Airstrike, Heavy Air Cover, Light Air Cover.</td></tr>
     <tr><td><strong>2</strong></td><td>NTK-2Q Night Hawk (4/5), WSP-3A Wasp (4/5), 2x GAL-100 Galleon, Maxim, 2x Jump Infantry, LCT-1V Locust (4/5), MON-66b Mongoose (4/5), Stinger IIC (4/5), Light Bombing, Light Airstrike, 2x Light Air Cover.</td></tr>
@@ -1180,7 +1184,7 @@ This section provides the definitive mechanical framework for generating randomi
 
 ### Lyran Commonwealth / Tamar Pact / Vesper Marches
 **Scale 1**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>LCT-7S Locust (4/5), COM-7S Commando (3/4), VLK-QDD Valkyrie (4/5), 2x Hover APC, SHD-5R Shadow Hawk (4/5), 2x Skulker, 2x Jump Infantry, Light Airstrike, Light Bombing, Light Air Cover.</td></tr>
     <tr><td><strong>2</strong></td><td>VT-5Sr Vulcan (3/4), STN-6S Sentinel (4/5), 2x GAL-100 Galleon, NGS-4S Nightsky (4/5), Condor, Maxim, IS Battle Armor Squad.</td></tr>
@@ -1192,7 +1196,7 @@ This section provides the definitive mechanical framework for generating randomi
 
 ### Jade Falcon
 **Scale 1**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>Baboon (Howler) (3/4), Stinger C (4/5), 3x APC Hover, 3x Elemental Point, Locust IIC 3 (4/5), Vixen (Incubus) 7 (4/5), 2x Light Airstrike, 2x Light Air Cover.</td></tr>
     <tr><td><strong>2</strong></td><td>Locust IIC (4/5), Shadow Hawk IIC (3/4), 3x Light Airstrike, 1x Light Air Cover.</td></tr>
@@ -1205,7 +1209,7 @@ This section provides the definitive mechanical framework for generating randomi
 
 ### Clan Hell's Horses
 **Scale 1**
-<table class="table">
+<table class="table table-bordered">
   <tbody>
     <tr><td><strong>1</strong></td><td>Locust IIC 3 (3/4), 2x Hover APC, Enyo, MCY-99 Mercury (4/5), Stinger C 2 (4/5), Vixen (Incubus) 7 (4/5), Elemental III Point, Jump Infantry Vet, Light Airstrike, 2x Light Bombing.</td></tr>
     <tr><td><strong>2</strong></td><td>Pack Hunter (3/4), Hephaestus Prime, Drillson C, Griffin C (4/5), Elemental III Point, Strafing, Light Air Cover.</td></tr>
@@ -1222,8 +1226,8 @@ This section provides the definitive mechanical framework for generating randomi
 *For arena duels, Solaris VII matches, or underground Hinterland fighting circuits, replace standard OpFor tables with these Gladiator generation tables to represent specialized duelists.*
 
 **Gladiator Experience Level Table**
-<table class="table">
-  <thead>
+<table class="table table-bordered">
+  <thead class="table-secondary">
     <tr><th>2D6</th><th>Experience Level</th></tr>
   </thead>
   <tbody>
@@ -1236,8 +1240,8 @@ This section provides the definitive mechanical framework for generating randomi
 </table>
 
 **Gladiator Faction Table**
-<table class="table">
-  <thead>
+<table class="table table-bordered">
+  <thead class="table-secondary">
     <tr><th>2D6</th><th>Faction</th></tr>
   </thead>
   <tbody>
@@ -1249,8 +1253,8 @@ This section provides the definitive mechanical framework for generating randomi
 </table>
 
 **Gladiator Skills Level Table (Gunnery/Piloting)**
-<table class="table">
-  <thead>
+<table class="table table-bordered">
+  <thead class="table-secondary">
     <tr><th>1D6</th><th>Regular</th><th>Veteran</th><th>Elite</th><th>Heroic</th><th>Legendary</th></tr>
   </thead>
   <tbody>
@@ -1261,8 +1265,8 @@ This section provides the definitive mechanical framework for generating randomi
 </table>
 
 **Gladiator Edge Abilities Table (Number of Edge Uses)**
-<table class="table">
-  <thead>
+<table class="table table-bordered">
+  <thead class="table-secondary">
     <tr><th>1D6</th><th>Regular</th><th>Veteran</th><th>Elite</th><th>Heroic</th><th>Legendary</th></tr>
   </thead>
   <tbody>
