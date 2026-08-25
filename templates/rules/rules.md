@@ -17,7 +17,7 @@
 
 ## League Play Structure
 
-* **Monthly Contracts:** Each month a Hot Spot contract is posted in Discord. Players pair up, choose one of the two opposing contracts, and complete it. Alternatively, roll a random contract via Dobless Information Services or the MRC Contract Generator.
+* **Monthly Contracts:** Each month 4 Hot Spot contracts are generated. Player who has the highest warchest picks first then the other players follow. Players can generate opposing contracts if they wanna challenge a particular player
 * **Contract Limit:** A company may only receive credit for one contract per month.
 * **Downtime:** After each contract, players receive one month of downtime at a Hiring Hall of their choice. Downtime at a Hiring Hall costs a flat 50 SP regardless of scale.
 * **Overtime (Taking One for the Team):** If contracts for the month are complete, players may use the Taking One for the Team rules to run additional contracts with a new mercenary company.
