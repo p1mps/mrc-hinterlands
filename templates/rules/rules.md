@@ -998,18 +998,3 @@ Roll **2D6** once per month to recruit from Kandersteg's local talent pool:
 *   **Red Royal (11 on 2D6)**: John Sanders prefers his theatrical stage name, "Red Royal." He pilots a bright red **King Crab KGC-0000** (Gunnery 4, Piloting 4; Alpha Strike: Skill 4). Demands **100 SP per track**.
     *   *Terms*: He is willing to permanently join your command if he participates in at least one successful track and you pay **500 SP** to upgrade his "Red King" to a Star League-spec **KGC-000**.
 *   **Erin Searcy (12 on 2D6)**: An eager pilot looking to prove her skills. Pilots a **Blackjack BJ-5** (Gunnery 3, Piloting 4; Alpha Strike: Skill 3) and possesses the **Sniper** Special Pilot Ability (changes long-range modifiers to +2 and medium-range modifiers to +1). Demands **150 SP per track**.
-
----
-
-### Galatea (Support Rating: A)
-The legendary **"Mercenary's Star"** remains the largest, most prestigious, and highest-rated hiring hall in the Inner Sphere. It saw a massive economic boom following the collapse of the Republic of the Sphere, as thousands of dispossessed ex-Republic soldiers flooded the market. It hosts the headquarters of the **Mercenary Review and Bonding Commission (MRBC)** and the **Mercenaries' Guild**, offering unparalleled training facilities, proving grounds, and elite technical services.
-
----
-
-### Arc-Royal (Rebuilding)
-Historically the premier hub for hiring mercenary forces to combat the Clans, its legendary facilities were entirely leveled during the Jade Falcon occupation. Under the leadership of Grand Duchess Callandre Kell, the Arc-Royal Liberty Coalition is actively re-establishing the hiring hall in Old Connaught. Until those facilities are complete, mercenary operations are handled out of New Hannover under the shadow of the Kell Refit Facility. It welcomes any mercenaries willing to take contracts against Clan Hell's Horses or Clan Jade Falcon.
-
----
-
-### Tamar Pact and Vesper Marches Recruiting Posts
-While not fully independent hiring halls, both the upstart Tamar Pact and the seceded Vesper Marches maintain dedicated recruiting posts on Kandersteg, Arc-Royal, and Galatea to snap up small-to-medium mercenary units to defend their rapidly expanding borders.
