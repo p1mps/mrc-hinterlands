@@ -998,3 +998,849 @@ Roll **2D6** once per month to recruit from Kandersteg's local talent pool:
 *   **Red Royal (11 on 2D6)**: John Sanders prefers his theatrical stage name, "Red Royal." He pilots a bright red **King Crab KGC-0000** (Gunnery 4, Piloting 4; Alpha Strike: Skill 4). Demands **100 SP per track**.
     *   *Terms*: He is willing to permanently join your command if he participates in at least one successful track and you pay **500 SP** to upgrade his "Red King" to a Star League-spec **KGC-000**.
 *   **Erin Searcy (12 on 2D6)**: An eager pilot looking to prove her skills. Pilots a **Blackjack BJ-5** (Gunnery 3, Piloting 4; Alpha Strike: Skill 3) and possesses the **Sniper** Special Pilot Ability (changes long-range modifiers to +2 and medium-range modifiers to +1). Demands **150 SP per track**.
+
+## OpFor tables
+
+### 1. Mercenary/Pirate Opposing Force (Scale 1)
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>1D6 Roll</th><th>Primary Force ('Mech)</th><th>Support Force (Non-'Mech)</th><th>Alternate Force ('Mech)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1–</strong></td><td>MON-96 Mongoose <code>(3/4)</code></td><td>
+      <ul>
+        <li>×2 J. Edgar X-Pulse (Veteran)</li>
+        <li>×2 Hover APC</li>
+        <li>×2 Foot Infantry (Veteran)</li>
+        <li>Light Bombing</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>SDR-9KA Venom <code>(3/4)</code></li>
+        <li>SDR-8X Spider <code>(3/4)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>2</strong></td><td>NX-100 Nyx <code>(4/5)</code></td><td>
+      <ul>
+        <li>2 H-8 Warrior</li>
+        <li>Hawk Moth II</li>
+        <li>×2 Marten</li>
+        <li>×2 Jump Infantry</li>
+        <li>2 Light Bombing</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>CVR-A1 Cadaver <code>(4/5)</code></li>
+        <li>LCT-7V2 Locust <code>(4/5)</code></li>
+        <li>ALM-10D Fireball <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>3</strong></td><td>
+      <ul>
+        <li>CMA-1S Chimera <code>(4/5)</code></li>
+        <li>JVN-12N Javelin <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>2 Vedette (Ultra)</li>
+        <li>Hunter</li>
+        <li>Light Airstrike</li>
+        <li>2 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>ABS-4C Anubis <code>(4/5)</code></li>
+        <li>SDR-8R Spider <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>4</strong></td><td>WVR-8K Wolverine <code>(4/5)</code></td><td>
+      <ul>
+        <li>Hunter</li>
+        <li>Patton (Ultra)</li>
+        <li>Vedette (Ultra)</li>
+        <li>Heavy Bombing</li>
+        <li>Light Bombing</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>GRM-01B Garm <code>(4/5)</code></li>
+        <li>PNT-12A Panther <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>5</strong></td><td>GHR-8K Grasshopper <code>(4/5)</code></td><td>
+      <ul>
+        <li>Manticore (HPPC)</li>
+        <li>Pike (LB-X)</li>
+        <li>GAL-100 Galleon</li>
+        <li>Light Bombing</li>
+        <li>2 Light Air Strike</li>
+      </ul>
+    </td><td>WHM-5L Warhammer <code>(4/5)</code></td></tr>
+    <tr><td><strong>6+</strong></td><td>BZK-D1 Hollander III <code>(3/4)</code></td><td>
+      <ul>
+        <li>Hetzer (Cell) (Veteran)</li>
+        <li>LRM Carrier (Veteran)</li>
+        <li>Heavy Airstrike</li>
+        <li>Light Airstrike</li>
+        <li>Heavy Air Cover</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>BNDR-01 Ar Bandersnatch <code>(3/4)</code></td></tr>
+  </tbody>
+</table>
+
+---
+
+### 2. Capellan Confederation Opposing Force (Scale 1)
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>1D6 Roll</th><th>Primary Force ('Mech)</th><th>Support Force (Non-'Mech)</th><th>Alternate Force ('Mech)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1–</strong></td><td>
+      <ul>
+        <li>DOL-1A1 Dola <code>(3/4)</code></li>
+        <li>WSP-8T Wasp <code>(3/4)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Hawk Moth II (Veteran)</li>
+        <li>Hover APC</li>
+        <li>IS Standard BA (Veteran)</li>
+        <li>Light Airstrike</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>STG-6G Stinger <code>(3/4)</code></li>
+        <li>MEB-13 Ebony <code>(3/4)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>2</strong></td><td>
+      <ul>
+        <li>FLE-21 Flea <code>(4/5)</code></li>
+        <li>LCT-7V2 Locust <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>×2 Pegasus (Upgrade)</li>
+        <li>Hover APC</li>
+        <li>IS Standard BA</li>
+        <li>2 Light Bombing</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>DOL-1A1 Dola <code>(4/5)</code></li>
+        <li>MEB-9 Ebony <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>3</strong></td><td>D9-G10 Duan Gung <code>(4/5)</code></td><td>
+      <ul>
+        <li>GAL-106 Galleon</li>
+        <li>×2 Jump Infantry</li>
+        <li>Heavy Airstrike</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>FLE-21 Flea <code>(4/5)</code></li>
+        <li>LCT-7V Locust <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>4</strong></td><td>YHC-3E Yinghuochong <code>(4/5)</code></td><td>
+      <ul>
+        <li>Bulldog (Plasma)</li>
+        <li>2 Hetzer (Cell)</li>
+        <li>Heavy Bombing</li>
+        <li>2 Light Bombing</li>
+        <li>2 Light Air Cover</li>
+      </ul>
+    </td><td>CTF-5L Cataphract <code>(4/5)</code></td></tr>
+    <tr><td><strong>5</strong></td><td>RFL-7G Rifleman <code>(4/5)</code></td><td>
+      <ul>
+        <li>x2 Schrek (XL)</li>
+        <li>Light Bombing</li>
+        <li>Heavy Bombing</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>STG-6G Stinger <code>(4/5)</code></li>
+        <li>SNK-2Br Snake <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>6+</strong></td><td>VND-4L Vindicator <code>(3/4)</code></td><td>
+      <ul>
+        <li>Manticore (XL) (Veteran)</li>
+        <li>Light Emplacement (Veteran)</li>
+        <li>Heavy Emplacement (Veteran)</li>
+        <li>Strafing</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>RD-1R Roadrunner <code>(3/4)</code></li>
+        <li>STG-5T Stinger <code>(3/4)</code></li>
+      </ul>
+    </td></tr>
+  </tbody>
+</table>
+
+---
+
+### 3. Draconis Combine Opposing Force (Scale 1)
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>1D6 Roll</th><th>Primary Force ('Mech)</th><th>Support Force (Non-'Mech)</th><th>Alternate Force ('Mech)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1–</strong></td><td>RJN-301-F Fujin <code>(3/4)</code></td><td>
+      <ul>
+        <li>2 Hawk Moth II (Veteran)</li>
+        <li>Light Bombing</li>
+      </ul>
+    </td><td>NX-80C Nyx <code>(3/4)</code></td></tr>
+    <tr><td><strong>2</strong></td><td>
+      <ul>
+        <li>HM-1r Hitman <code>(4/5)</code></li>
+        <li>SDR-9K Venom <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>2 J. Edgar (Light PPC)</li>
+        <li>×2 Hover APC</li>
+        <li>×2 Foot Infantry</li>
+        <li>×2 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>KBO-7A Kabuto <code>(4/5)</code></li>
+        <li>JR7-N Jenner <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>3</strong></td><td>
+      <ul>
+        <li>STG-3P Stinger <code>(4/5)</code></li>
+        <li>WFT-2 Wolf Trap (Tora) <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>2 Bulldog (ERLL)</li>
+        <li>2 Vedette (Ultra)</li>
+        <li>Light Bombing</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>HM-1 Hitman <code>(4/5)</code></li>
+        <li>RTX1-OG Raptor <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>4</strong></td><td>AVL-10 Avalanche <code>(4/5)</code></td><td>
+      <ul>
+        <li>×2 Manticore (XL)</li>
+        <li>NK-1C Narukami</li>
+        <li>Heavy Air Strike</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>NX-80 Nyx <code>(4/5)</code></li>
+        <li>Arbalest <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>5</strong></td><td>SHD-3K Shadow Hawk <code>(4/5)</code></td><td>
+      <ul>
+        <li>Tokugawa (MRM) (Veteran)</li>
+        <li>Saracen Mk II (Veteran)</li>
+        <li>Light Air Strike</li>
+        <li>×2 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>CMA-1S Chimera <code>(4/5)</code></li>
+        <li>SDR-7KC Spider <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>6+</strong></td><td>GHR-6K Grasshopper <code>(3/4)</code></td><td>
+      <ul>
+        <li>Behemoth (Kurita Upgrade) (Veteran)</li>
+        <li>Light Air Strike</li>
+        <li>Heavy Air Cover</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>MON-96 Mongoose <code>(3/4)</code></td></tr>
+  </tbody>
+</table>
+
+---
+
+### 4. Federated Suns Opposing Force (Scale 1)
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>1D6 Roll</th><th>Primary Force ('Mech)</th><th>Support Force (Non-'Mech)</th><th>Alternate Force ('Mech)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1–</strong></td><td>RSN-2 Rattlesnake II <code>(3/4)</code></td><td>
+      <ul>
+        <li>H-8 Warrior (Veteran)</li>
+        <li>Pegasus Scout Hover (Upgrade) (Veteran)</li>
+        <li>×2 Light Airstrike</li>
+        <li>×2 Light Air Cover</li>
+      </ul>
+    </td><td>OSR-3D Osiris <code>(3/4)</code></td></tr>
+    <tr><td><strong>2</strong></td><td>
+      <ul>
+        <li>ALM-10D Fireball <code>(4/5)</code></li>
+        <li>JVN-12N Javelin <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>×2 Fox Armored Car</li>
+        <li>Marten</li>
+        <li>IS Standard BA</li>
+        <li>Light Bombing</li>
+        <li>Light Airstrike</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>PY-SR10 Preyseeker <code>(4/5)</code></li>
+        <li>OSR-3D Osiris <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>3</strong></td><td>
+      <ul>
+        <li>BZK-D1 Hollander III <code>(4/5)</code></li>
+        <li>GRM-01A2 Garm <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>×2 Striker</li>
+        <li>Heavy Airstrike</li>
+        <li>Light Bombing</li>
+      </ul>
+    </td><td>CDR-1X Cuirass <code>(4/5)</code></td></tr>
+    <tr><td><strong>4–5</strong></td><td>
+      <ul>
+        <li>ENF-5R Enforcer <code>(4/5)</code></li>
+        <li>SHD-6D Shadow Hawk <code>(4/5)</code></li>
+        <li>WVR-10V2 Wolverine <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Striker</li>
+        <li>Light Bombing</li>
+        <li>Heavy Air Cover</li>
+        <li>Patton (XL)</li>
+        <li>Vedette (Armor)</li>
+        <li>Heavy Air Strike</li>
+        <li>Light Airstrike</li>
+        <li>2 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>GRM-01B Garm <code>(4/5)</code></li>
+        <li>VLK-QDD Valkyrie <code>(4/5)</code></li>
+        <li>WTH-3 Whitworth <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>6+</strong></td><td>HCT-7D Hatchetman <code>(3/4)</code></td><td>
+      <ul>
+        <li>Patton (XL) (Veteran)</li>
+        <li>Alacorn Mk. VII (Veteran)</li>
+        <li>Heavy Airstrike</li>
+        <li>Heavy Air Cover</li>
+      </ul>
+    </td><td>LGB-14C2 Longbow <code>(3/4)</code></td></tr>
+  </tbody>
+</table>
+
+---
+
+### 5. Raven Alliance Opposing Force (Scale 1)
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>1D6 Roll</th><th>Primary Force ('Mech)</th><th>Support Force (Non-'Mech)</th><th>Alternate Force ('Mech)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1–</strong></td><td>Baboon (Howler) <code>(3/4)</code></td><td>
+      <ul>
+        <li>×2 Enyo (Veteran)</li>
+        <li>2 Light Airstrike</li>
+        <li>Heavy Air Cover</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>CVR-A1 Cadaver <code>(3/4)</code></li>
+        <li>NTK-2Q Night Hawk <code>(3/4)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>2</strong></td><td>
+      <ul>
+        <li>NTK-2Q Night Hawk <code>(4/5)</code></li>
+        <li>WSP-3A Wasp <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>2 GAL-100 Galleon</li>
+        <li>Maxim Hover Transport</li>
+        <li>×2 Jump Infantry</li>
+        <li>Light Bombing</li>
+        <li>Light Airstrike</li>
+        <li>×2 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>LCT-1V Locust <code>(4/5)</code></li>
+        <li>MON-66b Mongoose <code>(4/5)</code></li>
+        <li>Stinger IIC <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>3</strong></td><td>
+      <ul>
+        <li>GRF-1N Griffin <code>(4/5)</code></li>
+        <li>MCY-99 Mercury <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>×2 Vedette</li>
+        <li>Tracked APC</li>
+        <li>Foot Infantry</li>
+        <li>Heavy Airstrike</li>
+        <li>Light Airstrike</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>LCT-1V Locust <code>(4/5)</code></li>
+        <li>MON-66b Mongoose <code>(4/5)</code></li>
+        <li>NTK-2Q Night Hawk <code>(4/5)</code></li>
+        <li>Stinger IIC <code>(4/5)</code></li>
+        <li>WSP-3A Wasp <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>4</strong></td><td>MLN-1D Merlin <code>(4/5)</code></td><td>
+      <ul>
+        <li>LRM Carrier</li>
+        <li>×2 Manticore Heavy Tank</li>
+        <li>Sniper</li>
+        <li>Light Airstrike</li>
+        <li>Heavy Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>CVR-T1 Cadaver <code>(4/5)</code></li>
+        <li>WSP-3A Wasp <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>5</strong></td><td>BMB-12D Bombardier <code>(4/5)</code></td><td>
+      <ul>
+        <li>×2 Bulldog Medium Tank</li>
+        <li>LRM Carrier</li>
+        <li>Heavy Bombing</li>
+        <li>×2 Heavy Air Cover</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Peregrine (Horned Owl) <code>(4/5)</code></li>
+        <li>MLN-1D Merlin <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>6+</strong></td><td>Dark Crow 4 <code>(3/4)</code></td><td>
+      <ul>
+        <li>×2 Manticore Heavy Tank (Veteran)</li>
+        <li>×2 Light Airstrike</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Stinger IIC <code>(3/4)</code></li>
+        <li>STG-3R Stinger <code>(3/4)</code></li>
+      </ul>
+    </td></tr>
+  </tbody>
+</table>
+
+---
+
+### Mercenary / Pirate Opposing Force (Scale 1)
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>1D6 Roll</th><th>Primary Force</th><th>Support Force</th><th>Alternate Force</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1–</strong></td><td>
+      <ul>
+        <li>FLE-17 Flea <code>(4/5)</code></li>
+        <li>STG-6G Stinger <code>(4/5)</code></li>
+        <li>CDA-3M Cicada <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>x2 APC, Tracked</li>
+        <li>x2 Foot Infantry</li>
+        <li>Light Airstrike</li>
+        <li>Heavy Airstrike</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>JVN-11D Javelin <code>(4/5)</code></li>
+        <li>COM-2Dr Commando <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>2</strong></td><td>
+      <ul>
+        <li>COM-8S Commando <code>(4/5)</code></li>
+        <li>SDR-7K Spider <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>x3 APC, Tracked</li>
+        <li>x3 IS Battle Armor Squad</li>
+        <li>Light Bombing</li>
+        <li>x2 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>CN9-Da Centurion <code>(4/5)</code></li>
+        <li>HER-5SA Hermes II <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>3</strong></td><td>FFL-5A Firefly <code>(4/5)</code></td><td>
+      <ul>
+        <li>x2 Vedette (Cell)</li>
+        <li>x2 Pegasus (3058 Upgrade)</li>
+        <li>x2 Light Bombing</li>
+        <li>x1 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>FLE-21 Flea <code>(4/5)</code></li>
+        <li>VLK-QDD Valkyrie <code>(4/5)</code></li>
+        <li>FS9-S2 Firestarter <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>4</strong></td><td>
+      <ul>
+        <li>BJ-2r Blackjack <code>(4/5)</code></li>
+        <li>HBK-5N Hunchback <code>(3/4)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Hetzer (Cell)</li>
+        <li>Warrior H-7C</li>
+        <li>x2 Light Airstrike</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>JR7-31P Rattlesnake <code>(4/5)</code></td></tr>
+    <tr><td><strong>5</strong></td><td>PXH-4M Phoenix Hawk <code>(3/3)</code></td><td>
+      <ul>
+        <li>GAL-106M Galleon Veteran</li>
+        <li>x2 Jump Infantry Veteran</li>
+        <li>Light Bombing</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>WSP-5A Wasp <code>(3/4)</code></li>
+        <li>JVN-12N Javelin <code>(3/4)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>6+</strong></td><td>ON1-MC Orion <code>(3/4)</code></td><td>
+      <ul>
+        <li>x3 Light Gun Emplacement</li>
+        <li>x2 Medium Gun Emplacement</li>
+        <li>Heavy Bombing</li>
+        <li>Light Air Cover</li>
+        <li>Heavy Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>FLE-17 Flea <code>(4/5)</code></li>
+        <li>WVR-9R Wolverine <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+  </tbody>
+</table>
+
+---
+
+### Lyran Commonwealth / Tamar Pact / Vesper Marches (Scale 1)
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>1D6 Roll</th><th>Primary Force</th><th>Support Force</th><th>Alternate Force</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1–</strong></td><td>
+      <ul>
+        <li>LCT-7S Locust <code>(4/5)</code></li>
+        <li>COM-7S Commando <code>(3/4)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>x2 Hover APC</li>
+        <li>x2 Skulker</li>
+        <li>x2 Jump Infantry</li>
+        <li>Light Airstrike</li>
+        <li>Light Bombing</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>VLK-QDD Valkyrie <code>(4/5)</code></li>
+        <li>SHD-5R Shadow Hawk <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>2</strong></td><td>VT-5Sr Vulcan <code>(3/4)</code></td><td>
+      <ul>
+        <li>x2 GAL-100 Galleon</li>
+        <li>Condor</li>
+        <li>Maxim</li>
+        <li>IS Battle Armor Squad</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>STN-6S Sentinel <code>(4/5)</code></li>
+        <li>NGS-4S Nightsky <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>3</strong></td><td>
+      <ul>
+        <li>FS9-S3 Firestarter <code>(4/4)</code></li>
+        <li>WLF-2 Wolfhound <code>(3/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Hetzer (Cell)</li>
+        <li>Vedette (Ultra)</li>
+        <li>Strafing</li>
+        <li>x2 Light Air Cover</li>
+      </ul>
+    </td><td>BSW-L1 Bushwacker <code>(4/5)</code></td></tr>
+    <tr><td><strong>4</strong></td><td>HCT-8S Hatchetman <code>(3/4)</code></td><td>
+      <ul>
+        <li>Vedette (Armor)</li>
+        <li>x2 Patton</li>
+        <li>x2 Light Airstrike</li>
+        <li>Heavy Airstrike</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Locust C <code>(4/5)</code></li>
+        <li>HBK-5SS Hunchback <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>5</strong></td><td>PXH-7S Phoenix Hawk <code>(3/4)</code></td><td>
+      <ul>
+        <li>Savannah Master</li>
+        <li>x2 Manticore (HPPC) Veteran</li>
+        <li>Heavy Airstrike</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>STG-6S Stinger <code>(4/5)</code></li>
+        <li>VT-7T Vulcan <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>6+</strong></td><td>
+      <ul>
+        <li>WSP-5A Wasp <code>(4/5)</code></li>
+        <li>COM-9S Commando <code>(3/4)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Savannah Master</li>
+        <li>LRM Carrier</li>
+        <li>Schrek</li>
+        <li>Sniper</li>
+        <li>Light Bombing</li>
+        <li>x2 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Locust IIC 2 <code>(4/5)</code></li>
+        <li>CLNT-5U Clint <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+  </tbody>
+</table>
+
+---
+
+### Clan Jade Falcon (Scale 1)
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>1D6 Roll</th><th>Primary Force</th><th>Support Force</th><th>Alternate Force</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1–</strong></td><td>
+      <ul>
+        <li>Baboon (Howler) <code>(3/4)</code></li>
+        <li>Stinger C <code>(4/5)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>x3 APC Hover</li>
+        <li>x3 Elemental Point</li>
+        <li>x2 Light Airstrike</li>
+        <li>x2 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Locust IIC 3 <code>(4/5)</code></li>
+        <li>Vixen (Incubus) 7 <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>2</strong></td><td>
+      <ul>
+        <li>Locust IIC <code>(4/5)</code></li>
+        <li>Shadow Hawk IIC <code>(3/4)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>x3 Light Airstrike</li>
+        <li>x1 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Locust IIC <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>3</strong></td><td>Valkyrie C <code>(4/4)</code></td><td>
+      <ul>
+        <li>x2 Vedette</li>
+        <li>Light Bombing</li>
+        <li>Heavy Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Fire Falcon C <code>(3/4)</code></li>
+        <li>HOP-5C Hoplite <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>4</strong></td><td>Fire Falcon T <code>(2/4)</code></td><td>
+      <ul>
+        <li>Drillson C Veteran</li>
+        <li>Elemental Point Veteran</li>
+        <li>x2 Light Air Cover</li>
+        <li>Heavy Air Cover</li>
+      </ul>
+    </td><td>Koshi (Mist Lynx) T <code>(3/4)</code></td></tr>
+    <tr><td><strong>5</strong></td><td>Crossbow W <code>(3/3)</code></td><td>
+      <ul>
+        <li>Pike (Clan)</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>Stinger C <code>(3/4)</code></td></tr>
+    <tr><td><strong>6+</strong></td><td>Thunderbolt C 2 <code>(3/4)</code></td><td>
+      <ul>
+        <li>LRM Carrier C</li>
+        <li>x2 Heavy Air Cover</li>
+        <li>Sniper</li>
+      </ul>
+    </td><td>Cougar H <code>(3/4)</code></td></tr>
+  </tbody>
+</table>
+
+---
+
+### Clan Hell's Horses (Scale 1)
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>1D6 Roll</th><th>Primary Force</th><th>Support Force</th><th>Alternate Force</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1–</strong></td><td>Locust IIC 3 <code>(3/4)</code></td><td>
+      <ul>
+        <li>x2 Hover APC</li>
+        <li>Enyo</li>
+        <li>Elemental III Point</li>
+        <li>Jump Infantry Veteran</li>
+        <li>Light Airstrike</li>
+        <li>x2 Light Bombing</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>MCY-99 Mercury <code>(4/5)</code></li>
+        <li>Stinger C 2 <code>(4/5)</code></li>
+        <li>Vixen (Incubus) 7 <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>2</strong></td><td>Pack Hunter <code>(3/4)</code></td><td>
+      <ul>
+        <li>Hephaestus Prime</li>
+        <li>Drillson C</li>
+        <li>Elemental III Point</li>
+        <li>Strafing</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>Griffin C <code>(4/5)</code></td></tr>
+    <tr><td><strong>3</strong></td><td>
+      <ul>
+        <li>Stinger C 2 <code>(4/5)</code></li>
+        <li>Jenner IIC 3 <code>(3/4)</code></li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Hover APC</li>
+        <li>Hephaestus Prime</li>
+        <li>Elemental III Point</li>
+        <li>Heavy Bombing</li>
+        <li>x2 Light Air Cover</li>
+        <li>Heavy Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Piranha <code>(4/5)</code></li>
+        <li>Locust IIC <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>4</strong></td><td>Hellion A <code>(3/4)</code></td><td>
+      <ul>
+        <li>Enyo</li>
+        <li>Elemental III Point</li>
+        <li>x2 Light Bombing</li>
+        <li>Heavy Air Cover</li>
+      </ul>
+    </td><td>Vulture (Mad Dog) A <code>(4/5)</code></td></tr>
+    <tr><td><strong>5</strong></td><td>Koshi (Mist Lynx) <code>(3/4)</code></td><td>
+      <ul>
+        <li>Epona A</li>
+        <li>x2 Elemental III Point</li>
+        <li>Heavy Airstrike</li>
+        <li>Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Stinger C <code>(4/5)</code></li>
+        <li>Vixen (Incubus) 8 <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+    <tr><td><strong>6+</strong></td><td>Shadow Hawk IIC 11 <code>(3/4)</code></td><td>
+      <ul>
+        <li>LRM Carrier C</li>
+        <li>x2 Light Gun Emplacement</li>
+        <li>x1 Medium Gun Emplacement</li>
+        <li>Light Airstrike</li>
+        <li>x2 Light Air Cover</li>
+      </ul>
+    </td><td>
+      <ul>
+        <li>Locust IIC 3 <code>(4/5)</code></li>
+        <li>Jenner IIC 3 <code>(4/5)</code></li>
+      </ul>
+    </td></tr>
+  </tbody>
+</table>
