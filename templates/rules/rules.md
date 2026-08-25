@@ -602,15 +602,28 @@ Big Leagues lets you join special mercenary commands with unique requirements, b
 
 ---
 
-## Taking One For The Team (Overtime)
+## Taking One For the Team (TOFT) Campaign Reference
 
-Regular military commands (House/Clan) can also use this option instead of standard mercenary play:
+A player may decide to run a randomly generated opposing force (OPFOR) for a track rather than deploying their own force. This is called **Taking One For the Team** (TOFT). It is commonly used in campaigns to allow a mercenary player to play a non-mercenary opposing force against another player, or to resolve situations where a contract is otherwise unplayable. Using the TOFT option provides several unique benefits and rewards to the player's primary force.
 
-* **Reserve Forces:** House/Clan forces get +50% BV for reserve forces.
-* **Support Points:** Regular military commands get 300 SP per Scale.
-* **No Negotiation:** Regular military commands have no contract terms or negotiation.
-* **Promotion:** 0–2 Reputation = Scale 1 (Sergeant); 3–10 = Scale 2 (Lieutenant); 11–20 = Scale 3 (Captain).
-* **Losing Reputation:** Can cause loss of force scale (but not rank).
+
+### Core Upkeep and Force Rules
+* **Zero Cost and Risk:** The player running the opposing force does not spend any Support Points (SP) to repair, rearm, or maintain those opposing units. Because you are not fielding your own force, any damage, ammunition expenditure, or unit destruction sustained during the track has zero impact on your actual campaign roster or Warchest.
+ 
+### Combat Pay and Reputation Mechanics
+* **Half Combat Pay:** In exchange for playing the opposing force, you earn **one-half (rounded down) of the Combat Pay bonus** that the track awards, which is applied directly to your own command's Warchest.
+    * *Example:* If you successfully win a track at Scale 2 but do not complete all objectives, the standard combat pay of 1,000 SP (500 SP baseline × Scale 2) is halved, netting your actual unit **500 SP**.
+* **Reputation & Training:** Your main command still gains or loses Reputation upon the victorious or unsuccessful conclusion of the contract as normal. You may use the Support Points earned from TOFT to purchase new units or fund training for your own command.
+
+### Unit Purchase Rewards (Salvage Options)
+* **Unlocking Opposing Units:** For any track you succeed in (meaning you score more Victory Points from objectives than the opponent), you may select **one of the opposing force's units** that you controlled during that track and add it to your roster's permanent purchase options.
+* **Purchase Cost:** You must pay the standard purchase price to officially add this unit to your roster, which is calculated as its **Battle Value (BV)** or **40 × Point Value (PV)** in Support Points.
+* **Availability Window:** These unlocked units remain available for you to buy for the remainder of your current contract, or during your next contract if you are currently in between contracts.
+* **Local Market Exclusion:** A player using the TOFT option does not use the standard purchase options of the local contract or Hot Spot where the battle occurred.
+
+### Full-Contract Completion Reward
+* **50% Discount Option:** If a player completes an **entire contract** using the TOFT option, they receive a special completion reward: they may select **any one additional unit** from any of the opposing forces they controlled during that contract and purchase it at a **50% discount**.
+* *Note:* Some specific contracts may explicitly define a different opposing force contract completion reward; if so, that contract-specific reward replaces this standard 50% discount purchase option.
 
 ---
 
@@ -833,49 +846,49 @@ Contracts are generated in order: contract type → employer → pay rate → sa
   </tbody>
 </table>
 
-*\* No modifiers are applied to this Target Number, except for standard Artillery Support [7].*
-*\*\* All Damage Value groupings represent 5 points of damage each [7].*
-*† Scatters if the attack roll misses [7].*
-*†† Affects multiple hexes (Target / Adjacent / Radius-2) [7].*
-*‡ See Copperhead special rules [7].*
-*‡‡ See Illumination/Smoke special rules [7].*
+*\* No modifiers are applied to this Target Number, except for standard Artillery Support.*
+*\*\* All Damage Value groupings represent 5 points of damage each.*
+*† Scatters if the attack roll misses.*
+*†† Affects multiple hexes (Target / Adjacent / Radius-2).*
+*‡ See Copperhead special rules.*
+*‡‡ See Illumination/Smoke special rules.*
 
 ---
 
 #### Core Support Mechanics
 
 ##### Force Construction and Scaling
-*   **BSP Allotments:** If a scenario does not define support budgets, players select one of the following starting tiers by mutual agreement [1]:
-    *   *Extraction Raid Support:* 5 BSPs [8]
-    *   *Objective Raid Support:* 12 BSPs [8]
-    *   *Diversionary Raid Support:* 20 BSPs [8]
-    *   *Planetary Assault Support:* 35 BSPs [8]
-*   **Acreage Scaling:** These rules are designed for a standard four-mapsheet playing area (31 x 35 hexes) [9]. For every two additional mapsheets added to the play area, increase each player's starting BSP budget by 50% [9].
-*   **One-Time Use:** Each purchased instance of a support type is usable exactly once per game, whether it hits or misses (with the exception of minefields, which remain active until depleted) [9]. Unspent BSPs are discarded once play begins [10].
-*   **Damage Resolution:** All damage value groupings consist of 5 points of damage each [11]. If an attack hits, a separate hit location roll is made for each individual grouping [11].
-*   **Attack Direction:** For successful aerospace strikes and direct artillery hits, roll 1D6 to determine the direction of impact: a result of 1–4 strikes the target's front armor, while 5–6 strikes the rear armor [12].
-*   **Environmental Restrictions:** Units completely submerged in Depth 2+ water cannot be targeted by any battlefield support attacks [13]. Any scattered hits or area-effect damage that lands on submerged units is ignored [13]. Standing targets in Depth 1 water resolve hits using the Punch Hit Location Table [14].
+*   **BSP Allotments:** If a scenario does not define support budgets, players select one of the following starting tiers by mutual agreement:
+    *   *Extraction Raid Support:* 5 BSPs
+    *   *Objective Raid Support:* 12 BSPs
+    *   *Diversionary Raid Support:* 20 BSPs
+    *   *Planetary Assault Support:* 35 BSPs
+*   **Acreage Scaling:** These rules are designed for a standard four-mapsheet playing area (31 x 35 hexes). For every two additional mapsheets added to the play area, increase each player's starting BSP budget by 50%.
+*   **One-Time Use:** Each purchased instance of a support type is usable exactly once per game, whether it hits or misses (with the exception of minefields, which remain active until depleted). Unspent BSPs are discarded once play begins.
+*   **Damage Resolution:** All damage value groupings consist of 5 points of damage each. If an attack hits, a separate hit location roll is made for each individual grouping.
+*   **Attack Direction:** For successful aerospace strikes and direct artillery hits, roll 1D6 to determine the direction of impact: a result of 1–4 strikes the target's front armor, while 5–6 strikes the rear armor.
+*   **Environmental Restrictions:** Units completely submerged in Depth 2+ water cannot be targeted by any battlefield support attacks. Any scattered hits or area-effect damage that lands on submerged units is ignored. Standing targets in Depth 1 water resolve hits using the Punch Hit Location Table.
 
 ---
 
 #### Support Category Rules
 
 ##### Offensive Aerospace Support (Strikes, Bombings, and Strafing)
-*   **Strikes (Light/Heavy):** Successful attacks directly strike the targeted hex [14]. Unsuccessful attacks have no effect [15].
-*   **Bombings (Light/Heavy) [AE]:** Area-effect damage [15]. If the target hex is a building currently occupied by a 'Mech, the full damage is applied simultaneously to both the building and the unit [15].
-    *   *Scattering on Miss:* If the attack roll fails, calculate the Margin of Failure (MoF) [15]. The bomb scatters a number of hexes equal to the MoF [15]. Roll 1D6 and consult the Scatter Diagram to determine the direction of the scatter [16]. Any unit occupying the scatter destination hex (friendly or enemy) is automatically hit, with the attack direction treated as originating from the originally targeted hex [16].
-*   **Strafing:** The attacker designates a straight line of 1 to 5 consecutive hexes [16]. The attacker makes a separate attack roll against TN 7 for every unit currently occupying those designated hexes [16]. If successful, the target takes 3 groupings of 5 damage each [11, 17]. Misses in any single hex do not affect attacks in other hexes along the strafing line [18].
+*   **Strikes (Light/Heavy):** Successful attacks directly strike the targeted hex. Unsuccessful attacks have no effect.
+*   **Bombings (Light/Heavy) [AE]:** Area-effect damage. If the target hex is a building currently occupied by a 'Mech, the full damage is applied simultaneously to both the building and the unit.
+    *   *Scattering on Miss:* If the attack roll fails, calculate the Margin of Failure (MoF). The bomb scatters a number of hexes equal to the MoF. Roll 1D6 and consult the Scatter Diagram to determine the direction of the scatter. Any unit occupying the scatter destination hex (friendly or enemy) is automatically hit, with the attack direction treated as originating from the originally targeted hex.
+*   **Strafing:** The attacker designates a straight line of 1 to 5 consecutive hexes. The attacker makes a separate attack roll against TN 7 for every unit currently occupying those designated hexes. If successful, the target takes 3 groupings of 5 damage each. Misses in any single hex do not affect attacks in other hexes along the strafing line.
 
 ##### Defensive Aerospace Support (Air Cover)
-Defensive Air Cover is used to intercept and nullify declared enemy Offensive Aerospace attacks before they resolve [18, 19].
-*   **Resolution Sequence:** After the attacker declares all Offensive Aerospace attacks for the turn, the defender may reveal their Air Cover selection [18, 19]. Before the attacker makes any rolls, the defender rolls 2D6 against the target number corresponding to the declared attack type [18, 19].
-*   **Successful Roll:** The target Offensive Aerospace attack is completely nullified and discarded with no effect [20, 21].
-*   **Unsuccessful Roll:** The attacker resolves their Offensive Aerospace attack as normal [20, 22]. Multiple air covers can be assigned to a single attack to maximize the chance of interception, but all assignments must be declared before rolling [20, 21].
+Defensive Air Cover is used to intercept and nullify declared enemy Offensive Aerospace attacks before they resolve.
+*   **Resolution Sequence:** After the attacker declares all Offensive Aerospace attacks for the turn, the defender may reveal their Air Cover selection. Before the attacker makes any rolls, the defender rolls 2D6 against the target number corresponding to the declared attack type.
+*   **Successful Roll:** The target Offensive Aerospace attack is completely nullified and discarded with no effect.
+*   **Unsuccessful Roll:** The attacker resolves their Offensive Aerospace attack as normal [20, 22]. Multiple air covers can be assigned to a single attack to maximize the chance of interception, but all assignments must be declared before rolling.
 
 ##### Artillery Support [AE]
-*   **Pre-Designated Hexes:** Before the game begins, each player secretly selects up to 5 pre-plotted target hexes for each purchased Artillery Support selection [22]. Artillery attacks launched against these pre-plotted hexes hit automatically without requiring an attack roll [22]. No player may place more than 5 pre-plotted target hexes on any single mapsheet [23].
-*   **Off-Target Firing:** To target a non-pre-designated hex, the player must secretly write down the target hex during the Weapon Attack Phase [24]. The shells arrive during the following turn's Weapon Attack Phase [24].
-*   **Spotting:** If a friendly unit spots the target hex on both the turn of declaration and the turn of arrival, apply a -2 Target Number modifier to the attack [24]. If the spotter fires its own weapons during the turn the artillery arrives, the spotter suffers a +1 attack penalty, and the artillery only receives a -1 modifier [25].
+*   **Pre-Designated Hexes:** Before the game begins, each player secretly selects up to 5 pre-plotted target hexes for each purchased Artillery Support selection. Artillery attacks launched against these pre-plotted hexes hit automatically without requiring an attack roll. No player may place more than 5 pre-plotted target hexes on any single mapsheet.
+*   **Off-Target Firing:** To target a non-pre-designated hex, the player must secretly write down the target hex during the Weapon Attack Phase. The shells arrive during the following turn's Weapon Attack Phase.
+*   **Spotting:** If a friendly unit spots the target hex on both the turn of declaration and the turn of arrival, apply a -2 Target Number modifier to the attack. If the spotter fires its own weapons during the turn the artillery arrives, the spotter suffers a +1 attack penalty, and the artillery only receives a -1 modifier.
 *   **Area-Effect Resolution:**
     *   *Thumper:* Applies 3 groupings to the target hex, and 1 grouping to all adjacent hexes [2, 25].
     *   *Sniper:* Applies 4 groupings to the target hex, and 2 groupings to adjacent hexes [2, 25].
@@ -884,8 +897,8 @@ Defensive Air Cover is used to intercept and nullify declared enemy Offensive Ae
 *   **Scattering on Miss:** Fails scatter one hex per point of Margin of Failure (MoF) [27]. Roll 1D6 and compare to the Scatter Diagram to determine the direction of scatter [27]. Any units, buildings, or terrain in the final hex are automatically hit [27].
 *   **Variant Munitions:**
     *   *Copperhead:* Functions as an Arrow IV homing missile [28]. It automatically hits any target successfully designated by a friendly Target Acquisition Gear (TAG) system [28, 29]. Damage groupings are reduced to: Thumper (1), Sniper (2), Long Tom (3) [28].
-    *   *Illumination:* Purchased at half BSP cost (rounding down) [7]. Instead of damage, it negates all light-based targeting modifiers in its area of effect for the remainder of the battle [7].
-    *   *Smoke:* Purchased at half BSP cost (rounding down) [7]. Instead of damage, it fills the target and adjacent hexes with heavy smoke rising 2 levels high [30]. The smoke remains in play for the remainder of the battle [30].
+    *   *Illumination:* Purchased at half BSP cost (rounding down). Instead of damage, it negates all light-based targeting modifiers in its area of effect for the remainder of the battle.
+    *   *Smoke:* Purchased at half BSP cost (rounding down). Instead of damage, it fills the target and adjacent hexes with heavy smoke rising 2 levels high [30]. The smoke remains in play for the remainder of the battle [30].
 
 ##### Minefield Support [AE]
 *   **Deployment:** Written down secretly before the game begins [30]. A player can designate any full hex on the map (excluding water) [30]. A maximum of 6 Damage groupings (30 damage) can be placed in a single hex by a single player [31]. Both players can have active minefields in the same hex [31].
