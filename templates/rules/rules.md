@@ -4,7 +4,7 @@
 
 ---
 
-## 1. Building Your Force
+## Building Your Force
 
 * **Faction Selection:** Select a faction from the Master Unit List (masterunitlist.info) and choose starting units from that faction's MUL.
 * **Starting Funds:** Start with 3000 BV to spend and 3000 Support Points (SP).
@@ -15,7 +15,7 @@
 
 ---
 
-## 2. League Play Structure
+## League Play Structure
 
 * **Monthly Contracts:** Each month a Hot Spot contract is posted in Discord. Players pair up, choose one of the two opposing contracts, and complete it. Alternatively, roll a random contract via Dobless Information Services or the MRC Contract Generator.
 * **Contract Limit:** A company may only receive credit for one contract per month.
@@ -25,20 +25,20 @@
 
 ---
 
-## 3. Reputation
+## Reputation
 
-### 3.1 Gaining and Losing Reputation
+### Gaining and Losing Reputation
 
 * All companies start with Reputation 1.
 * Winning a full contract (at least half the tracks) gains +1 reputation.
 * You never lose reputation for losing a contract, only for breaching it (–3) or abandoning objectives.
 
-### 3.2 Spending Reputation
+### Spending Reputation
 
 * Spend 1 reputation to shift a RAT result by ±1, or to negate a Command Complication roll.
 * You must keep at least 1 reputation to spend.
 
-### 3.3 Reputation Progression
+### Reputation Progression
 
 Your company's reputation determines your force scale and military rank as you grow:
 
@@ -58,13 +58,13 @@ Your company's reputation determines your force scale and military rank as you g
 
 ---
 
-## 4. Salvage
+## Salvage
 
-### 4.1 General Salvage Rules
+### General Salvage Rules
 
 Salvage is the right to claim destroyed or crippled enemy units left on the field after a track. The victor may claim salvage if they successfully complete the track. Salvaged mechs are in their end-of-battle condition and must be repaired. If you decline salvage, the original owner may ransom the unit back.
 
-### 4.2 Scrapyard Mechs
+### Scrapyard Mechs
 
 When purchasing from the scrapyard:
 
@@ -74,13 +74,13 @@ When purchasing from the scrapyard:
 * **Condition:** Always arrive in Crippled condition — they cannot be repaired to better than Crippled.
 * **No contract attachment:** Scrapyard mechs do not attach to active contracts, so salvage rights percentages are irrelevant.
 
-### 4.3 Battlefield Salvage
+### Battlefield Salvage
 
 After a track, the victor may attempt to salvage enemy units left on the field. A salvage check is made by rolling 2d6 with thresholds based on unit type (Mech: 4+, Vehicle: 6+, Battle Armor: 7+). Failure means the mech is destroyed — no salvage.
 
 If successful, the mech is acquired in its end-of-battle condition. The actual cost depends on your active contract's salvage rights terms.
 
-### 4.4 Salvage Rights
+### Salvage Rights
 
 Salvage rights is a contract term that determines how the cost of acquiring a salvaged mech is split between you and the employer:
 
@@ -92,9 +92,9 @@ Salvage value (the base reference for all calculations) = floor(BV / 2). Repair 
 
 ---
 
-## 5. Force Scale & Combat Pay
+## Force Scale & Combat Pay
 
-### 5.1 Force Scale
+### Force Scale
 
 The force scale determines the maximum force size and associated costs:
 
@@ -112,7 +112,7 @@ The force scale determines the maximum force size and associated costs:
 * **Unit limits:** Checked once at the start of each contract.
 * **Infantry:** Battle armor and conventional infantry may be fielded at 2-for-1 against other unit slots, but this does not bypass the BV cap.
 
-### 5.2 Maintenance and Combat Pay
+### Maintenance and Combat Pay
 
 * **Maintenance:** 500 SP × contract scale per month, paid regardless of whether a track is played.
 * **Combat Pay (No objectives achieved):** No pay
@@ -122,7 +122,7 @@ The force scale determines the maximum force size and associated costs:
 
 ---
 
-## 6. Special Rules
+## Special Rules
 
 * **Commander:** Each force designates one Commander unit per track (written down, not revealed). No initiative penalty if the Commander is destroyed.
 * **Forced Withdrawal:** Not in effect for player-generated forces. Crippled units may not perform pickup or scan actions. Forces without a company roster (opposing force table units) do use Forced Withdrawal.
@@ -131,7 +131,7 @@ The force scale determines the maximum force size and associated costs:
 
 ---
 
-## 7. Optional Rules
+## Optional Rules
 
 Used by mutual agreement. Veteran players should defer to less experienced players. Assumed active for MRC games using Total Warfare:
 
@@ -145,7 +145,7 @@ Special Munitions and Command Consoles may also be used by agreement.
 
 ---
 
-## 8. Vehicles & Infantry
+## Vehicles & Infantry
 
 * **Full Units:** On the company roster with a pilot/crew. Pay all normal repair and training costs. May be salvaged. Conventional infantry is purchased in "barracks" — one barracks provides one unit per contract.
 * **Support Units:** Available at any track without being on the roster. Must be from the Periphery MUL, have no AE weapons, and be non-Mech/non-aerospace. Always 4/5 skill. Cannot be salvaged. Max 500 BV × scale.
@@ -153,9 +153,9 @@ Special Munitions and Command Consoles may also be used by agreement.
 
 ---
 
-## 9. Contract Structure & Terms
+## Contract Structure & Terms
 
-### 9.1 The Step Table
+### The Step Table
 
 Every contract is defined by five terms, each assigned a step on a 13-step table. Higher steps mean better terms for the mercenary company. Each term is rolled independently on 2d6, with possible modifiers from the employer, affiliation, and contract type. The final step is clamped to the range 1–13.
 
@@ -175,7 +175,7 @@ Every contract is defined by five terms, each assigned a step on a 13-step table
   </tbody>
 </table>
 
-### 9.2 Term Definitions
+### Term Definitions
 
 * **Base Pay:** The base monthly payment is calculated as 500 SP × contract scale × (basePayPercent / 100). Base pay is paid per month of contract duration, regardless of how many tracks are completed.
 * **Command Rights (Integrated +3):** Full command authority over allies.
@@ -193,15 +193,15 @@ Every contract is defined by five terms, each assigned a step on a 13-step table
 * **Contract Type (Retainer):** 6 months. Standing force on call.
 * **Contract Type (Invasion):** 6 months. Offensive push into enemy territory.
 
-### 9.3 Negotiations
+### Negotiations
 
 Before accepting a contract, you may negotiate its terms by spending reputation points (maximum 2 × scale). You can shift any term up or down by one step on the table. For every 2 steps you sacrifice in one term, you may gain 1 step in another — this exchange can be used twice per contract. Number of Tracks (1–5) is negotiated separately and is not on the step table.
 
 ---
 
-## 10. Contract Types & Mission Types
+## Contract Types & Mission Types
 
-### 10.1 Mission Types Per Contract Type
+### Mission Types Per Contract Type
 
 When generating a contract, a 1d6 roll on the Track Intensity Table determines the mission type for each track. Different contract types offer different mission pools:
 
@@ -219,7 +219,7 @@ When generating a contract, a 1d6 roll on the Track Intensity Table determines t
   </tbody>
 </table>
 
-### 10.2 Quick Reference by Mission Type
+### Quick Reference by Mission Type
 
 <table class="table table-sm table-bordered mb-0">
   <thead class="table-secondary">
@@ -242,7 +242,7 @@ When generating a contract, a 1d6 roll on the Track Intensity Table determines t
 
 ---
 
-## 11. Command Complications
+## Command Complications
 
 At the start of each track, the primary player rolls 1d6 to determine possible complications. Add +1 if the player has Liaison Command, +2 for House Command, and +3 for Integrated Command. Roll Mechanic: 1d6 + commandRightsBonus (0–3).
 
@@ -256,7 +256,7 @@ At the start of each track, the primary player rolls 1d6 to determine possible c
   </tbody>
 </table>
 
-### 11.1 Terrain Complication Tables
+### Terrain Complication Tables
 
 **Desert**
 <table class="table table-sm table-bordered mb-0">
@@ -410,9 +410,9 @@ At the start of each track, the primary player rolls 1d6 to determine possible c
 
 ---
 
-## 12. Time Between Tracks — SP Activity Costs
+## Time Between Tracks — SP Activity Costs
 
-### 12.1 Activity Cost Table
+### Activity Cost Table
 
 <table class="table table-sm table-bordered mb-0">
   <thead class="table-secondary">
@@ -435,29 +435,29 @@ At the start of each track, the primary player rolls 1d6 to determine possible c
   </tbody>
 </table>
 
-### 12.2 General Rules
+### General Rules
 
 * **Repair Time:** Repairing a unit makes it unavailable for the rest of the month.
 * **Truly Destroyed:** A unit is truly destroyed only if its center torso internal structure is eliminated — it is gone permanently.
 
-### 12.3 Named Pilots
+### Named Pilots
 
 * Max 4 on roster.
 * Earn XP (1 SP per XP, up to 200 XP × scale per track).
 * MVP of each track earns +20 bonus XP.
 
-### 12.4 SP Allocation Between Tracks
+### SP Allocation Between Tracks
 
 * **Combat Pay Allocation:** Dedicate a portion of combat pay to train Named Pilots who participated in that mission.
 * **Limits by Scale:** Maximum 200 SP per Scale of the track to your participating pilots as a group.
 * **Even Distribution:** SP is divided evenly among all Named Pilots who participated in the track.
 * **Individual Cap:** Maximum 100 SP per pilot per track from this allocation.
 
-### 12.5 MVP Bonus
+### MVP Bonus
 
 Name one surviving pilot who participated as the MVP. The MVP receives a bonus of 20 SP (free bonus SP).
 
-### 12.6 Edge System
+### Edge System
 
 * **Starting Edge:** Every Named Pilot begins with 1 Edge token.
 * **Acquiring Edge:** Accumulating 60 SP unlocks a second token, 120 SP unlocks a third, and 200 SP unlocks a fourth.
@@ -467,7 +467,7 @@ Name one surviving pilot who participated as the MVP. The MVP receives a bonus o
 * **Reroll Critical Hit:** Spend one Edge token to completely reroll a Determining Critical Hits Table result.
 * **Activate Edge Abilities:** Spend Edge tokens to trigger unlocked special Edge Abilities.
 
-### 12.7 Edge Abilities (SPAs) - Total Warfare Rules
+### Edge Abilities (SPAs) - Total Warfare Rules
 
 A pilot unlocks a new ability slot when their allocated SP reaches 60, 180, 360, 600, and 900 SP.
 
@@ -491,13 +491,13 @@ A pilot unlocks a new ability slot when their allocated SP reaches 60, 180, 360,
   </tbody>
 </table>
 
-### 12.8 Unnamed Pilots
+### Unnamed Pilots
 
 * Always cost 100 SP to hire.
 * Always Gunnery 4 / Piloting 5.
 * Cannot earn XP.
 
-### 12.9 Handicap
+### Handicap
 
 The player with the lower average handicap earns a BSP bonus equal to the handicap difference × 10. Unnamed pilots in a unit of 500 BV or more count as 0 handicap.
 
@@ -529,11 +529,11 @@ The player with the lower average handicap earns a BSP bonus equal to the handic
 
 ---
 
-## 13. Dropship Mechanics
+## Dropship Mechanics
 
 Your company gets one dropship (unique per company at the DB level). It serves as your mobile repair bay.
 
-### 13.1 Two Limits: Tonnage + Mekbays
+### Two Limits: Tonnage + Mekbays
 
 <table class="table table-sm table-bordered mb-0">
   <thead class="table-secondary">
@@ -548,13 +548,13 @@ Your company gets one dropship (unique per company at the DB level). It serves a
 * Salvaged mechs only consume tonnage — they don't use mekbays.
 * When you board a roster unit, the system checks if the tonnage and mekbay capacity limits are met.
 
-### 13.2 Creating a Dropship
+### Creating a Dropship
 
 * Minimum 40 tons (allows at least 2 × 20-ton mechs).
 * Initial mekbay capacity starts at 0.
 * You specify name, maxCapacity, and mekbayCapacity when creating.
 
-### 13.3 Upgrading: 200 SP Per Upgrade
+### Upgrading: 200 SP Per Upgrade
 
 <table class="table table-sm table-bordered mb-0">
   <thead class="table-secondary">
@@ -566,11 +566,11 @@ Your company gets one dropship (unique per company at the DB level). It serves a
   </tbody>
 </table>
 
-### 13.4 Why Board Salvage to the Dropship?
+### Why Board Salvage to the Dropship?
 
 To repair them, you must board them onto your dropship (costs tonnage only) and pay the repair SP. The dropship is your only repair facility.
 
-### 13.5 Key Rules
+### Key Rules
 
 * Only one dropship per company.
 * You can unassign mech/units at any time (free).
@@ -578,31 +578,31 @@ To repair them, you must board them onto your dropship (costs tonnage only) and 
 
 ---
 
-## 14. Debt & Breaking Contract
+## Debt & Breaking Contract
 
 * **Debt:** If you can't pay maintenance or transport, you go into debt. While in debt, SP Activities and unit training are suspended. A force cannot be in debt for more than 6 league months. While in debt you may sell assets, retire your force, or skip one track (–1 reputation, available once).
 * **Breaking Contract:** Incurs a –3 reputation penalty (–1 if force is below 2/3 of the scale BV limit). The contract ends immediately. The other player gains their reputation bonus for completing.
 
 ---
 
-## 15. Big Leagues
+## Big Leagues
 
 Big Leagues lets you join special mercenary commands with unique requirements, benefits, and purchase options.
 
-### 15.1 21st Centauri Lancers
+### 21st Centauri Lancers
 
 * **Requirements:** No broken contracts, no piracy, Scale 2+, Reputation 3+, Esprit de Corps Special Command
 * **Benefits:** Treated as one higher Reputation in negotiations; half-cost Formations.
 * **Purchase Options:** Crossbow T, BattleMaster C, Rifleman C 2, Hunchback IIC 5, LRM Carrier C, SRM Carrier C, Vedette Medium Tank V9, Condor Heavy Hover Tank Ultra.
 
-### 15.2 Shadowblacks
+### Shadowblacks
 
 * **Requirements:** Must have participated in piracy, Scale 2+, 500 SP initiation fee.
 * **Benefits:** 20% bonus to piracy loot sale value; half-cost Formations; Clan tech upgrade options.
 
 ---
 
-## 16. Taking One For The Team (Overtime)
+## Taking One For The Team (Overtime)
 
 Regular military commands (House/Clan) can also use this option instead of standard mercenary play:
 
@@ -614,16 +614,16 @@ Regular military commands (House/Clan) can also use this option instead of stand
 
 ---
 
-## 17. Plotting the Monthly Schedule (The Dash Notation)
+## Plotting the Monthly Schedule (The Dash Notation)
 
 Roll 1D6 on the Track Intensity Table to determine the sequence of numbers separated by dashes (e.g., 0-1-1). Each number represents the exact number of tracks you must deploy for in that month.
 
-### 17.1 Examples
+### Examples
 
 * **Intensity 0-1-1:** Quiet Month 1, one battle in Month 2, and one battle in Month 3.
 * **Intensity 0-0-2:** No combat for the first two months, two consecutive battles in Month 3.
 
-### 17.2 Campaign Implications: The Danger of "Double-Track" Months
+### Campaign Implications: The Danger of "Double-Track" Months
 
 * **No automatic full recovery:** Standard rules state that any repaired unit is unavailable for the next track in that same month.
 * **Repair Time Rolls:** Roll 2D6 on the Repair Time Table between the two tracks to determine if you have time for Hasty Repairs, Standard Repairs, Extended Repairs, or All the Time in the World.
@@ -636,23 +636,23 @@ Roll 1D6 on the Track Intensity Table to determine the sequence of numbers separ
 
 ---
 
-## 18. Random Contracts (Dobless Information Services)
+## Random Contracts (Dobless Information Services)
 
 Generate one random contract offer per month at the Almotacen Hiring Hall.
 
-### 18.1 Jumping Between Systems (Deprecated)
+### Jumping Between Systems (Deprecated)
 
 Roll 1D6 for the number of jumps from Almotacen, then 1D6 for the specific system.
 
-### 18.2 Contract Generator
+### Contract Generator
 
 Contracts are generated in order: contract type → employer → pay rate → salvage rights → support terms → transportation → command rights. The employer type adds or subtracts steps from the rolled result.
 
-### 19 BSP
+### BSP
 
 ---
 
-#### 19.1 Battlefield Support Table
+#### Battlefield Support Table
 <table class="table table-sm table-bordered mb-0">
   <thead class="table-secondary text-center">
     <tr>
@@ -842,9 +842,9 @@ Contracts are generated in order: contract type → employer → pay rate → sa
 
 ---
 
-#### 19.3 Core Support Mechanics
+#### Core Support Mechanics
 
-##### 19.4 Force Construction and Scaling
+##### Force Construction and Scaling
 *   **BSP Allotments:** If a scenario does not define support budgets, players select one of the following starting tiers by mutual agreement [1]:
     *   *Extraction Raid Support:* 5 BSPs [8]
     *   *Objective Raid Support:* 12 BSPs [8]
@@ -858,21 +858,21 @@ Contracts are generated in order: contract type → employer → pay rate → sa
 
 ---
 
-#### 19.5. Support Category Rules
+#### Support Category Rules
 
-##### 1. Offensive Aerospace Support (Strikes, Bombings, and Strafing)
+##### Offensive Aerospace Support (Strikes, Bombings, and Strafing)
 *   **Strikes (Light/Heavy):** Successful attacks directly strike the targeted hex [14]. Unsuccessful attacks have no effect [15].
 *   **Bombings (Light/Heavy) [AE]:** Area-effect damage [15]. If the target hex is a building currently occupied by a 'Mech, the full damage is applied simultaneously to both the building and the unit [15].
     *   *Scattering on Miss:* If the attack roll fails, calculate the Margin of Failure (MoF) [15]. The bomb scatters a number of hexes equal to the MoF [15]. Roll 1D6 and consult the Scatter Diagram to determine the direction of the scatter [16]. Any unit occupying the scatter destination hex (friendly or enemy) is automatically hit, with the attack direction treated as originating from the originally targeted hex [16].
 *   **Strafing:** The attacker designates a straight line of 1 to 5 consecutive hexes [16]. The attacker makes a separate attack roll against TN 7 for every unit currently occupying those designated hexes [16]. If successful, the target takes 3 groupings of 5 damage each [11, 17]. Misses in any single hex do not affect attacks in other hexes along the strafing line [18].
 
-##### 2. Defensive Aerospace Support (Air Cover)
+##### Defensive Aerospace Support (Air Cover)
 Defensive Air Cover is used to intercept and nullify declared enemy Offensive Aerospace attacks before they resolve [18, 19].
 *   **Resolution Sequence:** After the attacker declares all Offensive Aerospace attacks for the turn, the defender may reveal their Air Cover selection [18, 19]. Before the attacker makes any rolls, the defender rolls 2D6 against the target number corresponding to the declared attack type [18, 19].
 *   **Successful Roll:** The target Offensive Aerospace attack is completely nullified and discarded with no effect [20, 21].
 *   **Unsuccessful Roll:** The attacker resolves their Offensive Aerospace attack as normal [20, 22]. Multiple air covers can be assigned to a single attack to maximize the chance of interception, but all assignments must be declared before rolling [20, 21].
 
-##### 3. Artillery Support [AE]
+##### Artillery Support [AE]
 *   **Pre-Designated Hexes:** Before the game begins, each player secretly selects up to 5 pre-plotted target hexes for each purchased Artillery Support selection [22]. Artillery attacks launched against these pre-plotted hexes hit automatically without requiring an attack roll [22]. No player may place more than 5 pre-plotted target hexes on any single mapsheet [23].
 *   **Off-Target Firing:** To target a non-pre-designated hex, the player must secretly write down the target hex during the Weapon Attack Phase [24]. The shells arrive during the following turn's Weapon Attack Phase [24].
 *   **Spotting:** If a friendly unit spots the target hex on both the turn of declaration and the turn of arrival, apply a -2 Target Number modifier to the attack [24]. If the spotter fires its own weapons during the turn the artillery arrives, the spotter suffers a +1 attack penalty, and the artillery only receives a -1 modifier [25].
@@ -887,10 +887,116 @@ Defensive Air Cover is used to intercept and nullify declared enemy Offensive Ae
     *   *Illumination:* Purchased at half BSP cost (rounding down) [7]. Instead of damage, it negates all light-based targeting modifiers in its area of effect for the remainder of the battle [7].
     *   *Smoke:* Purchased at half BSP cost (rounding down) [7]. Instead of damage, it fills the target and adjacent hexes with heavy smoke rising 2 levels high [30]. The smoke remains in play for the remainder of the battle [30].
 
-##### 4. Minefield Support [AE]
+##### Minefield Support [AE]
 *   **Deployment:** Written down secretly before the game begins [30]. A player can designate any full hex on the map (excluding water) [30]. A maximum of 6 Damage groupings (30 damage) can be placed in a single hex by a single player [31]. Both players can have active minefields in the same hex [31].
 *   **Triggering:** Minefields detonate immediately when a unit enters the hex along the ground (including skidding, displacement, or landing a combat drop) [32, 33]. Jumping units only trigger minefields if they end their movement phase in the mined hex [32].
 *   **Resolution:** Upon triggering, the controlling player rolls 2D6 against the minefield's density TN [31]. If successful, damage is resolved using the front column of the Kick Location Table [32].
 *   **Depletion and Persistence:** Each time a minefield hits a target, its strength is permanently reduced by 1 grouping [32]. If its groupings are reduced to 0, the minefield is removed [32]. If the minefield attack misses, it does not deplete and remains active in the hex [34].
 *   **Detection:** A unit mounting an active probe that passes within the probe's radius of an active enemy minefield forces a detection roll [34]. On a result of 10+, the minefield is permanently revealed [34].
 *   **Clearing:** A player can intentionally attempt to clear a minefield hex using direct fire from an LRM-20, Rocket Launcher 20, MRM-20/30/40, ATM 9/12, or Artillery [35]. On a 2D6 roll of 5+, the minefield's strength is reduced to 0 [35]. If standard artillery attacks hit a mined hex (even if not declared as a clearing attempt), roll 2D6; on a 10+, the minefield is cleared [35]. Cleared minefields do not detonate [35].
+
+
+---
+
+## Hiring Halls
+
+Stationing your mercenary unit at an active hiring hall provides several vital financial, operational, and logistic benefits.
+
+### Support Ratings and Repair Discounts
+Every hiring hall has a **Support Rating** from **A (highest)** to **F (none)**. This rating directly determines the level of local technical expertise and grants a discount on the Support Points (SP) required to perform unit repairs or healing:
+*   **Rating A–B**: Grants a **50% repair cost modifier** (a 50% discount on SP costs).
+*   **Rating C**: Grants a **75% repair cost modifier** (a 25% discount on SP costs).
+*   **Rating D–F**: Grants a **100% repair cost modifier** (no discount).
+
+### Slashed Maintenance Costs
+While your mercenary command is resting at a hiring hall and not actively under contract, your monthly overhead is heavily reduced. Instead of paying the standard monthly maintenance of 150 Warchest/Support Points (WP/SP), you pay a flat **50 WP** (or Support Points) per month.
+*   **Time Limit**: You can take advantage of this reduced rate for up to **six consecutive months**.
+*   **Reset**: The six-month timer resets once your unit spends at least three consecutive months paying standard maintenance.
+
+### Generating Random Contracts
+Mercenaries looking for work can utilize the hiring hall to generate random contracts. You can check the local boards once per month for a new random contract offer. If you decline the generated offer, you must wait until the following month to roll for a different one.
+
+---
+
+## 2. Rules for Reaching the Hiring Halls (Travel Costs)
+
+Interstellar transit across the Hinterlands is costly and time-consuming. Mercenary commands must pay for their own transit to a hiring hall unless travel is explicitly covered by an active employer contract.
+
+### Standard Transit Costs
+If your campaign uses simplified transit rules, traveling to any destination (including a hiring hall) costs a flat rate of **300 SP multiplied by your force Scale**:
+*   **Scale 1**: 300 SP
+*   **Scale 2**: 600 SP
+*   **Scale 3**: 900 SP
+
+### Detailed Jump Tracking (Optional)
+If you are playing with an active star map and tracking individual jumps, the cost of transit is **50 SP + 50 SP per jump**, multiplied by your force Scale:
+*   **Formula**: `(50 SP + (50 SP × Jumps)) × Scale`
+
+### Maintenance Overtime during Transit
+Space travel takes time, and every **four jumps (rounded up)** requires **one month of transit time**. Your MechWarriors and administrative staff must still be paid while in transit. For every month spent traveling without an active contract to cover expenses, you must pay your standard monthly maintenance fee (**500 SP multiplied by your force Scale**).
+
+---
+
+## 3. Hinterlands Hiring Hall Profiles
+
+Each active hiring hall has a unique support rating, local market purchase options, and a **Mercenary Board** populated by dispossessed veterans and colorful local pilots.
+
+---
+
+### Almotacen (Support Rating: C)
+Once a pirate smuggling base, Almotacen was brought "to the law" by the Peregrine Lancers and turned into a thriving, rough-and-tumble frontier hiring hub.
+
+#### Local 'Mech Purchases (Sea Fox Presence)
+Clan Sea Fox merchants maintain a regular presence in Almotacen's "Pulse Precinct." Once per month, you may roll **2D6** to see what Clan technology they have brought to market:
+*   **2+**: One 'Mech is available.
+*   **7+**: Two 'Mechs are available.
+*   **10+**: Three 'Mechs are available.
+*   *Note*: Available models are determined by rolling on the **Clan Sea Fox Random Allocation Table (RAT)**.
+
+#### Almotacen Mercenary Board (Temporary Hires)
+You may roll **2D6** once per month on the Almotacen Mercenary Board to recruit pilots. Regular and Veteran pilots can be hired permanently, while unique named characters can be taken as temporary hires for individual tracks:
+
+*   **Regular Dispossessed (2–7 on 2D6)**: Gunnery 4, Piloting 5 (Alpha Strike: Skill 4). Available to hire permanently for the standard cost (100 SP).
+*   **Veteran Dispossessed (8 on 2D6)**: Gunnery 3, Piloting 4 (Alpha Strike: Skill 3). Available to hire permanently for 100 SP.
+*   **Veteran with 'Mech (Special Roll)**: Available as a temporary hire for **50 SP per track**, plus a **50 SP bonus** if the track is successfully completed.
+*   **Olivia (9–10 on 2D6)**: A former Clan Jade Falcon solahma warrior seeking revenge against pirates. She is currently dispossessed, possesses Gunnery 2, Piloting 4 (Alpha Strike: Skill 3), and has the **Lucky (2)** Special Pilot Ability.
+    *   *Terms*: Demands **50 SP per track**. She will permanently leave your force unless you take a pirate-hunting garrison track, a garrison contract on Summit, or a Lone Wolf Retainer contract on Alyina by her third contract of employment. Successfully completing one of these tasks allows you to hire her permanently. She will immediately leave if your command commits any acts of piracy.
+*   **Harrington (11 on 2D6)**: A spaceport barfly piloting a **Marauder C** (Gunnery 3, Piloting 4; Alpha Strike: Skill 3). Demands you "pay his tab" of **100 SP per track**.
+*   **Long John O'Sullivan (12 on 2D6)**: A quiet mercenary who spends most of his time in a hammock but pilots a **Starslayer STC-4C** (Gunnery 3, Piloting 3; Alpha Strike: Skill 3) with ease. He possesses the **Jumping Jack** Special Pilot Ability (reduces the attacker movement modifier for jumping by 2). Demands **150 SP per track**.
+
+---
+
+### Kandersteg (Support Rating: B)
+A Lyran border world within easy jump range of the Hinterlands, Kandersteg became the leading regional hub after the destruction of Arc-Royal in 3146. It lacks dedicated military infrastructure, so its hiring facilities are informally set up in leased warehouses and office parks.
+
+#### Local 'Mech Purchases (Lyran Manufacturers)
+Representatives from Lyran industrial firms sell equipment directly to mercenaries. Roll **2D6** once per month:
+*   **2+**: One 'Mech is available.
+*   **6+**: Two 'Mechs are available.
+*   **9+**: Three 'Mechs are available.
+*   *Note*: Available models are determined by rolling on the **Lyran Commonwealth RAT**.
+
+#### Kandersteg Mercenary Board (Temporary Hires)
+Roll **2D6** once per month to recruit from Kandersteg's local talent pool:
+
+*   **Regular Dispossessed (2–6 on 2D6)**: Piloting 5, Gunnery 4 (Alpha Strike: Skill 4). Standard purchase terms.
+*   **Veteran with 'Mech (7–9 on 2D6)**: Piloting 4, Gunnery 3 (Alpha Strike: Skill 3). Demands **50 SP per track** (+50 SP success bonus).
+*   **Thomas Sane (10 on 2D6)**: The disinherited third child of a Lyran Landgrave who dropped out of the military academy. Pilots a **Wolverine WVR-9R** (Gunnery 4, Piloting 5; Alpha Strike: Skill 4). Demands **75 SP per track**.
+*   **Red Royal (11 on 2D6)**: John Sanders prefers his theatrical stage name, "Red Royal." He pilots a bright red **King Crab KGC-0000** (Gunnery 4, Piloting 4; Alpha Strike: Skill 4). Demands **100 SP per track**.
+    *   *Terms*: He is willing to permanently join your command if he participates in at least one successful track and you pay **500 SP** to upgrade his "Red King" to a Star League-spec **KGC-000**.
+*   **Erin Searcy (12 on 2D6)**: An eager pilot looking to prove her skills. Pilots a **Blackjack BJ-5** (Gunnery 3, Piloting 4; Alpha Strike: Skill 3) and possesses the **Sniper** Special Pilot Ability (changes long-range modifiers to +2 and medium-range modifiers to +1). Demands **150 SP per track**.
+
+---
+
+### Galatea (Support Rating: A)
+The legendary **"Mercenary's Star"** remains the largest, most prestigious, and highest-rated hiring hall in the Inner Sphere. It saw a massive economic boom following the collapse of the Republic of the Sphere, as thousands of dispossessed ex-Republic soldiers flooded the market. It hosts the headquarters of the **Mercenary Review and Bonding Commission (MRBC)** and the **Mercenaries' Guild**, offering unparalleled training facilities, proving grounds, and elite technical services.
+
+---
+
+### Arc-Royal (Rebuilding)
+Historically the premier hub for hiring mercenary forces to combat the Clans, its legendary facilities were entirely leveled during the Jade Falcon occupation. Under the leadership of Grand Duchess Callandre Kell, the Arc-Royal Liberty Coalition is actively re-establishing the hiring hall in Old Connaught. Until those facilities are complete, mercenary operations are handled out of New Hannover under the shadow of the Kell Refit Facility. It welcomes any mercenaries willing to take contracts against Clan Hell's Horses or Clan Jade Falcon.
+
+---
+
+### Tamar Pact and Vesper Marches Recruiting Posts
+While not fully independent hiring halls, both the upstart Tamar Pact and the seceded Vesper Marches maintain dedicated recruiting posts on Kandersteg, Arc-Royal, and Galatea to snap up small-to-medium mercenary units to defend their rapidly expanding borders.
