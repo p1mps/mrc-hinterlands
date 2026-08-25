@@ -602,7 +602,7 @@ Big Leagues lets you join special mercenary commands with unique requirements, b
 
 ---
 
-## Taking One For the Team (TOFT) Campaign Reference
+## Taking One For the Team (TOFT)
 
 A player may decide to run a randomly generated opposing force (OPFOR) for a track rather than deploying their own force. This is called **Taking One For the Team** (TOFT). It is commonly used in campaigns to allow a mercenary player to play a non-mercenary opposing force against another player, or to resolve situations where a contract is otherwise unplayable. Using the TOFT option provides several unique benefits and rewards to the player's primary force.
 
