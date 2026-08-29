@@ -6,5 +6,4 @@ enum ContractType: string {
     case Raid = 'raid';
     case Retainer = 'retainer';
     case Invasion = 'invasion';
-    case Liaison = 'liaison';
 }

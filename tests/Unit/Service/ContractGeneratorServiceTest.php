@@ -57,7 +57,7 @@ class ContractGeneratorServiceTest extends TestCase {
     {
         $service = $this->makeService(array_fill(0, 5, 3));
         $result  = $service->rollTrackSetup(ContractType::Raid, \App\Enum\CommandRights::Liaison);
-        foreach (['missionType','terrain','terrainSetting','complication'] as $key) {
+        foreach (['missionType','terrain', 'complication'] as $key) {
             $this->assertArrayHasKey($key, $result);
         }
     }
@@ -120,7 +120,7 @@ class ContractGeneratorServiceTest extends TestCase {
         $linkedContract = $this->createStub(\App\Entity\Contract::class);
         $linkedContract->method('getTrackRecords')->willReturn(
             new \Doctrine\Common\Collections\ArrayCollection([
-                $this->makeTrackRecord(1, 'Assault', 'Forest'),
+                $this->makeTrackRecord(1, 'Assault', 'Savannahs'),
             ])
         );
         $linkedContract->method('getType')->willReturn(\App\Enum\ContractType::Raid);
@@ -129,7 +129,7 @@ class ContractGeneratorServiceTest extends TestCase {
         $result  = $service->rollOpposingTrackSetup($linkedContract, \App\Enum\CommandRights::Liaison);
 
         $this->assertEquals('Assault', $result['missionType']);
-        $this->assertEquals('Forest', $result['terrain']);
+        $this->assertEquals('Savannahs', $result['terrain']);
         $this->assertTrue($result['inherited'] ?? false);
         $this->assertArrayHasKey('complication', $result);
         $this->assertArrayHasKey('complicationRoll', $result);
@@ -156,8 +156,8 @@ class ContractGeneratorServiceTest extends TestCase {
         $linkedContract = $this->createStub(\App\Entity\Contract::class);
         $linkedContract->method('getTrackRecords')->willReturn(
             new \Doctrine\Common\Collections\ArrayCollection([
-                $this->makeTrackRecord(1, 'Mission1', 'Terrain1'),
-                $this->makeTrackRecord(2, 'Mission2', 'Terrain2'),
+                $this->makeTrackRecord(1, 'Mission1', 'Urban'),
+                $this->makeTrackRecord(2, 'Mission2', 'Savannahs'),
             ])
         );
         $linkedContract->method('getType')->willReturn(\App\Enum\ContractType::Raid);
@@ -166,7 +166,7 @@ class ContractGeneratorServiceTest extends TestCase {
         $result  = $service->rollOpposingTrackSetup($linkedContract, \App\Enum\CommandRights::Liaison);
 
         $this->assertEquals('Mission2', $result['missionType']);
-        $this->assertEquals('Terrain2', $result['terrain']);
+        $this->assertEquals('Savannahs', $result['terrain']);
     }
 
     private function makeTrackRecord(int $trackNumber, string $missionType, string $terrain): \App\Entity\TrackRecord

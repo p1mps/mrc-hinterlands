@@ -25,7 +25,7 @@ class CommandComplicationTable {
             8 => 'Local air support has been scrambled against you. Give your opponent 1d2 Light Strike BSPs this track (Page 76 Battlemech Manuel). [cite: 987]',
             9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 988]'
         ],
-        'Hills' => [
+        'A Game of Armored Combat' => [
             1 => 'No Complication [cite: 1011]',
             2 => 'No Complication [cite: 1011]',
             3 => 'No Complication [cite: 1011]',
@@ -36,18 +36,7 @@ class CommandComplicationTable {
             8 => 'Support was delayed for this mission, so they sent a messenger ahead to alert you. For support units you receive a single 4/5 Savannah Master Hovercraft this track (do not select any other units with your remaining BV). If using BSPs, you receive a single Savannah Master Hovercraft BSP. [cite: 1021, 1022, 1023]',
             9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 1024]'
         ],
-        'Light Industrial' => [
-            1 => 'No Complication [cite: 1068]',
-            2 => 'No Complication [cite: 1068]',
-            3 => 'No Complication [cite: 1068]',
-            4 => 'No Complication [cite: 1068]',
-            5 => 'Your presence has been noted by local security forces. Reduce the turn limit on this track by 1d3 to avoid entanglements. [cite: 1070]',
-            6 => 'The industry in the area is playing havoc with target locks. Your Missile weapons suffer from a 1 to cluster rolls at medium range, and a -2 to cluster rolls at long range. [cite: 1071, 1072]',
-            7 => 'This site has been marked as strategically important by your employers. If any buildings take damage from your mechs (either as a result of your weapons fire or your mechs taking cover using said buildings) then you will receive a -100 VP penalty for this track. This penalty will not apply if you are forced to attack a building with an enemy mech inside it, but will apply if you fire at a mech with partial cover and hit the building instead. [cite: 1073, 1074, 1075]',
-            8 => '(Attacker Only) In the process of preparing to defend the area, the locals have found a Schrek PPC Carrier in functional order. Add a 5/6 Schrek PPC Carrier to your opponent\'s force as a support unit for this track (this does not count toward their support unit limit). If using BSPs, add one BSP Schrek PPC Carrier to your opponent\'s force. [cite: 1078, 1079, 1080] | (Defender Only) The opponent\'s employer has scraped together additional forces to take this crucial industrial plant. Add a 5/6 LRM Carrier to your opponent\'s force as a support unit this track (this does not count toward their support unit limit). If using BSPs, add one BSP LRM Carrier to your opponent\'s force. [cite: 1081, 1082, 1083]',
-            9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 1084]'
-        ],
-        'Mountains' => [
+        'Clan Invasion' => [
             1 => 'No Complication [cite: 1123]',
             2 => 'No Complication [cite: 1123]',
             3 => 'No Complication [cite: 1123]',
@@ -80,47 +69,14 @@ class CommandComplicationTable {
             8 => 'Local insurgents have thrown their lot in with your opponent. Give your opponent 2 Veteran Jump Infantry BSPs. [cite: 1255]',
             9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 1256]'
         ],
-        'Wetlands' => [
-            1 => 'No Complication [cite: 1292]',
-            2 => 'No Complication [cite: 1292]',
-            3 => 'No Complication [cite: 1292]',
-            4 => 'No Complication [cite: 1292]',
-            5 => 'The muck of the wetlands is fouling up vehicle systems. Reduce all your units with either Wheeled or Tracked MP by 1 for the first three rounds of combat. [cite: 1293, 1294]',
-            6 => 'Local support was limited at best. All your support units are 5/6. This does not affect the BV of selected support units and give you more to select. If using BSPs, then you may not purchase any Veteran Assets. [cite: 1295, 1296]',
-            7 => 'The opposition has managed to obtain scans of the AO and understands how to optimize their route through the mire. All opponent Mechs subtract 1 MP from all movement costs through swamp hexes and do not need to make bog down checks for moving through this type of terrain. [cite: 1297, 1298]',
-            8 => 'The terrain of the AO has your force off balance. Roll 3d6 and drop the highest number for your initiative for this track. [cite: 1299, 1300]',
-            9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 1301]'
-        ],
-        'Wooded' => [
-            1 => 'No Complication [cite: 1355]',
-            2 => 'No Complication [cite: 1355]',
-            3 => 'No Complication [cite: 1355]',
-            4 => 'No Complication [cite: 1355]',
-            5 => 'Local bandit forces sweep through the battlefield. Your opponent gains an additional 3 4/4 Beast Infantry (Tariq) (Auto-rifle) for this track. If playing with BSPs, the opponent gains 4 <infantry> BSPs. [cite: 1355]',
-            6 => 'It has been a dry season for the woods, and fire danger is at its peak. Triple any damage dealt to woods hexes with H, DE, or P weapons. Any destroyed hexes should be marked by a token, and any standing in that hex for the rest of the track will receive 5 heat that heat phase if they track heat, or 5 damage to their front arc if not. Alternatively, if players wish to use the fire rules, then refer to page 62 of the BattleMech Manual for the simplified rules, or page 41 of Tactical Operations: Advanced Rules for the full rules. [cite: 1355]',
-            7 => 'Local forces have come out in opposition to you. Add 1 4/5 Myrmidon Medium Tanks to your opponent\'s team. If using BSPs, add 1 Manticore Heavy Tank instead. [cite: 1355]',
-            8 => 'The opponent is being supported by artillery. Give your opponent 1 Long Tom Artillery Strike BSP. (Page 77 Battlemech Manuel). [cite: 1355]',
-            9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 1355]'
-        ],
-        'Alien' => [
-            1 => 'No Complication [cite: 1386]',
-            2 => 'No Complication [cite: 1386]',
-            3 => 'No Complication [cite: 1386]',
-            4 => 'No Complication [cite: 1386]',
-            5 => 'The local environment is dangerous to human life. Any conventional infantry fielded must be XCT troopers, and any vehicles fielded must have the Environmental Sealing chassis modification. If using BSPs, then conventional infantry may not be selected. [cite: 1391, 1392]',
-            6 => 'An eccentric professor has insisted on hijacking one of your units to aid him in a study and he has paid command enough to make it happen. You must bring a unit with a Remote Sensor Dispenser, and must use said Remote Sensor Dispenser in all 4 quadrants of the map this round. Failing to deploy any sensors will net you -1 reputation at the end of the track, deploying at least 3 will gain you 100 SP, and deploying all 4 will gain you +1 reputation. If none of your company units have a remote sensor dispenser, then you will have to bring a support unit for the task. If using BSPs, then designate one (only 1) unit as carrying a remote sensor dispenser. Sensors may be deployed in the movement phase anywhere along the path of the unit for the cost of 1 MP per sensor. [cite: 1393, 1394, 1395, 1396, 1397, 1398]',
-            7 => 'Sensor issues due to the oddities of this planet are making it hard for your astechs to adjust the targeting software, so they chose to just tune it for one instead. Choose one type of weapon - DE, DB, or M. All weapons with that type of damage gain -1 to hit, all other weapon types gain +1 to hit (NB Pulse lasers are not DE, and as such receive a +1 always). [cite: 1399, 1400]',
-            8 => 'Magnetic field fluctuations play havoc with system capacitors. Your Gauss Rifles may not be fired for 1d4 rounds, though if crit, said gauss rifle does not explode during this duration. In addition, all PPCs (Both yours and the opponent\'s) run the risk of exploding due the entire track to difficulties with their field inhibitors - on a to-hit roll of 2, the PPC will detonate for their damage value as an ammunition explosion. If players wish, they may refer to page 101 in Tactical Operation: Advanced Rules and use the rules for Disengaging Inhibitor instead, though note that disengaging the inhibitor is mandatory for every shot during this track. [cite: 1401, 1402, 1403]',
-            9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 1404]'
-        ],
     ];
 
     // roll = 1d6 + commandRightsBonus (0-3). Result >= 9 means roll twice.
     public static function lookup(string $terrain, int $roll): string {
+        $table = self::TABLES[$terrain];
         if ($roll >= 9) {
-            return 'ROLL TWICE — apply both complications (reroll any "No Complication" or duplicate results)';
+            return "Double complications! ". $table[max(1, min(8, $roll))] . " " . $table[max(1, min(8, $roll))];
         }
-        $table = self::TABLES[$terrain] ?? self::TABLES['Grasslands'];
-        return $table[max(1, min(8, $roll))] ?? 'No Complication';
+        return $table[max(1, min(8, $roll))];
     }
 }

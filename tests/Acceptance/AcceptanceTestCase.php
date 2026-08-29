@@ -260,7 +260,7 @@ abstract class AcceptanceTestCase extends WebTestCase
                 'contract_id' => $contractId,
                 'track_number' => $i,
                 'mission_type' => 'Assault',
-                'terrain' => 'Open',
+                'terrain' => 'Urban',
                 'status' => 'pending',
                 'taking_one_for_team' => 0,
                 'created_at' => date('Y-m-d H:i:s'),

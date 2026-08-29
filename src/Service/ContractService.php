@@ -117,7 +117,7 @@ class ContractService
             ->setTrack($track)
             ->setMonth($month)
             ->setEntryType(ContractLogEntryType::TrackSetup)
-            ->setDescription("Track {$track->getTrackNumber()}: {$result['missionType']} on {$result['terrain']} (MegaMek: {$result['terrainSetting']})")
+            ->setDescription("Track {$track->getTrackNumber()}: {$result['missionType']}")
             ->setData($result);
 
         $this->em->persist($log);

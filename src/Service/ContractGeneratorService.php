@@ -296,13 +296,12 @@ class ContractGeneratorService {
         $terrainData = TerrainTable::lookup($terrainRoll);
 
         $compRoll    = $this->dice->roll(1, 6) + $commandRights->complicationBonus();
-        $complication = CommandComplicationTable::lookup($terrainData['terrain'], $compRoll);
+        $complication = CommandComplicationTable::lookup($terrainData, $compRoll);
 
         return [
             'missionType'      => $missionType,
             'missionRoll'      => $missionRoll,
-            'terrain'          => $terrainData['terrain'],
-            'terrainSetting'   => $terrainData['setting'],
+            'terrain'          => $terrainData,
             'terrainRoll'      => $terrainRoll,
             'complication'     => $complication,
             'complicationRoll' => $compRoll,

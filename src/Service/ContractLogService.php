@@ -23,7 +23,6 @@ class ContractLogService
     public function updateTrackSetupData(ContractLogEntry $entry, string $missionType, string $terrain): void
     {
         $track = $entry->getTrack();
-        $terrainSetting = TerrainTable::getSettingByTerrain($terrain);
         $tofttLabel = $track?->isTakingOneForTeam() ? ' [TOFTT]' : '';
 
         if ($track) {
@@ -31,12 +30,11 @@ class ContractLogService
             $track->setTerrain($terrain);
         }
 
-        $entry->setDescription("Track {$track?->getTrackNumber()}: {$missionType} on {$terrain} (MegaMek: {$terrainSetting}){$tofttLabel}");
+        $entry->setDescription("Track {$track?->getTrackNumber()}: {$missionType} on {$terrain} {$tofttLabel}");
 
         $data = $entry->getData() ?? [];
         $data['missionType'] = $missionType;
         $data['terrain'] = $terrain;
-        $data['terrainSetting'] = $terrainSetting;
         $entry->setData($data);
     }
 
@@ -241,7 +239,7 @@ class ContractLogService
             ->setTrack($track)
             ->setMonth($month)
             ->setEntryType(ContractLogEntryType::TrackSetup)
-            ->setDescription("Track {$track->getTrackNumber()}: {$result['missionType']} on {$result['terrain']} (MegaMek: {$result['terrainSetting']}){$tofttLabel}")
+            ->setDescription("Track {$track->getTrackNumber()}: {$result['missionType']} on {$result['terrain']} {$tofttLabel}")
             ->setData($result);
 
         $this->em->persist($log);

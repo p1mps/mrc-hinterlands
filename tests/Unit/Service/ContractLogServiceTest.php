@@ -162,7 +162,6 @@ class ContractLogServiceTest extends TestCase
         $this->assertIsArray($data);
         $this->assertEquals('Raid', $data['missionType']);
         $this->assertEquals('Wasteland', $data['terrain']);
-        $this->assertArrayHasKey('terrainSetting', $data);
     }
 
     public function testUpdateTrackSetupDataHandlesNullTrack(): void

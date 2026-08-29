@@ -470,28 +470,28 @@ class SeedDatabaseCommand extends Command
         $this->em->persist($contract6);
         $contracts[] = $contract6;
 
-        // Contract 7: Liaison
-        $contract7 = new Contract();
-        $contract7->setCompany($mainCompany)
-            ->setType(ContractType::Liaison)
-            ->setEmployer('Lyran League')
-            ->setEmployerAffiliation('Lyran Alliance')
-            ->setDescription('Diplomatic escort and liaison duties with AFFS forces.')
-            ->setScale(1)
-            ->setDurationMonths(3)
-            ->setBasePayPercent(null)
-            ->setCommandRights(CommandRights::Liaison)
-            ->setSupportTerms('None')
-            ->setSalvageRights('None')
-            ->setTransportTerms('—')
-            ->setNumberOfTracks(2)
-            ->setTracksCompleted(0)
-            ->setStatus(ContractStatus::Available)
-            ->setName('Operation Silver Tongue')
-            ->setPlanet('Davos')
-            ->setIntensity($this->intensityGenerator->generate($contract7->getDurationMonths(), $contract7->getNumberOfTracks()));
-        $this->em->persist($contract7);
-        $contracts[] = $contract7;
+//        // Contract 7: Liaison
+//        $contract7 = new Contract();
+//        $contract7->setCompany($mainCompany)
+//            ->setType(ContractType::Liaison)
+//            ->setEmployer('Lyran League')
+//            ->setEmployerAffiliation('Lyran Alliance')
+//            ->setDescription('Diplomatic escort and liaison duties with AFFS forces.')
+//            ->setScale(1)
+//            ->setDurationMonths(3)
+//            ->setBasePayPercent(null)
+//            ->setCommandRights(CommandRights::Liaison)
+//            ->setSupportTerms('None')
+//            ->setSalvageRights('None')
+//            ->setTransportTerms('—')
+//            ->setNumberOfTracks(2)
+//            ->setTracksCompleted(0)
+//            ->setStatus(ContractStatus::Available)
+//            ->setName('Operation Silver Tongue')
+//            ->setPlanet('Davos')
+//            ->setIntensity($this->intensityGenerator->generate($contract7->getDurationMonths(), $contract7->getNumberOfTracks()));
+//        $this->em->persist($contract7);
+//        $contracts[] = $contract7;
 
         // Contract 8: Broken contract
         $contract8 = new Contract();
@@ -532,7 +532,6 @@ class SeedDatabaseCommand extends Command
                         ContractType::Garrison => 'Fortification Defense',
                         ContractType::Invasion => 'Beachhead Assault',
                         ContractType::Retainer => 'Patrol Route',
-                        ContractType::Liaison => 'Diplomatic Escort',
                     })
                     ->setTerrain(match($trackNum % 3) {
                         0 => 'Mountain',
