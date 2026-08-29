@@ -57,7 +57,7 @@ class ContractLogController extends BaseController
             'entry'        => $entry,
             'form'         => $form,
             'missionTypes' => ContractTrackTable::getAllMissionTypes(),
-            'terrains'     => array_keys(TerrainTable::getAllTerrains()),
+            'terrains'     => TerrainTable::getAllTerrains()
         ]);
     }
 
