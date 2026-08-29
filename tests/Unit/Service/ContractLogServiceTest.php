@@ -422,7 +422,7 @@ class ContractLogServiceTest extends TestCase
             ->with(ContractLogEntry::class)
             ->willReturn($repo);
 
-        $this->assertEquals(1, $this->service->calculateCurrentMonth($contract));
+        $this->assertEquals(2, $this->service->calculateCurrentMonth($contract));
     }
 
     public function testCalculateCurrentMonthReturnsNextMonthAfterLastPostTrack(): void

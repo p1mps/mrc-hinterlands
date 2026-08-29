@@ -72,15 +72,17 @@ class ContractLogService
             ['createdAt' => 'DESC']
         );
 
-        $maxMonth = 0;
+        $maxMonth = 1;
+
+        if ($lastPostTrack !== null) {
+            $maxMonth = max($maxMonth, $lastPostTrack->getMonth());
+        }
 
         if ($lastMonthAdvance !== null) {
             $maxMonth = max($maxMonth, $lastMonthAdvance->getMonth());
         }
 
-        if ($lastPostTrack !== null) {
-            $maxMonth = max($maxMonth, $lastPostTrack->getMonth());
-        }
+
 
         return $maxMonth + 1;
     }

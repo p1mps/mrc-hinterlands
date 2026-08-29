@@ -277,9 +277,9 @@ class ContractController extends BaseController
     }
 
     #[Route('/contract/{id}/track-setup', name: 'app_contract_track_setup')]
-    public function trackSetup(Contract $contract, Request $request, EntityManagerInterface $em, ContractService $contractService): Response
+    public function trackSetup(Contract $contract, Request $request, EntityManagerInterface $em, ContractService $contractService, ContractLogService $contractLogService): Response
     {
-        $month = $request->request->getInt('month') ?? 1;
+        $month = $contractLogService->calculateCurrentMonth($contract);
         $contractService->handleTrackSetup($contract, $month);
         $em->flush();
         $this->addFlash('success', 'Track setup rolled and recorded.');
