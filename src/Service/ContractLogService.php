@@ -61,30 +61,18 @@ class ContractLogService
     public function calculateCurrentMonth(Contract $contract): int
     {
         // Find the most recent MonthAdvance entry
-        $lastMonthAdvance = $this->em->getRepository(ContractLogEntry::class)->findOneBy(
-            ['contract' => $contract, 'entryType' => ContractLogEntryType::MonthAdvance],
-            ['createdAt' => 'DESC']
-        );
-
-        // Find the most recent PostTrack entry
-        $lastPostTrack = $this->em->getRepository(ContractLogEntry::class)->findOneBy(
-            ['contract' => $contract, 'entryType' => ContractLogEntryType::PostTrack],
+        $lastEntry = $this->em->getRepository(ContractLogEntry::class)->findOneBy(
+            [],
             ['createdAt' => 'DESC']
         );
 
         $maxMonth = 1;
 
-        if ($lastPostTrack !== null) {
-            $maxMonth = max($maxMonth, $lastPostTrack->getMonth());
+        if ($lastEntry !== null) {
+            $maxMonth = max($maxMonth, $lastEntry->getMonth());
         }
 
-        if ($lastMonthAdvance !== null) {
-            $maxMonth = max($maxMonth, $lastMonthAdvance->getMonth());
-        }
-
-
-
-        return $maxMonth + 1;
+        return $maxMonth;
     }
 
     /**
@@ -137,7 +125,7 @@ class ContractLogService
         return $newMonth;
     }
 
-    public function handleTransport(Contract $contract, $company): void
+    public function handleTransport(Contract $contract, $company, int $month): void
     {
         $full = 300;
         $pct = $contract->parseTransportPercent();
@@ -155,9 +143,9 @@ class ContractLogService
 
         $log = (new ContractLogEntry())
             ->setContract($contract)
-            ->setMonth($contract->getTracksCompleted() + 1)
+            ->setMonth($month)
             ->setEntryType(ContractLogEntryType::Transport)
-            ->setDescription("Transport: $playerPays SP")
+            ->setDescription("Transport: $playerPays SP $pctNote")
             ->setSupportPointEntry($sp);
 
         $this->em->persist($log);

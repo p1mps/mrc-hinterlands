@@ -84,13 +84,14 @@ class ContractLogController extends BaseController
         $postTrackForm = $this->createForm(PostTrackFormType::class);
         $postTrackForm->handleRequest($request);
         $currentMonth = $this->logService->calculateCurrentMonth($contract);
+        $nextMonth = $currentMonth;
 
         if ($request->isMethod('POST')) {
             match ($action) {
-                'transport'   => $this->logService->handleTransport($contract, $company),
-                'maintenance' => $this->logService->handleMaintenance($contract, $company, $currentMonth),
-                'base_pay'    => $this->logService->handleBasePay($contract, $company, $currentMonth),
-                'track_setup' => $this->logService->handleTrackSetup($contract, $currentMonth, $request->request->getBoolean('toftt')),
+                'transport'   => $this->logService->handleTransport($contract, $company, $nextMonth),
+                'maintenance' => $this->logService->handleMaintenance($contract, $company, $nextMonth),
+                'base_pay'    => $this->logService->handleBasePay($contract, $company, $nextMonth),
+                'track_setup' => $this->logService->handleTrackSetup($contract, $nextMonth, $request->request->getBoolean('toftt')),
                 'post_track'  => $this->handlePostTrackAction($contract, $company, $postTrackForm, $request->request->getInt('month')),
                 'downtime'    => $this->logService->handleDowntime($contract, $company, $request->request->getInt('month'), $request->request->getString('note', ''), $request->request->getInt('amount', 0)),
                 default       => null,
@@ -98,7 +99,7 @@ class ContractLogController extends BaseController
 
             if ($action !== 'post_track') {
                 $this->addFlash('success', "Log entry added $action.");
-                return $this->redirectToRoute('app_contracts_show', [
+                return $this->redirectToRoute('app_contracts_log_add', [
                     'id' => $contract->getId(),
                 ]);
             }
@@ -106,7 +107,7 @@ class ContractLogController extends BaseController
 
         return $this->render('contract_log/add.html.twig', [
             'contract'      => $contract,
-            'currentMonth'  => $currentMonth,
+            'currentMonth'  => $nextMonth,
             'postTrackForm' => $postTrackForm,
         ]);
     }

@@ -16,7 +16,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'jumps' => 1,
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId);
+        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
@@ -32,7 +32,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'action' => 'maintenance',
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId);
+        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
@@ -48,7 +48,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'action' => 'base_pay',
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId);
+        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
@@ -66,7 +66,8 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'toftt' => false,
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId);
+        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
+
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
@@ -144,7 +145,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'note' => 'To delete',
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId);
+        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
         $client->followRedirect();
 
         // Now delete the log entry
