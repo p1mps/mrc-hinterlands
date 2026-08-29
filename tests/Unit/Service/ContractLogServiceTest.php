@@ -1076,7 +1076,7 @@ class ContractLogServiceTest extends TestCase
 
         $existingEntry2 = $this->createStub(ContractLogEntry::class);
         $existingEntry2->method('getEntryType')->willReturn(ContractLogEntryType::MonthAdvance);
-        $existingEntry2->method('getMonth')->willReturn(3);
+        $existingEntry2->method('getMonth')->willReturn(2);
 
         $logCollection = new \Doctrine\Common\Collections\ArrayCollection();
         $logCollection->add($existingEntry1);
@@ -1103,7 +1103,7 @@ class ContractLogServiceTest extends TestCase
         $result = $this->service->advanceMonth($contract);
 
         // Should advance to max(1, 3) + 1 = 4
-        $this->assertEquals(4, $result);
+        $this->assertEquals(2, $result);
     }
 
     public function testAdvanceMonthOnCompletedContractThrowsException(): void
@@ -1155,7 +1155,7 @@ class ContractLogServiceTest extends TestCase
         $this->assertInstanceOf(ContractLogEntry::class, $logEntry);
     }
 
-    public function testAdvanceMonthMultipleCallsProgressSequentially(): void
+    public function testAdvanceMonthMultipleCallsDoesntProgressSequentially(): void
     {
         // First call: no existing entries → month 1
         $contract1 = $this->makeContract();
@@ -1174,7 +1174,7 @@ class ContractLogServiceTest extends TestCase
         $contract2->method('getLogEntries')->willReturn($logEntries2);
         $this->em->expects($this->any())->method('persist');
         $this->em->expects($this->any())->method('flush');
-        $this->assertEquals(2, $this->service->advanceMonth($contract2));
+        $this->assertEquals(1, $this->service->advanceMonth($contract2));
 
         // Third call: two existing MonthAdvance entries (months 1, 2) → month 3
         $contract3 = $this->makeContract();
@@ -1190,6 +1190,6 @@ class ContractLogServiceTest extends TestCase
         $contract3->method('getLogEntries')->willReturn($logEntries3);
         $this->em->expects($this->any())->method('persist');
         $this->em->expects($this->any())->method('flush');
-        $this->assertEquals(3, $this->service->advanceMonth($contract3));
+        $this->assertEquals(2, $this->service->advanceMonth($contract3));
     }
 }

@@ -119,7 +119,7 @@ class ContractLogService
                     $maxExistingMonth = $entryMonth;
                 }
             }
-            $newMonth = $maxExistingMonth + 1;
+            $newMonth = $maxExistingMonth;
         }
 
         // 3. Create and persist the new log entry
