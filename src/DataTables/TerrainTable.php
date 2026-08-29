@@ -8,7 +8,8 @@ class TerrainTable {
         'Savannahs',
         'Urban',
         'A Game of Armored Combat',
-        'Clan Invasion'
+        'Clan Invasion',
+        'GM Choice :)',
     ];
 
     public static function lookup(int $roll): string {
