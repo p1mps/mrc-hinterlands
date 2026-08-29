@@ -80,6 +80,22 @@ class CommandComplicationTable {
             8 => 'Support was delayed for this tournament round. For support units you receive a single 4/5 Savannah Master Hovercraft this track (do not select any other units with your remaining BV). If using BSPs, you receive a single Savannah Master Hovercraft BSP. [cite: 1311, 1312, 1313]',
             9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 1314]'
         ],
+        'GM Choice :)' => [
+            1 => 'No Complication [cite: 1301]',
+            2 => 'No Complication [cite: 1301]',
+            3 => 'No Complication [cite: 1301]',
+            4 => 'No Complication [cite: 1301]',
+            5 => 'High mountain passes cause issues for some vehicles. All units with Hover or VTOL MP reduce their cruising MP by 2 due
+to the thin atmosphere. BSPs with hover or VTOL movement reduce their total MP by 2.',
+            6 => 'Local support was limited at best. All your support units are 5/6. This does not affect the BV of selected support units and
+give you more to select. If using BSPs, then you may not purchase any Veteran Assets.',
+            7 => 'The opponent is being supported by artillery. Give your opponent 1 Long Tom Artillery Strike BSP.',
+            8 => 'Support was delayed for this tournament round. For support units you receive a single 4/5 Savannah Master Hovercraft this track (do not select any other units with your remaining BV). If using BSPs, you receive a single Savannah Master Hovercraft BSP. [cite: 1311, 1312, 1313]',
+            9 => 'Sensor issues due to the oddities of this planet are making it hard for your astechs to adjust the targeting software, so
+they chose to just tune it for one instead. Choose one type of weapon - DE, DB, or M. All weapons with that type of
+damage gain -1 to hit, all other weapon types gain +1 to hit (NB - Pulse lasers are not DE, and as such receive a +1
+always)',
+        ],
     ];
 
     // roll = 1d6 + commandRightsBonus (0-3). Result >= 9 means roll twice.
