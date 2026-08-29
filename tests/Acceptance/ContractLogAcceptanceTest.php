@@ -16,7 +16,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'jumps' => 1,
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
+        $this->assertResponseRedirects('/contracts/' . $contractId . '/log/add');
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
@@ -32,7 +32,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'action' => 'maintenance',
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
+        $this->assertResponseRedirects('/contracts/' . $contractId . '/log/add');
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
@@ -48,7 +48,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'action' => 'base_pay',
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
+        $this->assertResponseRedirects('/contracts/' . $contractId . '/log/add');
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
@@ -66,7 +66,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'toftt' => false,
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
+        $this->assertResponseRedirects('/contracts/' . $contractId . '/log/add');
 
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
@@ -104,7 +104,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'note' => 'Test note',
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId);
+        $this->assertResponseRedirects('/contracts/' . $contractId . '/log/add');
         $client->followRedirect();
 
         // Now edit the last log entry
@@ -120,7 +120,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
                     'contract_log_entry_edit_form[entryType]' => 'downtime',
                 ]);
                 $client->submit($form);
-                $this->assertResponseRedirects('/contract/' . $contractId);
+                $this->assertResponseRedirects('/contracts/' . $contractId);
                 $crawler = $client->followRedirect();
                 $this->assertResponseIsSuccessful();
                 return;
@@ -145,7 +145,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
             'note' => 'To delete',
         ]);
 
-        $this->assertResponseRedirects('/contract/' . $contractId . '/add');
+        $this->assertResponseRedirects('/contracts/' . $contractId . '/log/add');
         $client->followRedirect();
 
         // Now delete the log entry
@@ -154,7 +154,7 @@ class ContractLogAcceptanceTest extends AcceptanceTestCase
         if ($entry && $entry['id']) {
             $entryId = $entry['id'];
             $client->request('POST', '/contracts/' . $contractId . '/log/entry/' . $entryId . '/delete');
-            $this->assertResponseRedirects('/contract/' . $contractId);
+            $this->assertResponseRedirects('/contracts/' . $contractId);
             $crawler = $client->followRedirect();
             $this->assertResponseIsSuccessful();
             return;

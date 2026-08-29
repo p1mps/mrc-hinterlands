@@ -7,6 +7,7 @@
 <table class="table table-bordered table-sm">
 <tr><th>Employer</th><td>{{ contract.employer }}</td></tr>
 <tr><th>Affiliation</th><td>{{ contract.employerAffiliation }}</td></tr>
+<tr><th>Type</th><td>{{ contract.type.value }}</td></tr>
 <tr><th>Scale</th><td>{{ contract.scale }}</td></tr>
 <tr><th>Duration</th><td>{{ contract.durationMonths }} months</td></tr>
 <tr><th>Base Pay</th><td>{{ contract.basePayPercent is not null ? contract.basePayPercent ~ '%' : 'None' }}</td></tr>
