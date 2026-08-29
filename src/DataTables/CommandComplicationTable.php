@@ -69,6 +69,17 @@ class CommandComplicationTable {
             8 => 'Local insurgents have thrown their lot in with your opponent. Give your opponent 2 Veteran Jump Infantry BSPs. [cite: 1255]',
             9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 1256]'
         ],
+        'Solaris' => [
+            1 => 'No Complication [cite: 1301]',
+            2 => 'No Complication [cite: 1301]',
+            3 => 'No Complication [cite: 1301]',
+            4 => 'No Complication [cite: 1301]',
+            5 => 'A VTOL carrying VIP spectators crashes on the field. Whichever side is successful in this track will gain +1 reputation. Destroying one of the VTOLs will result in an immediate -1 reputation to whichever player destroyed the VTOL (accidental crashes or skidding off the map will cause no effect unless caused by intentional damage). Add two tokens to the map at elevation 6 to represent the VTOLs. Use the Warrior Attack Helicopter BSP to represent each unit or use the datasheet for a Sprint Scout Helicopter for players looking to avoid BSP rules. [cite: 1303, 1304, 1305, 1306]',
+            6 => 'The mission was set for dawn. Add +1 to hit with all weapon attacks. [cite: 1307]',
+            7 => 'Enemy forces have placed target beacons on your units. All missile attacks by the opponent have a -1 to hit against your Mech units. [cite: 1308, 1309]',
+            8 => 'Support was delayed for this tournament round. For support units you receive a single 4/5 Savannah Master Hovercraft this track (do not select any other units with your remaining BV). If using BSPs, you receive a single Savannah Master Hovercraft BSP. [cite: 1311, 1312, 1313]',
+            9 => 'Roll twice and apply both effects. Do not reroll No Complication, but reroll any other duplicate effects. [cite: 1314]'
+        ],
     ];
 
     // roll = 1d6 + commandRightsBonus (0-3). Result >= 9 means roll twice.
