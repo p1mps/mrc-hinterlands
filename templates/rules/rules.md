@@ -240,6 +240,223 @@ When generating a contract, a 1d6 roll on the Track Intensity Table determines t
   </tbody>
 </table>
 
+
+*BattleTech Hot Spots: Draconis Reach* features **11 core Chaos Campaign tracks** (plus the specialized **Duel** track used on Game Worlds).
+
+Below is the complete list of all tracks with their setups, deployments, objectives, and special rules:
+
+---
+
+### 1. Assault
+*A pitched battle where the Attacker tries to drive the Defender from the field entirely.*
+
+* **Game Setup:** The Defender selects a long map edge as their home edge; the Attacker takes the opposite long edge.
+* **Deployment:**
+    * **Defender (Garrison):** Deploys within 5 full hexes (Alpha Strike: 10") of their home edge prior to Turn 1 Initiative.
+    * **Attacker (Garrison):** Enters from their home edge during the Movement Phase of Turn 1. Attackers cannot select Minefield or Immobile Battlefield Support (BSP) assets.
+* **Objectives:**
+    * **Orders (Attacker):** At least half of your units (by number, excluding assets) must either attack an enemy unit for two consecutive turns, or remain within Line of Sight (LOS) and medium range of an enemy unit's weapon for two consecutive turns [50 VP].
+    * **Orders (Defender):** All of your units must remain on the playing field for the first three turns, or be crippled or destroyed [50 VP].
+    * **Conquer (Attacker/Defender):** Destroy or cripple at least half of the opponent's starting force (by BV or PV, excluding assets) before losing more than 50% of your own force [200 VP].
+    * **Hold the Field (Attacker/Defender):** If one side's entire deployed force (including assets) is crippled or destroyed, the opposing side holds the field [100 VP].
+* **Special Rules & Salvage:** The track ends when one side has no 'Mechs in play, or at the end of Turn 10 (Turn 8 in Alpha Strike). The victor claims all battlefield salvage.
+
+---
+
+### 2. Breakthrough
+*The Attacker attempts a pinpoint strike to break through the Defender’s defensive line.*
+
+* **Game Setup:** Defender chooses a long edge as their home edge; Attacker takes the opposite long edge.
+* **Deployment:**
+    * **Defender (Garrison):** Deploys within 6 full hexes (AS: 12") of their home edge prior to Turn 1 Initiative.
+    * **Attacker (Standard):** Enters from their home edge during the Movement Phase of Turn 1. Cannot select Minefield or Immobile BSP assets.
+* **Objectives:**
+    * **Orders (Attacker):** At least half of starting units (by BV/PV, excluding assets) must cross the center line toward the Defender's home edge [50 VP].
+    * **Orders (Defender):** At least half of surviving units (by number, excluding assets) must attack an enemy unit for two consecutive turns [50 VP].
+    * **Push Through (Attacker):** Move at least half of the starting force (by BV/PV, including assets) off the Defender's home edge [300 VP].
+    * **Suppressing Fire (Attacker/Defender):** Every non-BSP unit in the opponent's force suffers at least 1 point of internal damage (AS: 1 point of damage) [100 VP].
+    * **You Shall Not Pass (Defender):** Cripple or destroy at least half of the Attacker's starting force (by BV/PV, including assets) before they exit off the Defender's home edge [300 VP].
+* **Special Rules & Salvage:** Ends when one side has no units in play or at the end of Turn 10 (Turn 8 in Alpha Strike). All crippled/destroyed units form a single salvage pool; the victor drafts first, alternating picks.
+
+---
+
+### 3. Defend
+*The Defender sets up a defense-in-depth to repel an oncoming enemy assault.*
+
+* **Game Setup:** Defender selects a short edge as their home edge; Attacker takes the opposite short edge.
+* **Deployment:**
+    * **Defender (Garrison):** Holds up to 33% of their force (by unit count, rounding down, including assets) off the map at start. The remainder deploys prior to Initiative within 6 hexes (AS: 12") of their home edge (12 hexes / 18" at Scale 2+). Held units are placed anywhere on full hexes within the Defender's half after Turn 1 movement completes (counted as stationary). Defenders cannot take BSP Strikes.
+    * **Attacker (Raiders):** Enters from their home edge during the Movement Phase of Turn 1. Cannot select Minefield or Immobile BSP assets.
+* **Objectives:**
+    * **Orders (Attacker/Defender):** At least half of surviving units (by number, excluding assets) are within 4 hexes (AS: 8") of the center line at the end of Turn 3 (6 hexes / 12" on Turn 4 at Scale 2+) [50 VP].
+    * **Overpower (Attacker/Defender):** At the end of Turn 6 (Turn 8 at Scale 2+), have more non-crippled units (by BV, excluding assets) within 4 hexes (AS: 8") of the center line than the opponent [250 VP].
+    * **Cut Off the Head (Attacker/Defender):** Destroy or cripple the enemy commander's unit [150 VP].
+* **Special Rules & Salvage:** Ends after the End Phase of Turn 6 (Turn 8 at Scale 2+) or when one side is wiped out. The victor claims all battlefield salvage.
+
+---
+
+### 4. Flank
+*The Attacker maneuvers around and past fortified enemy positions to roll up the line.*
+
+* **Game Setup:** Defender picks a long edge; Attacker takes the opposite long edge. The Defender is granted two veteran Medium Emplacements per Scale (or choice of emplacements up to 20 BSP each; AS: two Gun Trailers [Ultra]; or 30 CF Large Laser bunkers) placed anywhere in the Attacker's half of the map.
+* **Deployment:**
+    * **Defender (Standard):** Entire force deploys fully within their own half of the battlefield prior to Turn 1.
+    * **Attacker (Raiders):** At least one-third of units (by number, rounding down, including assets) enter from the home edge during Turn 1 Movement Phase. The remainder enter from a short edge during Turn 2 Movement Phase. Cannot select Minefield or Immobile BSP assets.
+* **Objectives:**
+    * **Orders (Attacker):** At least half of surviving units (including assets) end any turn in the Defender's half of the battlefield [50 VP].
+    * **Orders (Defender):** At least half of units (excluding assets) attack an enemy unit for two consecutive turns [50 VP].
+    * **Crush (Attacker):** Destroy or cripple at least 50% of the opponent's force (BV/PV, including assets) [150 VP].
+    * **Ramming Speed (Attacker):** Destroy all Defender emplacements [150 VP].
+    * **Cut Off Retreat (Attacker):** Maintain at least one non-crippled 'Mech (or 2 BSP assets) per Scale within 3 hexes (AS: 6") of the Defender's home edge during the End Phase for at least 2 consecutive turns [150 VP].
+    * **Turn the Tide (Defender):** Destroy or cripple at least 50% of the Attacker's force (BV/PV, including assets) [150 VP].
+    * **Fall Back in Order (Defender):** After completing *Turn the Tide*, retreat at least 50% of starting force (BV/PV, including assets) off your home edge [150 VP].
+* **Special Rules & Salvage:** Ends when one force is eliminated or at the end of Turn 10 (Turn 8 in Alpha Strike). Victor claims all salvage.
+
+---
+
+### 5. Meeting Engagement
+*Two advancing patrols collide and make rapid contact before withdrawing.*
+
+* **Game Setup:** Defender selects a short edge; Attacker takes the opposite short edge. Neither player may choose Minefield or Immobile BSP assets.
+* **Deployment:**
+    * **Attacker (Standard):** Enters from their home edge during the Movement Phase of Turn 1.
+    * **Defender (Standard):** Enters from their home edge during the Movement Phase of Turn 1.
+* **Objectives:**
+    * **Orders (Attacker/Defender):** At least half of units (excluding assets) attack an enemy unit for two consecutive turns, or move within 12 hexes (AS: 24") of an enemy for two consecutive turns [50 VP].
+    * **Make Their Acquaintance (Attacker/Defender):** First team to destroy or cripple one-third or more of the opponent's starting force (BV/PV, excluding assets) [200 VP].
+    * **Suppressing Fire (Attacker/Defender):** Every non-BSP unit in the opponent's force suffers at least 1 point of internal structure damage [100 VP].
+* **Special Rules & Salvage:** Ends when one side is eliminated or at the end of Turn 8 (Turn 6 in Alpha Strike). **Neither side may claim salvage**.
+
+---
+
+### 6. Objective Raid
+*A smash-and-grab mission to plunder valuable supplies and equipment.*
+
+* **Game Setup:** Defender chooses a short edge; Attacker takes the opposite short edge. Defender places 2 indestructible Medium objective buildings within 4 hexes (6 hexes at Scale 2+) of the map center.
+* **Deployment:**
+    * **Defender (Garrison):** Begins with all units on the battlefield, with at least 50% deployed within 6 hexes of the objective buildings.
+    * **Attacker (Raiders):** Enters from their home edge during Turn 1 Movement Phase. Cannot select Minefield or Immobile BSP assets.
+* **Objectives:**
+    * **Orders (Attacker):** At least one unit (per Scale, excluding assets) crosses the center line toward the Defender's home edge [50 VP].
+    * **Orders (Defender):** All units must stay within 3 hexes (AS: 6") of an objective building, or closer to the Attacker's home edge than the buildings, for the first two turns (unless crippled/destroyed) [50 VP].
+    * **Grab the Stuff (Attacker):** Each component successfully carried off the Attacker's home edge [100 VP each].
+    * **You Must Pay For That (Defender):** Each non-asset Attacker unit crippled or destroyed [100 VP each].
+* **Special Rules & Salvage:** Uses Raid cargo-handling rules (units with hand actuators or cargo capacity pick up components). Attacker cannot take salvage ("Leg it!"). Defender claims salvage only if they win. Ends when one side is eliminated or at the end of Turn 12 (Turn 10 in Alpha Strike).
+
+---
+
+### 7. Pursuit
+*A desperate chase where the fleeing Defender tries to outrun pursuing Attacker units.*
+
+* **Game Setup:** Played on 2 mapsheets long edges touching for Scale 1–2, or 4 mapsheets for Scale 3+. Attacker selects a short edge as home edge; Defender takes the opposite short edge. **Both forces enter from the Attacker's home edge**.
+* **Deployment:**
+    * **Defender (Raiders):** Enters from the Attacker's home edge on Turn 1. At least half of the Defender's units (BV/PV, excluding assets) must have a maximum movement speed of 8 MP or less (AS: 16" or less).
+    * **Attacker (Raiders):** Enters from their home edge during Turn 2 Movement Phase.
+* **Objectives:**
+    * **Orders (Attacker):** Make an attack against at least half of the Defender's units (including assets) [50 VP].
+    * **Orders (Defender):** At least half of starting force (BV/PV, excluding assets) crosses the center line toward their escape edge [50 VP].
+    * **Prevention (Attacker):** Prevent at least 75% of Defender starting force (BV/PV, excluding assets) from exiting through their home edge through Turn 10 [300 VP].
+    * **No Quarter (Attacker):** Destroy or cripple 100% of Defender force (including assets) [100 VP].
+    * **Escape (Defender):** At least 50% of starting force (qualifying speed, excluding assets) exits through their home edge by Turn 10 [300 VP].
+    * **We Were Never Here (Defender):** At least 75% of starting force (qualifying speed, excluding assets) exits through their home edge by Turn 10 [100 VP].
+* **Special Rules & Salvage:** Defender cannot claim salvage. Attacker claims salvage if victorious. Ends at Turn 10 or when one force is wiped out.
+
+---
+
+### 8. Pushback
+*A coordinated two-pronged assault designed to shove back the Defender's battle lines.*
+
+* **Game Setup:** Attacker selects a short edge as home edge; Defender takes the opposite short edge.
+* **Deployment:**
+    * **Defender (Standard):** Sets up anywhere at least 5 hexes (AS: 10") away from their home edge (10 hexes / 16" at Scale 2+).
+    * **Attacker (Standard):** Receives an extra +32 BSP of vehicle assets per Scale (AS: an extra Scale 1 force) and splits their total forces into two groups. Group 1 enters from the Attacker's home edge on Turn 1; Group 2 enters from the long edges at least halfway up the battlefield from the Defender's edge on Turn 1. Cannot choose Minefield or Immobile BSP.
+* **Objectives:**
+    * **Orders (Attacker):** At least half of surviving units cross the center line toward the Defender's home edge [50 VP].
+    * **Orders (Defender):** At least half of surviving units (excluding assets) attack an enemy unit for two consecutive turns [50 VP].
+    * **Push (Attacker):** 75% of remaining force (including assets) is in the half closest to the Defender's home edge at the end of Turn 4 [200 VP].
+    * **Crush (Attacker):** Destroy or cripple at least 33% of enemy starting force (BV/PV, excluding assets) [400 VP].
+    * **Gutted (Attacker):** Destroy or cripple at least 75% of enemy starting force (BV/PV, excluding assets) [150 VP].
+    * **Advance to the Rear (Defender):** At least 50% of starting force retreats off their home edge between Turns 6 and 10 [200 VP].
+    * **Make Them Hurt (Defender):** Destroy or cripple at least 50% of Attacker starting force [400 VP].
+    * **Lead Them to Victory (Defender):** Complete all other three Defender objectives and have your commander survive [150 VP].
+* **Special Rules & Salvage:** Ends after Turn 10 (Turn 8 in Alpha Strike). Both sides draft from a combined salvage pool, with the winner picking first.
+
+---
+
+### 9. Recon
+*A probe to scan and assess enemy strength before disengaging.*
+
+* **Game Setup:** Attacker chooses any edge as their home edge; Defender selects any other edge.
+* **Deployment:**
+    * **Defender (Standard):** Deploys anywhere, but at least 50% of units (including assets) must be in the half closest to the Attacker's home edge.
+    * **Attacker (Raiders):** Enters from their home edge on Turn 1. Cannot take Minefield or Immobile BSP.
+* **Objectives:**
+    * **Orders (Attacker):** Successfully scan at least one Defender unit (per Scale, including assets) [50 VP].
+    * **Orders (Defender):** At least half of units (excluding assets) survive on the field through the first two turns [50 VP].
+    * **Identify the Opposition (Attacker):** Successfully scan at least two-thirds of the Defender's starting force (including assets) [100 VP].
+    * **Preemptive Strike (Attacker):** Destroy or cripple at least 25% of the Defender's starting force [100 VP].
+    * **Observe and Report (Attacker):** At least 50% of Attacker starting force survives and exits through their home edge after Turn 4 [100 VP].
+    * **Deny (Defender):** Defender earns points for any Attacker objectives not met by Turn 8 [50/100/200/300 VP].
+* **Special Rules & Salvage:** Scanning rules are active. **Neither side claims salvage**. Ends after Turn 8 or when one side is wiped out.
+
+---
+
+### 10. Retreat
+*A fighting withdrawal where the Defender attempts to extract before being identified and destroyed.*
+
+* **Game Setup:** Played on 2 mapsheets long edges touching (Scale 1–2) or 4 mapsheets (Scale 3+). Defender selects a short edge; Attacker takes opposite short edge. **Both forces enter from the Attacker's home edge**.
+* **Deployment:**
+    * **Defender (Standard):** Enters from the Attacker's starting edge on Turn 1.
+    * **Attacker (Standard):** Enters from their home edge on Turn 2.
+* **Objectives:**
+    * **Orders (Attacker):** Successfully scan one Defender unit or have at least half of starting units in the Defender's half at the end of Turn 4 [50 VP].
+    * **Orders (Defender):** Exit at least one unit off your home edge [50 VP].
+    * **Identify Weaknesses (Attacker):** Successfully scan at least two-thirds of Defender starting units [200 VP].
+    * **Hammer (Attacker/Defender):** Be the first to destroy or cripple at least 25% of the opponent's starting force [100 VP].
+    * **Gauntlet (Defender):** Exit at least half of starting force (by unit count, excluding assets; crippled units count) through your home edge [200 VP].
+* **Special Rules & Salvage:** Scanning rules in effect. Ends at Turn 10. Defender cannot claim salvage; Attacker claims all salvage if victorious.
+
+---
+
+### 11. Strike
+*A search-and-destroy mission against an enemy headquarters.*
+
+* **Game Setup:** Defender selects a long edge; Attacker takes the opposite long edge. Defender places 4 Medium Level 2+ buildings (30 CF, immobile) within 3 hexes (AS: 6") of map center. One building is secretly recorded as the HQ.
+* **Deployment:**
+    * **Defender (Garrison):** Deploys entire force prior to Initiative in their half; at least 50% must be within 3 hexes (AS: 6") of the buildings.
+    * **Attacker (Raiders):** At least half of force enters from home edge on Turn 1. Remainder enters from a short edge on Turn 2. Cannot choose Minefield or Immobile BSP.
+* **Objectives:**
+    * **Orders (Attacker):** Successfully scan 2 buildings, or locate the HQ building [50 VP].
+    * **Orders (Defender):** At least half of surviving units are within 6 hexes (AS: 12") of designated buildings at the end of Turn 4 [50 VP].
+    * **Identify and Destroy (Attacker):** Destroy the HQ building after scanning it [200 VP].
+    * **Rough Up the Place (Attacker/Defender):** Destroy or cripple at least half of the opponent's starting force [100 VP].
+    * **Seek and Destroy (Defender):** Destroy or cripple the Attacker's commander [200 VP].
+* **Special Rules & Salvage:** Scanning rules apply (infantry/battle armor can only scan while adjacent or inside). Shared salvage pool draft (winner chooses first). Ends after Turn 10 (Turn 8 in Alpha Strike).
+
+---
+
+### Bonus Track: Duel (Game Worlds)
+*A formal one-on-one arena match fought on Solaris-style Game Worlds like Carcassonne, Tybalt, or Xhosa VII.*
+
+* **Game Setup:** Defender chooses a short edge; Attacker takes the opposite short edge. Fought 1 'Mech vs. 1 'Mech matched by weight class without standard Scale BV limits.
+* **Deployment:** Both units enter from their respective home edges during Turn 1 Movement Phase. Exiting through any edge other than your own home edge counts as unit destruction.
+* **Objectives:**
+    * **Orders:** Survive at least two turns of attacks [50 VP].
+    * **Victory!:** Destroy opponent or force surrender [100 VP; doubled if opponent is a heavier weight class].
+    * **Nice Showing:** Cripple opponent [50 VP; doubled if opponent is heavier].
+    * **Shoot Them:** Deal 20 damage (AS: 2 damage) [10 VP per occurrence].
+    * **Beat Them:** Successful physical attack [10 VP each, max once/turn].
+    * **Head Shot:** Hit opponent's head [10 VP] or roll natural 12 critical [20 VP].
+    * **Crushing Blow:** Deal critical hit [10 VP; 20 in AS].
+    * **Turning It Around:** Win Initiative after losing it for 2+ consecutive turns [10 VP].
+    * **Humiliating Shot:** Successful attack into rear arc [10 VP, max once/turn].
+    * **Boom!:** Inflict ammo explosion [10 VP; 20 in AS].
+* **Special Rules & Salvage:** Objectives directly convert into Support Points (1 VP = 1 SP Combat Pay). A player only wins the duel if they achieve the *Victory!* objective, regardless of total VP. Ends when a 'Mech is eliminated or after Turn 12 (Turn 10 in Alpha Strike).
+
+---
+
+🎯 Would you like a printable reference cheat sheet or summary table comparing the force requirements, map sizes, and turn limits across these tracks?
+
 ---
 
 ## Command Complications
