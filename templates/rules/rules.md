@@ -491,6 +491,26 @@ A pilot unlocks a new ability slot when their allocated SP reaches 60, 180, 360,
   </tbody>
 </table>
 
+---
+
+## Skill improvements
+
+Pilots earn Gunnery and Piloting XP separately — there is no single `xp` field. Only **named pilots** accumulate XP. When a named pilot has spent enough XP, they may attempt to improve their skill. The pilot rolls 2d6 and the result must be **under or equal to** their current skill level.
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr><th>Skill Improvement</th><th>Gunnery XP</th><th>Piloting XP</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>2200</td><td>2200</td></tr>
+    <tr><td>1</td><td>1200</td><td>1200</td></tr>
+    <tr><td>2</td><td>700</td><td>700</td></tr>
+    <tr><td>3</td><td>300</td><td>200</td></tr>
+    <tr><td>4</td><td>50</td><td>100</td></tr>
+    <tr><td>5</td><td>0</td><td>50</td></tr>
+  </tbody>
+</table>
+
 ### Unnamed Pilots
 
 * Always cost 100 SP to hire.

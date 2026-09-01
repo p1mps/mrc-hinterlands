@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict QjtmOFB4ZeMNXXXyVd47pUK4USQagySudwBZ2BQJ7EB5bLT952dsu1HiCkHGEAk
+\restrict uvqHSYNsSk9nYz4BBNUfnpw6iSbbpdCoSJVfbjiyr0pTElH4nq2QAsQp9FR0o06
 
 -- Dumped from database version 14.24 (Ubuntu 14.24-0ubuntu0.22.04.1)
 -- Dumped by pg_dump version 14.24 (Ubuntu 14.24-0ubuntu0.22.04.1)
@@ -418,10 +418,10 @@ COPY public.contract (id, is_opposing, type, employer, employer_affiliation, sca
 8	f	raid	Pirates	Pirates	1	1	0	independent	0%	100%	0%	1	1	completed	2026-06-28 22:56:24	2026-06-28 22:56:24	2	\N	6	Sommerset	1	Act of piracy	\N
 9	t	raid	Pirates	Pirates	1	1	0	independent	0%	100%	0%	1	1	completed	2026-06-29 09:06:30	\N	3	\N	6	Somerset	1	Raid	\N
 6	f	garrison	Noble (Local)	Star league	1	3	100	independent	0%	60%	100%	2	2	completed	2026-06-27 09:44:37	2026-06-27 09:44:37	1	\N	\N	Somerset	0-1-1	Act of piracy contract	\N
+30	t	expedition	Noble (Local)	Federated Suns	1	6	130	liaison	Straight/80%	10%	—	4	1	accepted	2026-08-11 16:17:10	2026-08-11 16:17:15	2	\N	29	Crellacor	0-2-1-0-1-0	Expedition for Federated Suns	\N
 14	f	retainer	Mercenary Subcontract	Lyran Commonwealth	1	6	110	liaison	Straight/40%	None	50%	4	1	accepted	2026-08-02 11:14:51	2026-08-18 16:10:13	3	\N	\N	Eidsfoss	0-2-0-1-0-1	Periphery Raid	# CLASSIFIED MISSION BRIEFING // EYES ONLY\n**CONTRACT ID:** 14\n**DESIGNATION:** Eidsfoss Periphery Shield\n**SOURCE:** Black Box / ComStar Encrypted Routing\n**TIMESTAMP:** 3058.11.14\n\n---\n\n## MISSION OVERVIEW\n\nCommander,\n\nYou have pulled the file for **Contract 14: Eidsfoss Periphery Shield**. On the surface, this is a standard Periphery retainer posting. In practice, this contract is a trap wrapped in bureaucratic silk. I've run the numbers, and the terms scream "political liability."\n\nYou are being asked to deploy a **Scale 1 force** to the world of **Eidsfoss** for a **6-month retainer**. The stated goal is to provide a "Periphery Shield" for local infrastructure, maintaining stability in a sector currently experiencing low-level unrest.\n\n**But read the fine print, Commander. The devil here isn't in the local militia; it's in the chain of command.**\n\n---\n\n## THE EMPLOYER: A SHADOW CHAIN\n\n*   **Stated Employer:** Mercenary Subcontract (Entity ID Redacted).\n*   **Ultimate Affiliation:** Periphery Power.\n*   **Contract Type:** Retainer.\n\n**ANALYSIS:**\nThe employer is listed as a "Mercenary Subcontract." This is the first red flag. No sane planetary governor hires a merc unit to hire another merc unit unless they are trying to burn their own name off the record.\n\n*   **Deniability Play:** The "Periphery Power" sponsoring this contract is likely a Great House proxy, a Clan scout group, or a remnant faction attempting to project power without triggering a diplomatic incident. By using a merc subcontract, they maintain plausible deniability. If your unit is compromised, the sponsor washes their hands and claims the subcontractor went rogue.\n*   **Retainer Risk:** You are being paid to *exist*, not to fight. This is a political prop. Your BattleMechs and tanks are props in a standoff. If you engage enemy forces, you risk voiding the retainer payments. You are holding the line for a ghost.\n\n---\n\n## FINANCIAL TERMS: THE STING\n\n*   **Base Pay:** 70% of standard rate.\n*   **Salvage Rights:** 10%.\n*   **Support/Transport:** Mercenary bears 75% of transport costs; Support provided at 60% rate.\n\n**ANALYSIS:**\nThese terms are insulting unless there is hidden value.\n\n*   **Below Market Pay:** 70% base pay is a discount for political leverage, not a retainer. The employer is squeezing you because they know you have a window of opportunity, or they are desperate.\n*   **The Salvage Trap:** **10% salvage rights** is an anomaly. Mercenaries don't accept 10% salvage unless the enemy possesses specific gear the employer *needs* and cannot be seen acquiring.\n    *   *Hypothesis:* The opposition on Eidsfoss may be hoarding Clan technology, stolen Great House prototypes, or data caches. The employer doesn't want the bodies; they want the loot. Your 10% is a carrot to keep you fighting, but the employer keeps 90% of the high-value assets.\n*   **Logistical Black Hole:** You are paying for your own transport and support. This contract is a cash-flow negative operation unless you find independent funding or salvage enough to offset the burn.\n\n---\n\n## PLANETARY CONTEXT: EIDSFOS\n\n*   **Location:** Deep Periphery.\n*   **Intensity:** 0-2-0-1-0-1 (Low/Scattered).\n*   **Tracks:** 4 (Objectives: Grid Nodes, JumpPoint Perimeter, Refinery Complex, Civil Admin District).\n\n**ANALYSIS:**\nEidsfoss is a backwater world with failing infrastructure. The intensity profile suggests this is not a war zone; it's a powder keg.\n\n*   **Low Intensity:** Expect sabotage, sniper fire, light armor raids, and political assassinations. This is not a fight for heavy 'Mechs. Sending a heavy regiment here is tactical suicide and political folly. You will be accused of oppression if you level a city block to stop a dozen saboteurs.\n*   **The 4 Tracks:** You are likely expected to hold four distinct points simultaneously. With a Scale 1 force, you will be stretched thin. The "Shield" is likely a thin perimeter around critical resources the Periphery Power wants to monopolize.\n*   **Opposing Force:** Unnamed. No faction claims responsibility. This implies internal factions, pirates, or agents provocateurs. You won't know who to shoot until it's too late.\n\n---\n\n## WARNINGS & CAVEATS\n\nCommander, proceed with extreme caution. This contract has the hallmarks of a **Mercenary Slaughterhouse**.\n\n1.  **Verify the Prime Contractor:** Before accepting, attempt to identify the true backer of the "Mercenary Subcontract." If this is a Lyran or Federated Suns proxy, you may be walking into a trap set by the Free Worlds League or a rival house.\n2.  **Engagement Rules:** As a retainer, your rules of engagement will be draconian. You are likely prohibited from initiating combat. If you are attacked, you must defend, but you may be forbidden from counter-attacking. Know your orders. If you break the "Retainer Clause," you will be left stranded on a Periphery rock with unpaid bills.\n3.  **The Salvage Incentive:** The 10% salvage right is the only profitable aspect of this contract. Ensure your intel teams are ready to identify high-value targets. If the enemy is hoarding tech, you need to secure it before the employer's black-ops teams arrive to confiscate 90% of it.\n4.  **Political Suicide:** You are the "Shield" for a Periphery Power that likely has no legitimate claim to the world. If the local population rises up, or if a Great House intervenes, you will be the first target. You are a mercenary standing between the locals and a shadowy employer. History remembers who holds the gun.\n\n---\n\n## RECOMMENDATION\n\n**This contract is available, but it is high-risk/low-reward.**\n\n*   **Accept only if:** You have a specific political objective on Eidsfoss, you can verify the Prime Contractor is not a hostile Great House, or you have a way to monetize the 10% salvage beyond standard scrap.\n*   **Reject if:** You value your reputation, your treasury, or your life. This is the kind of contract that gets a merc battalion dissolved by saboteurs while the employer watches from a safe jumpship, collecting 90% of the prizes.\n\n**Final Note:** The intensity profile `0-2-0-1-0-1` suggests the threat is rising in cycles. Track 3 (Refinery Complex) shows a spike to 2. Ensure your heavy assets are reserved for that node.\n\n*Burn this briefing after reading. And Commander? Check your dropship's fuel reserves. You're paying for your own ride home.*\n\n**END OF BRIEFING**
-30	t	expedition	Noble (Local)	Draconis Combine	1	6	130	liaison	Straight/80%	10%	—	4	0	accepted	2026-08-11 16:17:10	2026-08-11 16:17:15	2	\N	29	Crellacor	0-2-1-0-1-0	Raid the Combine Shield	\N
-29	f	expedition	House Government	Federated Suns	1	6	120	liaison	Battle/20%	None	50%	4	0	accepted	2026-08-10 22:22:13	2026-08-11 16:08:53	1	\N	\N	Eidsfoss	0-2-1-0-1-0	Combine Shield	A retainer contract from the Draconis Combine on Eidsfoss, offering 100% pay with integrated command authority. This is the kind of contract that makes mercenary commanders pause and think carefully before accepting.\n\nThe Draconis Combine is attempting to reestablish control over Eidsfoss in the power vacuum following Clan Jade Falcon's withdrawal. They're offering top-tier compensation and full integration into their command structure, which means close coordination with DCMS forces. The 6-month duration and 4-track structure suggest a sustained occupation force.\n\nWhat makes this contract intriguing: the Combine is known for being meticulous about their mercenary contracts, and 100% pay with integrated command suggests they value your company's capabilities highly. However, being integrated into DCMS operations means you'll be operating under their direct command, with all the political complications that entails. The Combine may have hidden agendas regarding Eidsfoss's resources or strategic position.\n\nThis is the kind of contract that could make or break a mercenary company's reputation—and survival—in the Hinterlands.
 33	t	retainer	House Government	Pirates	1	0	130	liaison	Straight/100%	None	75%	4	1	accepted	2026-08-22 23:30:00	2026-08-22 23:30:12	1	\N	14	Kochab	\N	TTOFT	\N
+29	f	expedition	House Government	Draconis Combine	1	6	120	liaison	Battle/20%	None	50%	4	1	accepted	2026-08-10 22:22:13	2026-08-11 16:08:53	1	\N	\N	Eidsfoss	0-2-1-0-1-0	Reitener Contract for Draconis Combine	A retainer contract from the Draconis Combine on Eidsfoss, offering 100% pay with integrated command authority. This is the kind of contract that makes mercenary commanders pause and think carefully before accepting.\n\nThe Draconis Combine is attempting to reestablish control over Eidsfoss in the power vacuum following Clan Jade Falcon's withdrawal. They're offering top-tier compensation and full integration into their command structure, which means close coordination with DCMS forces. The 6-month duration and 4-track structure suggest a sustained occupation force.\n\nWhat makes this contract intriguing: the Combine is known for being meticulous about their mercenary contracts, and 100% pay with integrated command suggests they value your company's capabilities highly. However, being integrated into DCMS operations means you'll be operating under their direct command, with all the political complications that entails. The Combine may have hidden agendas regarding Eidsfoss's resources or strategic position.\n\nThis is the kind of contract that could make or break a mercenary company's reputation—and survival—in the Hinterlands.
 \.
 
 
@@ -469,9 +469,12 @@ COPY public.contract_log_entry (id, month, entry_type, description, roll_result,
 133	4	post_track	Combat pay: +500 SP (full). No salvage.	\N	\N	2026-08-01 00:25:59	6	\N	98
 131	3	base_pay	Base pay received: +500 SP	\N	\N	2026-07-31 22:39:45	6	\N	96
 132	3	maintenance	Maintenance deducted: -500 SP	\N	\N	2026-07-31 22:39:49	6	\N	97
+168	1	transport	Transport: 300 SP	\N	\N	2026-08-23 22:04:19	30	\N	126
 147	1	transport	Transport: 150 SP	\N	\N	2026-08-22 23:36:17	14	\N	110
 148	1	base_pay	Base pay received: +550 SP	\N	\N	2026-08-22 23:36:25	14	\N	111
 149	1	maintenance	Maintenance deducted: -500 SP	\N	\N	2026-08-22 23:40:41	14	\N	112
+169	1	base_pay	Base pay received: +650 SP	\N	\N	2026-08-23 22:04:23	30	\N	127
+170	1	maintenance	Maintenance deducted: -500 SP	\N	\N	2026-08-23 22:04:27	30	\N	128
 151	1	month_advance	Month advance	\N	\N	2026-08-23 00:38:58	14	\N	\N
 152	2	base_pay	Base pay received: +550 SP	\N	\N	2026-08-23 00:39:05	14	\N	113
 153	2	maintenance	Maintenance deducted: -500 SP	\N	\N	2026-08-23 00:39:12	14	\N	114
@@ -482,10 +485,18 @@ COPY public.contract_log_entry (id, month, entry_type, description, roll_result,
 158	1	month_advance	Month advance	\N	\N	2026-08-23 00:41:15	29	\N	\N
 159	2	base_pay	Base pay received: +600 SP	\N	\N	2026-08-23 00:41:22	29	\N	118
 160	2	maintenance	Maintenance deducted: -500 SP	\N	\N	2026-08-23 00:41:26	29	\N	119
-161	2	track_setup	Track 1: Bounding Retreat on Hills (MegaMek: Hills-pastoral)	\N	{"missionType":"Bounding Retreat","missionRoll":5,"terrain":"Hills","terrainSetting":"Hills-pastoral","terrainRoll":5,"complication":"No Complication [cite: 1011]","complicationRoll":3}	2026-08-23 00:41:34	29	27	\N
+171	1	month_advance	Month advance	\N	\N	2026-08-23 22:04:33	30	\N	\N
 146	1	track_setup	Track 1: Demolition on Desert (MegaMek: Desert) [TOFTT]	\N	{"missionType":"Demolition","missionRoll":1,"terrain":"Desert","terrainSetting":"Desert","terrainRoll":5,"complication":"The sand has heatsinks working overtime. Any time a unit has 5 or more heat after the heat phase, reduce the heat dissipation capacity of the mech by 1. This is not a critical hit to the heatsink of the mech, so needs separate tracking. A coolant truck can be used to replace any cooling capacity lost mid-battle if the mech and coolant truck end the movement phase in the same turn and the neither unit makes any attacks. [cite: 894, 895]","complicationRoll":5}	2026-08-22 23:31:36	33	24	\N
 162	1	post_track	Combat pay: +125 SP (half) (TOFTT — half pay). No salvage.	\N	\N	2026-08-23 11:57:28	33	\N	120
 163	2	post_track	Combat pay: +500 SP (full). Salvage claimed.	\N	\N	2026-08-23 11:59:52	14	\N	121
+172	2	base_pay	Base pay received: +650 SP	\N	\N	2026-08-23 22:04:47	30	\N	129
+173	2	maintenance	Maintenance deducted: -500 SP	\N	\N	2026-08-23 22:04:51	30	\N	130
+161	2	track_setup	Track 1: Ambush on Desert (MegaMek: Desert)	\N	{"missionType":"Ambush","missionRoll":5,"terrain":"Desert","terrainSetting":"Desert","terrainRoll":5,"complication":"No Complication [cite: 1011]","complicationRoll":3}	2026-08-23 00:41:34	29	27	\N
+174	2	track_setup	Track 1: Ambush on Desert (MegaMek: Desert)	\N	{"missionType":"Ambush","terrain":"Desert","terrainSetting":"Desert","complication":"The desert winds have kicked up a sandstorm. All units' DE and P weapons suffer from +1 to hit this track. [cite: 890]","complicationRoll":6,"inherited":true}	2026-08-23 22:04:57	30	28	\N
+175	2	post_track	Combat pay: +500 SP (full). Salvage claimed.	\N	\N	2026-08-23 22:05:15	30	\N	131
+176	2	post_track	Combat pay: +250 SP (half). No salvage.	\N	\N	2026-08-23 22:07:25	29	\N	132
+216	2	track_setup	Track 2: Flank on Savannahs 	\N	{"missionType":"Flank","terrain":"Savannahs","terrainSetting":"Savannahs","complication":"A local farmer was incensed at the discount your procurement officer insisted on purchasing his livestock at. He has decided to make this a problem for you. Give your opponent 1 Thumper Artillery Strike BSP this track (Page 77 BattleMech Manual)","complicationRoll":2,"inherited":true}	2026-08-29 22:12:55	30	68	\N
+215	2	track_setup	Track 2: Flank on Savannahs 	\N	{"missionType":"Flank","missionRoll":4,"terrain":"Savannahs","terrainRoll":2,"complication":"No Complication [cite: 1183]","complicationRoll":2}	2026-08-29 22:12:28	29	67	\N
 \.
 
 
@@ -558,13 +569,13 @@ COPY public.messenger_messages (id, body, headers, queue_name, created_at, avail
 --
 
 COPY public.pilot (id, name, is_named, gunnery, piloting, gunnery_xp, company_id, piloting_xp, wounded, edge_tokens, special_abilities) FROM stdin;
-2	Scrappy	t	4	5	150	2	0	f	1	\N
 5	Elena "Ratch" Rostov	t	4	5	150	3	0	f	1	\N
 3	Samantha Hazel	t	4	5	150	3	0	f	1	\N
 6	Davin Mitchell	t	4	5	150	1	0	f	1	\N
 7	Vanessa Mitchell	t	4	5	150	1	0	f	1	\N
 4	Chase Falcon	t	4	5	150	3	0	f	1	\N
-1	Pitch Black	t	4	5	150	2	0	t	1	\N
+2	Scrappy	t	3	4	0	2	0	f	1	Patient
+1	Pitch Black	t	3	4	0	2	0	f	1	Jumping Jack
 \.
 
 
@@ -573,8 +584,6 @@ COPY public.pilot (id, name, is_named, gunnery, piloting, gunnery_xp, company_id
 --
 
 COPY public.salvaged_mech (id, model, tonnage, bv_cost, contract_id, damage_state, tech_base, is_truly_destroyed, sp_taken, salvage_rights_percent, scrapyard, dropship_id, company_id, created_at, repair_cost) FROM stdin;
-11	Phoenix Hawk PXH-3K	45	1380	\N	none	\N	f	\N	\N	t	1	2	2026-08-11 06:32:13	\N
-12	Hunchback HBK-5N	50	1485	\N	crippled	\N	f	\N	\N	t	1	2	2026-08-11 06:32:16	\N
 13	Marauder MAD-5D	60	1790	\N	crippled	is	f	\N	\N	t	1	2	2026-08-11 06:32:18	\N
 21	BattleMaster BLR-3M	85	1679	\N	crippled	is	f	\N	\N	t	3	1	2026-08-18 14:57:01	\N
 14	Marauder MAD-5D	60	1790	\N	crippled	is	f	\N	\N	t	3	1	2026-08-11 11:20:06	\N
@@ -582,6 +591,8 @@ COPY public.salvaged_mech (id, model, tonnage, bv_cost, contract_id, damage_stat
 19	Wasp WSP-3S	25	389	\N	crippled	is	f	\N	\N	t	2	3	2026-08-11 11:54:04	\N
 18	Vindicator VND-3L	45	1520	\N	crippled	is	f	\N	\N	t	2	3	2026-08-11 11:54:03	\N
 17	Gallowglas GAL-1GLS	70	1695	\N	crippled	is	f	\N	\N	t	2	3	2026-08-11 11:54:01	\N
+11	Phoenix Hawk PXH-3K	45	1380	\N	crippled	is	f	\N	\N	t	1	2	2026-08-11 06:32:13	\N
+12	Hunchback HBK-5N	50	1485	\N	crippled	is	f	\N	\N	t	1	2	2026-08-11 06:32:16	\N
 \.
 
 
@@ -616,7 +627,6 @@ COPY public.support_point_entry (id, amount, description, created_at, company_id
 88	500	Combat pay (full)	2026-07-26 20:19:15	2
 89	-500	Contract maintenance (scale 1)	2026-07-26 20:19:45	3
 90	550	Base pay (scale 1)	2026-07-26 20:19:49	3
-92	-50	Travel to Almotacen base fee	2026-07-26 21:03:08	3
 96	500	Base pay (scale 1)	2026-07-31 22:39:45	1
 97	-500	Contract maintenance (scale 1)	2026-07-31 22:39:49	1
 98	500	Combat pay (full)	2026-08-01 00:25:59	1
@@ -624,10 +634,6 @@ COPY public.support_point_entry (id, amount, description, created_at, company_id
 53	0	Transport (2 jumps)	2026-06-27 23:57:56	2
 55	-500	Contract maintenance (scale 1)	2026-06-27 23:58:23	2
 57	500	Base pay (scale 1)	2026-06-27 23:59:08	2
-99	-80	Repair of Springer (CLINT-6S)	2026-08-11 16:01:45	1
-100	-140	Repair of Malevolent (BKX-8D)	2026-08-11 16:01:50	1
-101	-895	Acquisition of Marauder MAD-5D (Scrapyard)	2026-08-11 16:04:00	1
-102	-180	Repair of Marauder MAD-5D (Marauder MAD-5D)	2026-08-11 16:04:51	1
 110	-150	Transport (150)	2026-08-22 23:36:17	3
 111	550	Base pay (scale 1)	2026-08-22 23:36:25	3
 112	-500	Contract maintenance (scale 1)	2026-08-22 23:40:41	3
@@ -640,6 +646,20 @@ COPY public.support_point_entry (id, amount, description, created_at, company_id
 119	-500	Contract maintenance (scale 1)	2026-08-23 00:41:26	1
 120	125	Combat pay (half)	2026-08-23 11:57:28	1
 121	500	Combat pay (full)	2026-08-23 11:59:52	3
+126	-300	Transport (300)	2026-08-23 22:04:19	2
+127	650	Base pay (scale 1)	2026-08-23 22:04:23	2
+128	-500	Contract maintenance (scale 1)	2026-08-23 22:04:27	2
+129	650	Base pay (scale 1)	2026-08-23 22:04:47	2
+130	-500	Contract maintenance (scale 1)	2026-08-23 22:04:51	2
+131	500	Combat pay (full)	2026-08-23 22:05:15	2
+132	250	Combat pay (half)	2026-08-23 22:07:25	1
+135	-1060	Pilot improvements	2026-08-24 14:48:11	2
+136	-5	Pilot heal	2026-08-24 14:58:51	2
+137	-926	Acquisition of BattleAxe 8D (salvage rights 10%) (includes 210 SP repair)	2026-08-24 20:29:52	2
+138	-3	Repair of Distant Thunder (Whitworth WTH-2)	2026-08-24 20:46:07	2
+139	-7	Repair of Event Horizon (Black Hawk (Nova) S)	2026-08-24 20:46:12	2
+141	-1	Rearm of Distant Thunder (Whitworth WTH-2)	2026-08-24 20:46:28	2
+142	-1	Rearm of BattleAxe 8D (BattleAxe 8D)	2026-08-24 20:46:41	2
 \.
 
 
@@ -659,9 +679,12 @@ COPY public.track_record (id, track_number, mission_type, terrain, command_compl
 14	1	Reconnaissance	Wetlands	The muck of the wetlands is fouling up vehicle systems. Reduce all your units with either Wheeled or Tracked MP by 1 for the first three rounds of combat. [cite: 1293, 1294]	full	completed	2026-06-29 09:18:39	2026-06-29 09:18:45	9	t
 15	2	Demolition	Grasslands	Local support was limited at best. All your support units are 5/6. This does not affect the BV of selected support units and give you more to select. If using BSPs, then you may not purchase any Veteran Assets. [cite: 1295, 1296]	full	completed	2026-07-26 20:10:40	2026-07-26 20:19:15	4	f
 16	2	Demolition	Grasslands	A point of Elementals has joined the battle on your opponent's side, seeking honor and glory in battle. Add a 3/4 Elemental III Battle Armor [Flamer] (Sqd5) to your opponent's force (this unit does not count toward their support unit limit). If you should destroy this unit using only a single one of your units, then at the conclusion of this track you will have the option to acquire the unit and add it to your roster permanently for 500 SP (If the squad takes any damage from a second unit then you will lose the ability to acquire this unit). If using BSPs, then just add 1 Veteran Elemental III unit to the opponent's support for this track. [cite: 979, 980, 981, 982]	\N	pending	2026-07-26 20:19:52	\N	2	f
-27	1	Bounding Retreat	Hills	No Complication [cite: 1011]	\N	pending	2026-08-23 00:41:34	\N	29	f
+28	1	Ambush	Desert	The desert winds have kicked up a sandstorm. All units' DE and P weapons suffer from +1 to hit this track. [cite: 890]	full	completed	2026-08-23 22:04:57	2026-08-23 22:05:15	30	f
+27	1	Ambush	Desert	No Complication [cite: 1011]	half	completed	2026-08-23 00:41:34	2026-08-23 22:07:25	29	f
 24	1	Demolition	Desert	News choppers have arrived to cover the battle. Whichever side is successful in this track will gain +1 reputation. Destroying one of the VTOLs will result in an immediate -1 reputation to whichever player destroyed the VTOL (accidental crashes or skidding off the map will cause no effect unless caused by intentional damage). Add two tokens to the map at elevation 6 to represent the VTOLs. Use the Warrior Attack Helicopter BSP to represent each unit or use the datasheet for a Sprint Scout Helicopter for players looking to avoid BSP rules. [cite: 1013, 1014, 1015, 1016]	half	completed	2026-08-22 23:31:36	2026-08-23 11:57:28	33	t
 26	1	Demolition	Desert	The attack has conceded with a poor forecast in the mountains. A snowstorm applies a +1 to all weapon attacks, and all heat tracking units may sink 1 more heat this track. [cite: 1129, 1130]	full	completed	2026-08-23 00:39:18	2026-08-23 11:59:52	14	f
+67	2	Flank	Savannahs	No Complication [cite: 1183]	\N	pending	2026-08-29 22:12:28	\N	29	f
+68	2	Flank	Savannahs	No Complication [cite: 1183]	\N	pending	2026-08-29 22:12:55	\N	30	f
 \.
 
 
@@ -673,11 +696,11 @@ COPY public.unit (id, name, chassis, tonnage, bv, unit_type, damage_state, compa
 3	Tempest's Edge	Jade Hawk	75	2523	mech	none	3	3	2	clan
 4	Augur	Tribune Mobile Tactical Command HQ	30	424	vehicle	none	3	4	2	is
 5	Thunderhead	Black Hawk-KU [BHKU-OR]	60	2193	mech	none	3	5	2	is
-2	Distant Thunder	Whitworth WTH-2	40	936	mech	armor_only	2	2	1	is
-1	Event Horizon	Black Hawk (Nova) S	50	2056	mech	armor_only	2	1	1	clan
 6	Springer	CLINT-6S	40	1334	mech	none	1	6	3	\N
 8	Marauder MAD-5D	Marauder MAD-5D	75	1787	mech	none	1	\N	3	\N
-9	BattleAxe 8KX-8D	BattleAxe 8KX-8D	70	796	mech	crippled	2	\N	1	is
+2	Distant Thunder	Whitworth WTH-2	40	936	mech	none	2	2	1	is
+1	Event Horizon	Black Hawk (Nova) S	50	2056	mech	none	2	1	1	clan
+10	BattleAxe 8D	BattleAxe 8D	70	1592	mech	crippled	2	\N	1	is
 \.
 
 
@@ -696,14 +719,14 @@ COPY public."user" (id, username, email, password, roles) FROM stdin;
 -- Name: contract_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.contract_id_seq', 33, true);
+SELECT pg_catalog.setval('public.contract_id_seq', 34, true);
 
 
 --
 -- Name: contract_log_entry_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.contract_log_entry_id_seq', 167, true);
+SELECT pg_catalog.setval('public.contract_log_entry_id_seq', 216, true);
 
 
 --
@@ -738,35 +761,35 @@ SELECT pg_catalog.setval('public.pilot_id_seq', 7, true);
 -- Name: salvaged_mech_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.salvaged_mech_id_seq', 23, true);
+SELECT pg_catalog.setval('public.salvaged_mech_id_seq', 24, true);
 
 
 --
 -- Name: support_point_entry_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.support_point_entry_id_seq', 125, true);
+SELECT pg_catalog.setval('public.support_point_entry_id_seq', 142, true);
 
 
 --
 -- Name: track_record_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.track_record_id_seq', 27, true);
+SELECT pg_catalog.setval('public.track_record_id_seq', 68, true);
 
 
 --
 -- Name: unit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.unit_id_seq', 9, true);
+SELECT pg_catalog.setval('public.unit_id_seq', 10, true);
 
 
 --
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: p1mps
 --
 
-SELECT pg_catalog.setval('public.user_id_seq', 3, true);
+SELECT pg_catalog.setval('public.user_id_seq', 4, true);
 
 
 --
@@ -1138,5 +1161,5 @@ ALTER TABLE ONLY public.salvaged_mech
 -- PostgreSQL database dump complete
 --
 
-\unrestrict QjtmOFB4ZeMNXXXyVd47pUK4USQagySudwBZ2BQJ7EB5bLT952dsu1HiCkHGEAk
+\unrestrict uvqHSYNsSk9nYz4BBNUfnpw6iSbbpdCoSJVfbjiyr0pTElH4nq2QAsQp9FR0o06
 
